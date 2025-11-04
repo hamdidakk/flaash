@@ -40,7 +40,7 @@ export default function JobsPage() {
                     job.status === "running" ? "default" : job.status === "completed" ? "secondary" : "destructive"
                   }
                 >
-                  {job.status}
+                  {t(`jobs.status.${job.status}`)}
                 </Badge>
                 {job.status === "running" && (
                   <Button variant="ghost" size="sm">
@@ -51,7 +51,7 @@ export default function JobsPage() {
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Progress</span>
+                <span className="text-muted-foreground">{t("jobs.progress")}</span>
                 <span className="font-medium">{job.progress}%</span>
               </div>
               <Progress value={job.progress} />

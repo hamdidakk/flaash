@@ -7,6 +7,7 @@ import { Upload, FileText } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { EmptyState } from "@/components/empty-state"
 import { DocumentsSearch } from "@/components/documents/documents-search"
+import { DocumentsFilters } from "@/components/documents/documents-filters"
 import { DocumentsTable } from "@/components/documents/documents-table"
 import { ChunksDialog } from "@/components/documents/chunks-dialog"
 import { UploadDocumentDialog } from "@/components/documents/upload-document-dialog"
@@ -15,6 +16,9 @@ import { DeleteDocumentDialog } from "@/components/documents/delete-document-dia
 export default function DocumentsPage() {
   const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [dateFrom, setDateFrom] = useState("")
+  const [dateTo, setDateTo] = useState("")
   const [selectedDoc, setSelectedDoc] = useState<any>(null)
   const [showChunks, setShowChunks] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
@@ -72,7 +76,29 @@ export default function DocumentsPage() {
     },
   ]
 
-  const filteredDocs = documents.filter((doc) => doc.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredDocs = documents.filter((doc) => {
+    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesStatus = statusFilter === "all" || doc.status === statusFilter
+
+    let matchesDateRange = true
+    if (dateFrom || dateTo) {
+      const docDate = new Date(doc.uploadedAt)
+      if (dateFrom) {
+        matchesDateRange = matchesDateRange && docDate >= new Date(dateFrom)
+      }
+      if (dateTo) {
+        matchesDateRange = matchesDateRange && docDate <= new Date(dateTo + " 23:59:59")
+      }
+    }
+
+    return matchesSearch && matchesStatus && matchesDateRange
+  })
+
+  const handleClearFilters = () => {
+    setStatusFilter("all")
+    setDateFrom("")
+    setDateTo("")
+  }
 
   const handleViewChunks = (doc: any) => {
     setSelectedDoc(doc)
@@ -98,6 +124,16 @@ export default function DocumentsPage() {
       />
 
       <DocumentsSearch value={searchQuery} onChange={setSearchQuery} />
+
+      <DocumentsFilters
+        statusFilter={statusFilter}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        onStatusChange={setStatusFilter}
+        onDateFromChange={setDateFrom}
+        onDateToChange={setDateTo}
+        onClearFilters={handleClearFilters}
+      />
 
       {filteredDocs.length === 0 ? (
         <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />

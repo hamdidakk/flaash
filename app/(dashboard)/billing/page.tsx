@@ -75,7 +75,7 @@ export default function BillingPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-2xl font-bold">Pro Plan</h3>
-                <Badge>Active</Badge>
+                <Badge>{t("alerts.status.active")}</Badge>
               </div>
               <p className="text-muted-foreground mt-1">$99/month • Renews on Feb 1, 2025</p>
             </div>
@@ -153,7 +153,7 @@ export default function BillingPage() {
                   <div className="text-right">
                     <p className="font-medium">${invoice.amount}</p>
                     <Badge variant="secondary" className="text-xs">
-                      {invoice.status}
+                      {t(`billing.status.${invoice.status}`)}
                     </Badge>
                   </div>
                   <Button variant="ghost" size="sm">

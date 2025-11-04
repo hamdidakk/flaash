@@ -1,7 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Search } from "lucide-react"
 import { ChunkCard } from "@/components/chunk-card"
+import { useLanguage } from "@/lib/language-context"
 
 interface Chunk {
   id: number
@@ -18,16 +22,38 @@ interface ChunksDialogProps {
 }
 
 export function ChunksDialog({ open, onOpenChange, documentName, chunks }: ChunksDialogProps) {
+  const { t } = useLanguage()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const filteredChunks = chunks.filter((chunk) => chunk.content.toLowerCase().includes(searchQuery.toLowerCase()))
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{documentName} - Chunks</DialogTitle>
+          <DialogTitle>
+            {documentName} - {t("documents.chunks.title")}
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          {chunks.map((chunk) => (
-            <ChunkCard key={chunk.id} chunk={chunk} />
-          ))}
+
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder={t("documents.chunks.search")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+          {filteredChunks.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              {searchQuery ? t("documents.chunks.noResults") : t("documents.empty.description")}
+            </div>
+          ) : (
+            filteredChunks.map((chunk) => <ChunkCard key={chunk.id} chunk={chunk} />)
+          )}
         </div>
       </DialogContent>
     </Dialog>

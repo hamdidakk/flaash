@@ -52,7 +52,9 @@ export default function AlertsPage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{alert.condition}</td>
                   <td className="px-4 py-3">
-                    <Badge variant={alert.status === "active" ? "default" : "secondary"}>{alert.status}</Badge>
+                    <Badge variant={alert.status === "active" ? "default" : "secondary"}>
+                      {t(`alerts.status.${alert.status}`)}
+                    </Badge>
                   </td>
                   <td className="px-4 py-3">
                     {alert.triggered > 0 && (
@@ -65,10 +67,10 @@ export default function AlertsPage() {
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="sm">
-                        Edit
+                        {t("common.edit")}
                       </Button>
                       <Button variant="ghost" size="sm">
-                        Delete
+                        {t("common.delete")}
                       </Button>
                     </div>
                   </td>

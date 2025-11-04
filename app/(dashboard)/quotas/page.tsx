@@ -10,10 +10,10 @@ export default function QuotasPage() {
   const { t } = useLanguage()
 
   const quotas = [
-    { name: "API Requests", used: 4250, limit: 10000, unit: "requests" },
-    { name: "Storage", used: 12.5, limit: 50, unit: "GB" },
-    { name: "Documents", used: 145, limit: 500, unit: "docs" },
-    { name: "Monthly Cost", used: 127.5, limit: 500, unit: "€" },
+    { name: "apiRequests", used: 4250, limit: 10000, unit: "requests" },
+    { name: "storage", used: 12.5, limit: 50, unit: "GB" },
+    { name: "documents", used: 145, limit: 500, unit: "docs" },
+    { name: "monthlyCost", used: 127.5, limit: 500, unit: "€" },
   ]
 
   return (
@@ -29,7 +29,7 @@ export default function QuotasPage() {
           return (
             <Card key={quota.name} className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">{quota.name}</h3>
+                <h3 className="font-semibold">{t(`quotas.quotas.${quota.name}`)}</h3>
                 {isDanger ? (
                   <AlertCircle className="h-5 w-5 text-destructive" />
                 ) : isWarning ? (

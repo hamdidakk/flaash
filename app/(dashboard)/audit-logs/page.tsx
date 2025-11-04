@@ -67,7 +67,7 @@ export default function AuditLogsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Icon className="h-4 w-4 text-muted-foreground" />
-                        <Badge variant="outline">{log.action}</Badge>
+                        <Badge variant="outline">{t(`auditLogs.actions.${log.action}`)}</Badge>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{log.user}</td>

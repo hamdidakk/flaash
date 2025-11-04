@@ -4,8 +4,8 @@ import { PageHeader } from "@/components/page-header"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { useLanguage } from "@/lib/language-context"
 import { Webhook, Plus, MoreVertical } from "lucide-react"
+import { useLanguage } from "@/lib/language-context"
 
 export default function WebhooksPage() {
   const { t } = useLanguage()
@@ -43,16 +43,20 @@ export default function WebhooksPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <code className="text-sm bg-muted px-2 py-1 rounded">{webhook.url}</code>
-                    <Badge variant={webhook.status === "active" ? "default" : "secondary"}>{webhook.status}</Badge>
+                    <Badge variant={webhook.status === "active" ? "default" : "secondary"}>
+                      {t(`alerts.status.${webhook.status}`)}
+                    </Badge>
                   </div>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {webhook.events.map((event) => (
                       <Badge key={event} variant="outline">
-                        {event}
+                        {t(`webhooks.events.${event}`)}
                       </Badge>
                     ))}
                   </div>
-                  <p className="text-sm text-muted-foreground">{webhook.calls} calls</p>
+                  <p className="text-sm text-muted-foreground">
+                    {webhook.calls} {t("webhooks.calls")}
+                  </p>
                 </div>
               </div>
               <Button variant="ghost" size="sm">

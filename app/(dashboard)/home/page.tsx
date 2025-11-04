@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/page-header"
 import { StatsGrid } from "@/components/dashboard/stats-grid"
 import { QuickActionsSection } from "@/components/dashboard/quick-actions-section"
 import { RecentActivitySection } from "@/components/dashboard/recent-activity-section"
+import { CostManagementCard } from "@/components/dashboard/cost-management-card"
 import { FileText, MessageSquare, Search, TrendingUp, Upload, Settings } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 
@@ -17,6 +18,23 @@ export default function HomePage() {
     searches: 0,
   })
 
+  const [costData, setCostData] = useState({
+    totalCost: 0,
+    tokensUsed: 0,
+    estimatedCost: 0,
+    breakdown: {
+      embedding: 0,
+      completion: 0,
+      search: 0,
+      storage: 0,
+    },
+    alerts: {
+      threshold: 0,
+      current: 0,
+      isNearLimit: false,
+    },
+  })
+
   useEffect(() => {
     // Mock data - replace with real API call
     setStats({
@@ -24,6 +42,23 @@ export default function HomePage() {
       chunks: 8934,
       conversations: 523,
       searches: 2891,
+    })
+
+    setCostData({
+      totalCost: 127.5,
+      tokensUsed: 2847500,
+      estimatedCost: 145.2,
+      breakdown: {
+        embedding: 45.3,
+        completion: 62.8,
+        search: 12.4,
+        storage: 7.0,
+      },
+      alerts: {
+        threshold: 150.0,
+        current: 127.5,
+        isNearLimit: true,
+      },
     })
   }, [])
 
@@ -46,36 +81,36 @@ export default function HomePage() {
     const diffMins = Math.floor(diffMs / 60000)
 
     if (diffMins < 60) {
-      return `${diffMins}m ago`
+      return `${diffMins}${t("dashboard.time.minutesAgo")}`
     }
     const diffHours = Math.floor(diffMins / 60)
     if (diffHours < 24) {
-      return `${diffHours}h ago`
+      return `${diffHours}${t("dashboard.time.hoursAgo")}`
     }
     const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays}d ago`
+    return `${diffDays}${t("dashboard.time.daysAgo")}`
   }
 
   const recentActivity = [
     {
       id: "1",
       type: "upload" as const,
-      title: "Document uploaded",
+      title: t("dashboard.activity.documentUploaded"),
       description: "technical-specs.pdf",
       timestamp: new Date(Date.now() - 1000 * 60 * 5),
     },
     {
       id: "2",
       type: "chat" as const,
-      title: "New conversation",
+      title: t("dashboard.activity.newConversation"),
       description: "RAG query about product features",
       timestamp: new Date(Date.now() - 1000 * 60 * 15),
     },
     {
       id: "3",
       type: "search" as const,
-      title: "Search performed",
-      description: 'Query: "authentication methods"',
+      title: t("dashboard.activity.searchPerformed"),
+      description: `${t("dashboard.activity.query")}: "authentication methods"`,
       timestamp: new Date(Date.now() - 1000 * 60 * 30),
     },
   ]
@@ -139,6 +174,8 @@ export default function HomePage() {
       <PageHeader title={t("dashboard.title")} description={t("dashboard.description")} />
 
       <StatsGrid stats={statsData} />
+
+      <CostManagementCard data={costData} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <QuickActionsSection
