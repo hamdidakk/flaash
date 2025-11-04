@@ -9,6 +9,7 @@ interface SearchResultCardProps {
   document: string
   content: string
   score: number
+  highlight?: string
   metadata?: {
     page?: number
     section?: string
@@ -17,7 +18,30 @@ interface SearchResultCardProps {
   onView?: () => void
 }
 
-export function SearchResultCard({ document, content, score, metadata, onView }: SearchResultCardProps) {
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+const getHighlightedText = (text: string, highlight?: string) => {
+  if (!highlight) return text
+
+  const trimmed = highlight.trim()
+  if (!trimmed) return text
+
+  const regex = new RegExp(`(${escapeRegExp(trimmed)})`, "gi")
+  const parts = text.split(regex)
+  const lower = trimmed.toLowerCase()
+
+  return parts.map((part, index) =>
+    part.toLowerCase() === lower ? (
+      <mark key={`${part}-${index}`} className="rounded bg-primary/20 px-1 py-0.5">
+        {part}
+      </mark>
+    ) : (
+      <span key={`${part}-${index}`}>{part}</span>
+    ),
+  )
+}
+
+export function SearchResultCard({ document, content, score, metadata, onView, highlight }: SearchResultCardProps) {
   return (
     <Card className="p-4 hover:shadow-md transition-shadow">
       <div className="space-y-3">
@@ -31,19 +55,21 @@ export function SearchResultCard({ document, content, score, metadata, onView }:
           </Badge>
         </div>
 
-        {metadata && (
-          <div className="flex gap-2 text-xs text-muted-foreground">
+        {(metadata?.page || metadata?.section || metadata?.date) && (
+          <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
             {metadata.page && <span>Page {metadata.page}</span>}
             {metadata.section && <span>• {metadata.section}</span>}
             {metadata.date && <span>• {metadata.date}</span>}
           </div>
         )}
 
-        <p className="text-sm leading-relaxed text-foreground/90 line-clamp-3">{content}</p>
+        <p className="text-sm leading-relaxed text-foreground/90 line-clamp-4">
+          {getHighlightedText(content, highlight)}
+        </p>
 
         {onView && (
           <Button variant="ghost" size="sm" className="w-full justify-center" onClick={onView}>
-            View Full Document
+            View Source Chunk
             <ExternalLink className="h-3 w-3 ml-2" />
           </Button>
         )}

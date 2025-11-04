@@ -1,24 +1,19 @@
 "use client"
 
 import { ChatMessage } from "@/components/chat-message"
-
-interface Message {
-  id: number | string
-  role: string
-  content: string
-  citations: any[]
-}
+import type { RagMessage, CitationLink } from "@/lib/mock-data"
 
 interface ChatMessagesListProps {
-  messages: Message[]
+  messages: RagMessage[]
   isLoading?: boolean
+  onCitationClick?: (citation: CitationLink) => void
 }
 
-export function ChatMessagesList({ messages, isLoading }: ChatMessagesListProps) {
+export function ChatMessagesList({ messages, isLoading, onCitationClick }: ChatMessagesListProps) {
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-4">
       {messages.map((message) => (
-        <ChatMessage key={message.id} message={message} />
+        <ChatMessage key={message.id} message={message} onCitationClick={onCitationClick} />
       ))}
       {isLoading && (
         <ChatMessage

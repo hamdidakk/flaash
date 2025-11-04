@@ -6,25 +6,23 @@ import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/lib/language-context"
 import { Target, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react"
 import { MetricBar } from "@/components/dashboard/metric-bar"
+import { evaluationSnapshot } from "@/lib/mock-data"
 
 export default function EvaluationPage() {
   const { t } = useLanguage()
 
   const evaluationData = {
-    averageRetrievalGrade: 9.2,
-    averageGenerationGrade: 8.5,
-    totalEvaluations: 1247,
-    lastEvaluated: "2025-01-15 14:30",
-    retrievalMetrics: [
-      { label: t("evaluation.precision"), value: 9.5, percentage: 95 },
-      { label: t("evaluation.recall"), value: 8.9, percentage: 89 },
-      { label: t("evaluation.relevance"), value: 9.2, percentage: 92 },
-    ],
-    generationMetrics: [
-      { label: t("evaluation.accuracy"), value: 8.7, percentage: 87 },
-      { label: t("evaluation.coherence"), value: 8.9, percentage: 89 },
-      { label: t("evaluation.completeness"), value: 8.0, percentage: 80 },
-    ],
+    ...evaluationSnapshot,
+    retrievalMetrics: evaluationSnapshot.retrievalMetrics.map((metric, index) => ({
+      label: [t("evaluation.precision"), t("evaluation.recall"), t("evaluation.relevance")][index] ?? metric.label,
+      value: metric.value,
+      percentage: metric.percentage,
+    })),
+    generationMetrics: evaluationSnapshot.generationMetrics.map((metric, index) => ({
+      label: [t("evaluation.accuracy"), t("evaluation.coherence"), t("evaluation.completeness")][index] ?? metric.label,
+      value: metric.value,
+      percentage: metric.percentage,
+    })),
   }
 
   const getGradeColor = (grade: number) => {
