@@ -12,7 +12,7 @@ import { Upload, File, X } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import type { KnowledgeDocument } from "@/lib/mock-data"
+import { DEFAULT_COLLECTION_ID, type KnowledgeDocument } from "@/lib/mock-data"
 
 interface UploadDocumentDialogProps {
   open: boolean
@@ -117,6 +117,7 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
         uploadedAtRaw: uploadedAt,
         source: mode === "batch" ? "Batch upload" : "Manual upload",
         owner: "Vous",
+        collectionId: DEFAULT_COLLECTION_ID,
         batchId,
       }))
 

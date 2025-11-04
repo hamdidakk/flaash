@@ -219,7 +219,7 @@ export const translations = {
       },
       search: "Search documents...",
     },
-    chat: {
+      chat: {
       title: "RAG Chat",
       description: "Ask questions about your documents and get AI-powered answers",
       placeholder: "Ask a question about your documents...",
@@ -233,6 +233,18 @@ export const translations = {
         systemPromptPlaceholder:
           "You are a helpful assistant that answers questions based on the provided documents...",
         systemPromptDescription: "Customize how the AI responds to your questions",
+        collection: "Collection",
+        collectionDescription: "Choose the dataset to query for answers",
+        promptType: "Prompt type",
+        promptTypeDescription: "Select the prompting template to control the tone and depth of the answer",
+        promptTypes: {
+          short: "Short",
+          shortDescription: "Concise response optimized for speed",
+          long: "Long",
+          longDescription: "Detailed response with more context",
+          v2: "v2",
+          v2Description: "Experimental template blending summary and rationale",
+        },
       },
       models: {
         gpt4o: "Most capable, best for complex tasks",
@@ -241,9 +253,23 @@ export const translations = {
         mistralLarge: "Powerful open-source model",
         mistralMedium: "Balanced open-source model",
       },
+      collections: {
+        all: "All collections",
+        allDescription: "Search across every available dataset",
+      },
       citations: "Sources",
+      metadata: {
+        collection: "Collection",
+        promptType: "Prompt",
+        model: "Model",
+        temperature: "Temp",
+      },
+      retrievedDocuments: {
+        title: "Retrieved documents",
+        open: "Open chunk",
+      },
     },
-    search: {
+      search: {
       title: "Semantic Search",
       description: "Search your documents using natural language",
       placeholder: "Search for information in your documents...",
@@ -708,30 +734,56 @@ export const translations = {
       },
       search: "Rechercher des documents...",
     },
-    chat: {
-      title: "Chat RAG",
-      description: "Posez des questions sur vos documents et obtenez des réponses IA",
-      placeholder: "Posez une question sur vos documents...",
-      send: "Envoyer",
-      settings: {
-        title: "Paramètres du chat",
-        model: "Modèle",
-        temperature: "Température",
-        temperatureDescription: "Contrôle l'aléatoire: 0 est concentré, 2 est créatif",
-        systemPrompt: "Prompt système",
-        systemPromptPlaceholder:
-          "Vous êtes un assistant utile qui répond aux questions basées sur les documents fournis...",
-        systemPromptDescription: "Personnalisez la façon dont l'IA répond à vos questions",
+      chat: {
+        title: "Chat RAG",
+        description: "Posez des questions sur vos documents et obtenez des réponses IA",
+        placeholder: "Posez une question sur vos documents...",
+        send: "Envoyer",
+        settings: {
+          title: "Paramètres du chat",
+          model: "Modèle",
+          temperature: "Température",
+          temperatureDescription: "Contrôle l'aléatoire: 0 est concentré, 2 est créatif",
+          systemPrompt: "Prompt système",
+          systemPromptPlaceholder:
+            "Vous êtes un assistant utile qui répond aux questions basées sur les documents fournis...",
+          systemPromptDescription: "Personnalisez la façon dont l'IA répond à vos questions",
+          collection: "Collection",
+          collectionDescription: "Sélectionnez l'ensemble de données à interroger",
+          promptType: "Type de prompt",
+          promptTypeDescription: "Choisissez le template de prompt pour ajuster la réponse",
+          promptTypes: {
+            short: "Court",
+            shortDescription: "Réponse concise optimisée pour la rapidité",
+            long: "Long",
+            longDescription: "Réponse détaillée avec davantage de contexte",
+            v2: "v2",
+            v2Description: "Template expérimental mêlant synthèse et justification",
+          },
+        },
+        models: {
+          gpt4o: "Le plus performant, idéal pour les tâches complexes",
+          gpt4turbo: "Rapide et performant, bon équilibre",
+          gpt35: "Rapide et économique, bon pour les tâches simples",
+          mistralLarge: "Modèle open-source puissant",
+          mistralMedium: "Modèle open-source équilibré",
+        },
+        collections: {
+          all: "Toutes les collections",
+          allDescription: "Recherche sur l'ensemble des sources disponibles",
+        },
+        citations: "Sources",
+        metadata: {
+          collection: "Collection",
+          promptType: "Prompt",
+          model: "Modèle",
+          temperature: "Temp.",
+        },
+        retrievedDocuments: {
+          title: "Documents retrouvés",
+          open: "Ouvrir l'extrait",
+        },
       },
-      models: {
-        gpt4o: "Le plus performant, idéal pour les tâches complexes",
-        gpt4turbo: "Rapide et performant, bon équilibre",
-        gpt35: "Rapide et économique, bon pour les tâches simples",
-        mistralLarge: "Modèle open-source puissant",
-        mistralMedium: "Modèle open-source équilibré",
-      },
-      citations: "Sources",
-    },
     search: {
       title: "Recherche sémantique",
       description: "Recherchez dans vos documents en langage naturel",

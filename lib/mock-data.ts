@@ -10,6 +10,7 @@ export interface KnowledgeDocument {
   uploadedAtRaw: string
   source: string
   owner: string
+  collectionId?: string
   batchId?: string
   lastError?: string
 }
@@ -51,6 +52,55 @@ export interface ChunkRecord {
     score?: number
   }
 }
+
+export type RagPromptType = "short" | "long" | "v2"
+
+export interface KnowledgeCollection {
+  id: string
+  name: string
+  description: string
+}
+
+export interface RetrievedDocument {
+  id: string
+  documentId: string
+  documentName: string
+  chunkId: string
+  snippet: string
+  score?: number
+  collectionId?: string
+  metadata?: {
+    page?: number
+    section?: string
+  }
+}
+
+export interface SimulateRagOptions {
+  collectionId?: string
+  promptType?: RagPromptType
+  model?: string
+  temperature?: number
+}
+
+export const DEFAULT_COLLECTION_ID = "core"
+
+export const knowledgeCollections: KnowledgeCollection[] = [
+  {
+    id: DEFAULT_COLLECTION_ID,
+    name: "Base Produit",
+    description: "Documentation principale du produit et spécifications techniques.",
+  },
+  {
+    id: "support",
+    name: "Support Client",
+    description: "Articles de la base de connaissance destinée au support et à la réussite client.",
+  },
+  {
+    id: "operations",
+    name: "Opérations & Process",
+    description: "Procédures internes, playbooks et guides de déploiement.",
+  },
+]
 
 export interface OrganizationRecord {
   id: string
@@ -95,6 +145,7 @@ export const knowledgeDocuments: KnowledgeDocument[] = [
     uploadedAtRaw: "2025-01-15T10:30:00Z",
     source: "Secure upload",
     owner: "Jane Smith",
+    collectionId: DEFAULT_COLLECTION_ID,
     batchId: "batch-2025-01-15",
   },
   {
@@ -107,6 +158,7 @@ export const knowledgeDocuments: KnowledgeDocument[] = [
     uploadedAtRaw: "2025-01-15T11:45:00Z",
     source: "API",
     owner: "Operations Bot",
+    collectionId: "support",
   },
   {
     id: "doc_technical_doc",
@@ -118,6 +170,7 @@ export const knowledgeDocuments: KnowledgeDocument[] = [
     uploadedAtRaw: "2025-01-14T09:15:00Z",
     source: "Secure upload",
     owner: "Carlos Alvarez",
+    collectionId: DEFAULT_COLLECTION_ID,
   },
   {
     id: "doc_api_reference",
@@ -129,6 +182,7 @@ export const knowledgeDocuments: KnowledgeDocument[] = [
     uploadedAtRaw: "2025-01-14T14:20:00Z",
     source: "GitHub sync",
     owner: "Automation",
+    collectionId: "operations",
     lastError: "Invalid frontmatter section at line 154",
   },
 ]
@@ -354,6 +408,14 @@ export interface RagMessage {
   content: string
   citations: CitationLink[]
   timestamp?: string
+  metadata?: {
+    model?: string
+    temperature?: number
+    promptType?: RagPromptType
+    collectionId?: string
+    collectionName?: string
+  }
+  retrievedDocuments?: RetrievedDocument[]
 }
 
 export const initialChatMessages: RagMessage[] = [
@@ -376,32 +438,93 @@ export function findChunkById(chunkId: string) {
   return allChunks.find((chunk) => chunk.id === chunkId)
 }
 
-export function simulateRagResponse(query: string): RagMessage {
+export function simulateRagResponse(query: string, options: SimulateRagOptions = {}): RagMessage {
   const lowerQuery = query.toLowerCase()
+  const {
+    collectionId,
+    promptType = "short",
+    model = "gpt-4o",
+    temperature = 0.7,
+  } = options
 
-  const relevantHits = semanticSearchResults.filter((hit) =>
-    hit.snippet.toLowerCase().includes(lowerQuery) || hit.metadata?.section?.toLowerCase().includes(lowerQuery),
-  )
+  const normalizedCollection = collectionId && collectionId !== "all" ? collectionId : undefined
 
-  const citations = (relevantHits.length > 0 ? relevantHits : semanticSearchResults.slice(0, 2)).map((hit, index) => ({
+  const documentById = new Map(knowledgeDocuments.map((doc) => [doc.id, doc]))
+
+  const matchesCollection = (documentId: string) => {
+    if (!normalizedCollection) return true
+    const doc = documentById.get(documentId)
+    const docCollection = doc?.collectionId ?? DEFAULT_COLLECTION_ID
+    return docCollection === normalizedCollection
+  }
+
+  const relevantHits = semanticSearchResults.filter((hit) => {
+    if (!matchesCollection(hit.documentId)) return false
+    const snippet = hit.snippet.toLowerCase()
+    const section = hit.metadata?.section?.toLowerCase() ?? ""
+    return snippet.includes(lowerQuery) || section.includes(lowerQuery)
+  })
+
+  const fallbackHits = semanticSearchResults.filter((hit) => matchesCollection(hit.documentId))
+
+  const hitsToUse = (relevantHits.length > 0 ? relevantHits : fallbackHits.length > 0 ? fallbackHits : semanticSearchResults).slice(0, 3)
+
+  const citations = hitsToUse.map((hit, index) => ({
     id: `${hit.id}_${index}`,
     chunkId: hit.chunkId,
     documentId: hit.documentId,
     document: hit.document,
     page: hit.metadata?.page,
-    contentPreview: hit.snippet.slice(0, 140),
+    contentPreview: hit.snippet.slice(0, 280),
     score: hit.similarity,
   }))
 
-  const summarySentences = citations
-    .map((citation) => `• ${citation.contentPreview}`)
+  const retrievedDocuments: RetrievedDocument[] = citations.map((citation, index) => {
+    const chunk = findChunkById(citation.chunkId)
+    const doc = documentById.get(citation.documentId)
+    return {
+      id: `${citation.chunkId}_${index}`,
+      chunkId: citation.chunkId,
+      documentId: citation.documentId,
+      documentName: citation.document,
+      snippet: chunk?.content ?? citation.contentPreview,
+      score: citation.score,
+      collectionId: doc?.collectionId ?? DEFAULT_COLLECTION_ID,
+      metadata: {
+        page: chunk?.metadata?.page ?? citation.page,
+        section: chunk?.metadata?.section,
+      },
+    }
+  })
+
+  const promptFlavor =
+    promptType === "long"
+      ? "réponse détaillée"
+      : promptType === "v2"
+        ? "synthèse enrichie"
+        : "réponse synthétique"
+
+  const summarySentences = retrievedDocuments
+    .map((doc) => `• ${doc.snippet}`)
     .join("\n")
+
+  const collectionName = normalizedCollection
+    ? knowledgeCollections.find((collection) => collection.id === normalizedCollection)?.name
+    : undefined
 
   return {
     id: `assistant_${Date.now()}`,
     role: "assistant",
-    content: `Voici ce que j'ai trouvé :\n${summarySentences}\n\nPose-moi d'autres questions ou ouvre une source pour voir le détail.`,
+    content: `(${promptFlavor.toUpperCase()})\n${summarySentences}\n\nPose-moi d'autres questions ou ouvre une source pour voir le détail.`,
     citations,
+    retrievedDocuments,
+    metadata: {
+      model,
+      temperature,
+      promptType,
+      collectionId: normalizedCollection,
+      collectionName,
+    },
     timestamp: new Date().toLocaleTimeString(),
   }
 }
