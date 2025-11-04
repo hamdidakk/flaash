@@ -19,6 +19,13 @@ import { useLanguage } from "@/lib/language-context"
 import { useToast } from "@/hooks/use-toast"
 import { Key, RefreshCw, Copy, Eye, EyeOff, Lock, Unlock, Shield } from "lucide-react"
 import { projectsMock, organizationsMock, formatDisplayDateShort } from "@/lib/mock-data"
+import {
+  getStoredApiBaseUrl,
+  getStoredApiKey,
+  setStoredApiBaseUrl,
+  setStoredApiKey,
+  getApiIntegrationStatus,
+} from "@/lib/dakkom-api"
 
 export default function SettingsPage() {
   const { t } = useLanguage()
@@ -28,6 +35,9 @@ export default function SettingsPage() {
   const [selectedProjectId, setSelectedProjectId] = useState(initialProjectId)
   const [showRegenerateDialog, setShowRegenerateDialog] = useState(false)
   const [isKeyVisible, setIsKeyVisible] = useState(false)
+  const [apiBaseUrl, setApiBaseUrl] = useState("")
+  const [apiKeyInput, setApiKeyInput] = useState("")
+  const [isApiConfigHydrated, setIsApiConfigHydrated] = useState(false)
   const [projectKeys, setProjectKeys] = useState(() =>
     projectsMock.reduce(
       (acc, project) => {
@@ -52,6 +62,13 @@ export default function SettingsPage() {
   useEffect(() => {
     setIsKeyVisible(false)
   }, [selectedProjectId])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    setApiBaseUrl(getStoredApiBaseUrl())
+    setApiKeyInput(getStoredApiKey())
+    setIsApiConfigHydrated(true)
+  }, [])
 
   const handleUnlock = () => {
     if (!keyState) return
@@ -111,11 +128,65 @@ export default function SettingsPage() {
     })
   }
 
+  const handleSaveApiConfig = () => {
+    setStoredApiBaseUrl(apiBaseUrl.trim())
+    setStoredApiKey(apiKeyInput.trim())
+    toast({
+      title: t("settings.apiConfig.saved"),
+      description: t("settings.apiConfig.savedDescription"),
+    })
+  }
+
+  const apiConfigStatus = useMemo(() => {
+    if (!isApiConfigHydrated) {
+      return { baseUrl: "", hasApiKey: false, isConfigured: false }
+    }
+    return getApiIntegrationStatus()
+  }, [apiBaseUrl, apiKeyInput, isApiConfigHydrated])
+
   const displayedKey = keyState && !keyState.locked && isKeyVisible ? keyState.key : keyState ? "••••••••••••••••" : ""
 
   return (
     <div className="space-y-6">
       <PageHeader title={t("settings.title")} description={t("settings.description")} />
+
+      <SettingsSection title={t("settings.apiConfig.title") ?? "Dakkom API"} icon={Key}>
+        <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="dakkom-base-url">{t("settings.apiConfig.baseUrlLabel")}</Label>
+              <Input
+                id="dakkom-base-url"
+                type="url"
+                placeholder={t("settings.apiConfig.baseUrlPlaceholder")}
+                value={apiBaseUrl}
+                onChange={(event) => setApiBaseUrl(event.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">{t("settings.apiConfig.baseUrlDescription")}</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="dakkom-api-key">{t("settings.apiConfig.apiKeyLabel")}</Label>
+              <Input
+                id="dakkom-api-key"
+                type="text"
+                placeholder={t("settings.apiConfig.apiKeyPlaceholder")}
+                value={apiKeyInput}
+                onChange={(event) => setApiKeyInput(event.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">{t("settings.apiConfig.apiKeyDescription")}</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Badge variant={apiConfigStatus.isConfigured ? "default" : "outline"}>
+                {apiConfigStatus.isConfigured ? t("settings.unlocked") : t("settings.locked")}
+              </Badge>
+              {apiConfigStatus.baseUrl && <span className="truncate">{apiConfigStatus.baseUrl}</span>}
+            </div>
+            <Button onClick={handleSaveApiConfig}>{t("settings.apiConfig.save")}</Button>
+          </div>
+        </div>
+      </SettingsSection>
 
       <SettingsSection title={t("settings.apiKey")} icon={Key}>
         <div className="space-y-4">
