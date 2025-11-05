@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Only ignore during builds if absolutely necessary for deployment
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
+  turbopack: {},
   typescript: {
     ignoreBuildErrors: false,
   },
@@ -11,5 +8,4 @@ const nextConfig = {
     unoptimized: true,
   },
 }
-
 export default nextConfig

@@ -19,20 +19,23 @@ export function UserMenu() {
 
   if (!user) return null
 
+  const displayName = (user.name && user.name.trim()) || user.email || ""
+  const initial = (displayName.charAt(0) || "?").toUpperCase()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
-            {user.name.charAt(0).toUpperCase()}
+            {initial}
           </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium">{user.name}</p>
-            <p className="text-xs text-muted-foreground">{user.email}</p>
+            <p className="text-sm font-medium">{displayName || ""}</p>
+            <p className="text-xs text-muted-foreground">{user.email || ""}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { ErrorPage } from "@/components/error-page"
+import { LanguageProvider } from "@/lib/language-context"
 
 export default function GlobalError({
   error,
@@ -17,7 +18,9 @@ export default function GlobalError({
   return (
     <html lang="fr">
       <body>
-        <ErrorPage code={500} reset={reset} />
+        <LanguageProvider>
+          <ErrorPage code={500} reset={reset} />
+        </LanguageProvider>
       </body>
     </html>
   )
