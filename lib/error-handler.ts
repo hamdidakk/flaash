@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/nextjs"
+// Sentry removed
 
 export type ErrorCode = 400 | 401 | 403 | 404 | 500 | 503
 
@@ -81,21 +81,7 @@ export class ErrorLogger {
       console.error("[v0] Error logged:", log)
     }
 
-    const client = Sentry.getCurrentHub().getClient()
-    if (client) {
-      Sentry.captureException(error, {
-        extra: {
-          details: error.details,
-          url: log.url,
-        },
-        tags: {
-          code: String(error.code),
-        },
-      })
-    }
-
-    // In production, you would send this to an error tracking service
-    // Example: Sentry, LogRocket, etc.
+    // Hook for external error tracking can be added here if needed
   }
 
   static getLogs(): ErrorLog[] {
