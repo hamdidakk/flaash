@@ -76,9 +76,23 @@ export class ErrorLogger {
       this.logs.pop()
     }
 
-    // Log to console in development
+    // Log to console in development with structured payload
     if (process.env.NODE_ENV === "development") {
-      console.error("[v0] Error logged:", log)
+      const isClientError = error.code >= 400 && error.code < 500
+      try {
+        const payload = JSON.stringify(log, null, 2)
+        if (isClientError) {
+          console.warn("[v0] Warning:", payload)
+        } else {
+          console.error("[v0] Error logged:", payload)
+        }
+      } catch {
+        if (isClientError) {
+          console.warn("[v0] Warning:", log)
+        } else {
+          console.error("[v0] Error logged:", log)
+        }
+      }
     }
 
     // Hook for external error tracking can be added here if needed

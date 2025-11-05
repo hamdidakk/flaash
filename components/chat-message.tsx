@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { FileText } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useLanguage } from "@/lib/language-context"
-import type { RagMessage, CitationLink } from "@/lib/mock-data"
+import type { RagMessage, CitationLink } from "@/lib/types"
 
 interface ChatMessageProps {
   message: RagMessage

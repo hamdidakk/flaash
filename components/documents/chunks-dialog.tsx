@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { ChunkCard } from "@/components/chunk-card"
 import { useLanguage } from "@/lib/language-context"
-import type { ChunkRecord } from "@/lib/mock-data"
+import type { ChunkRecord } from "@/lib/types"
 
 interface ChunksDialogProps {
   open: boolean

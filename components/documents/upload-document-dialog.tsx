@@ -12,7 +12,8 @@ import { Upload, File, X } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { DEFAULT_COLLECTION_ID, type KnowledgeDocument } from "@/lib/mock-data"
+import type { KnowledgeDocument } from "@/lib/types"
+import { uploadDocument, uploadBatch } from "@/lib/dakkom-api"
 
 interface UploadDocumentDialogProps {
   open: boolean
@@ -100,39 +101,44 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
       )
     }, 320)
 
-    setTimeout(() => {
+    try {
+      if (isBatch) {
+        const form = new FormData()
+        snapshot.forEach((entry) => form.append("files", entry.file))
+        await uploadBatch(form)
+      } else {
+        for (const entry of snapshot) {
+          const form = new FormData()
+          form.append("file", entry.file)
+          await uploadDocument(form)
+        }
+      }
+
       clearInterval(progressInterval)
-
-      const uploadedAt = new Date().toISOString()
-
-      const batchId = mode === "batch" ? `batch-${Date.now().toString(36)}` : undefined
-
-      const uploadedDocuments: KnowledgeDocument[] = snapshot.map((entry, index) => ({
-        id: `doc_${Date.now()}_${index}`,
-        name: entry.file.name,
-        status: "processing",
-        size: formatFileSize(entry.file.size),
-        chunkCount: 0,
-        ingestionProgress: mode === "batch" ? 4 : 8,
-        uploadedAtRaw: uploadedAt,
-        source: mode === "batch" ? "Batch upload" : "Manual upload",
-        owner: "Vous",
-        collectionId: DEFAULT_COLLECTION_ID,
-        batchId,
-      }))
-
       setEntries((prev) => prev.map((entry) => ({ ...entry, status: "completed", progress: 100 })))
-      setIsUploading(false)
-
       toast({
         title: t("documents.uploadSuccess"),
         description: t("documents.uploadSuccessDescription"),
       })
-
-      onUploadComplete?.(uploadedDocuments)
+      onUploadComplete?.([] as unknown as KnowledgeDocument[])
       setEntries([])
       onOpenChange(false)
-    }, 2000)
+    } catch (e) {
+      clearInterval(progressInterval)
+      setIsUploading(false)
+      let description = t("errors.generic.description")
+      try {
+        const msg = e instanceof Error ? e.message : String(e)
+        // Try to extract { error: "..." } from backend JSON-as-text
+        if (msg && msg.trim().startsWith("{")) {
+          const parsed = JSON.parse(msg)
+          if (parsed?.error) description = String(parsed.error)
+        } else if (msg) {
+          description = msg
+        }
+      } catch {}
+      toast({ title: t("documents.upload"), description, variant: "destructive" })
+    }
   }
 
   const handleDialogOpenChange = (nextOpen: boolean) => {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText } from "lucide-react"
@@ -18,13 +18,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  knowledgeDocuments,
-  knowledgeChunksByDocument,
-  formatDisplayDate,
-  type KnowledgeDocument,
-  type ChunkRecord,
-} from "@/lib/mock-data"
+import type { KnowledgeDocument, ChunkRecord } from "@/lib/types"
+import { listDocumentNames, getDocumentChunksByName, removeDocumentByName } from "@/lib/dakkom-api"
 
 export default function DocumentsPage() {
   const { t } = useLanguage()
@@ -32,9 +27,7 @@ export default function DocumentsPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFrom, setDateFrom] = useState("")
   const [dateTo, setDateTo] = useState("")
-  const [documents, setDocuments] = useState<KnowledgeDocument[]>(() =>
-    knowledgeDocuments.map((doc) => ({ ...doc })),
-  )
+  const [documents, setDocuments] = useState<KnowledgeDocument[]>([])
   const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | null>(null)
   const [selectedChunks, setSelectedChunks] = useState<ChunkRecord[]>([])
   const [showChunks, setShowChunks] = useState(false)
@@ -42,6 +35,36 @@ export default function DocumentsPage() {
   const [uploadMode, setUploadMode] = useState<"single" | "batch">("single")
   const [showDelete, setShowDelete] = useState(false)
   const [documentToDelete, setDocumentToDelete] = useState<KnowledgeDocument | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const formatDisplayDate = (value: string) => new Date(value).toLocaleString()
+
+  const reloadDocuments = async () => {
+    try {
+      setIsLoading(true)
+      const res = await listDocumentNames()
+      const nowIso = new Date().toISOString()
+      const mapped: KnowledgeDocument[] = res.documents.map((name, idx) => ({
+        id: `${name}-${idx}`,
+        name,
+        status: "completed",
+        size: "",
+        chunkCount: 0,
+        ingestionProgress: 100,
+        uploadedAtRaw: nowIso,
+        source: "API",
+        owner: "",
+      }))
+      setDocuments(mapped)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    void reloadDocuments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const filteredDocs = documents.filter((doc) => {
     const query = searchQuery.toLowerCase()
@@ -71,9 +94,19 @@ export default function DocumentsPage() {
     setDateTo("")
   }
 
-  const handleViewChunks = (doc: KnowledgeDocument) => {
+  const handleViewChunks = async (doc: KnowledgeDocument) => {
     setSelectedDoc(doc)
-    setSelectedChunks(knowledgeChunksByDocument[doc.id] ?? [])
+    try {
+      const res = await getDocumentChunksByName(doc.name)
+      const chunks: ChunkRecord[] = res.chunks.map((c) => ({
+        id: c.id,
+        content: c.value,
+        metadata: { document: doc.name, documentId: doc.id, source: c.source, isValidated: c.is_validated },
+      }))
+      setSelectedChunks(chunks)
+    } catch {
+      setSelectedChunks([])
+    }
     setShowChunks(true)
   }
 
@@ -82,8 +115,8 @@ export default function DocumentsPage() {
     setShowDelete(true)
   }
 
-  const handleUploadComplete = (newDocs: KnowledgeDocument[]) => {
-    setDocuments((prev) => [...newDocs, ...prev])
+  const handleUploadComplete = () => {
+    void reloadDocuments()
   }
 
   const handleOpenUpload = (mode: "single" | "batch") => {
@@ -91,12 +124,15 @@ export default function DocumentsPage() {
     setShowUpload(true)
   }
 
-  const handleDeleteConfirmed = () => {
+  const handleDeleteConfirmed = async () => {
     if (!documentToDelete) return
-
-    setDocuments((prev) => prev.filter((doc) => doc.id !== documentToDelete.id))
-    setShowDelete(false)
-    setDocumentToDelete(null)
+    try {
+      await removeDocumentByName(documentToDelete.name)
+      await reloadDocuments()
+    } finally {
+      setShowDelete(false)
+      setDocumentToDelete(null)
+    }
   }
 
   const tableRows = filteredDocs.map((doc) => ({
@@ -109,7 +145,7 @@ export default function DocumentsPage() {
       <PageHeader
         title={t("documents.title")}
         description={t("documents.description")}
-        action={
+        actions={
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button>
@@ -139,7 +175,9 @@ export default function DocumentsPage() {
         onClearFilters={handleClearFilters}
       />
 
-        {tableRows.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center text-sm text-muted-foreground py-8">{t("common.loading")}</div>
+        ) : tableRows.length === 0 ? (
           <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />
         ) : (
           <DocumentsTable documents={tableRows} onViewChunks={handleViewChunks} onDelete={handleDelete} />

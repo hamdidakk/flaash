@@ -5,23 +5,20 @@ import { StatsGrid } from "@/components/dashboard/stats-grid"
 import { QuickActionsSection } from "@/components/dashboard/quick-actions-section"
 import { RecentActivitySection } from "@/components/dashboard/recent-activity-section"
 import { CostManagementCard } from "@/components/dashboard/cost-management-card"
+import { getCostSnapshot } from "@/lib/telemetry"
 import { FileText, MessageSquare, Search, TrendingUp, Upload, Settings } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
-import {
-  knowledgeDocuments,
-  knowledgeChunksByDocument,
-  semanticSearchResults,
-  usageCostSnapshot,
-} from "@/lib/mock-data"
+// Replace mock stats with minimal placeholders; can be fed from backend later
 
 export default function HomePage() {
   const { t } = useLanguage()
 
-  const totalDocuments = knowledgeDocuments.length
-  const totalChunks = Object.values(knowledgeChunksByDocument).reduce((acc, chunks) => acc + chunks.length, 0)
-  const totalSearches = semanticSearchResults.length * 12
-  const totalConversations = Math.round(usageCostSnapshot.tokensUsed / 5500)
-  const costData = usageCostSnapshot
+  const snapshot = getCostSnapshot()
+  const totalDocuments = 0
+  const totalChunks = 0
+  const totalSearches = (snapshot as any).breakdown?.search ? Math.round(((snapshot as any).breakdown.search / 0.003) || 0) : 0
+  const totalConversations = (snapshot as any).breakdown?.completion ? Math.round(((snapshot as any).breakdown.completion / 0.02) || 0) : 0
+  const costData = snapshot
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -57,22 +54,21 @@ export default function HomePage() {
       id: "activity-upload",
       type: "upload" as const,
       title: t("dashboard.activity.documentUploaded"),
-      description: knowledgeDocuments[0]?.name ?? "",
+      description: "",
       timestamp: new Date(Date.now() - 1000 * 60 * 5),
     },
     {
       id: "activity-chat",
       type: "chat" as const,
       title: t("dashboard.activity.newConversation"),
-      description:
-        semanticSearchResults[0]?.snippet ? `${semanticSearchResults[0].snippet.slice(0, 64)}…` : t("dashboard.activity.chatFallback"),
+      description: t("dashboard.activity.chatFallback"),
       timestamp: new Date(Date.now() - 1000 * 60 * 14),
     },
     {
       id: "activity-search",
       type: "search" as const,
       title: t("dashboard.activity.searchPerformed"),
-      description: `${t("dashboard.activity.query")}: "${semanticSearchResults[1]?.document ?? "product latency"}"`,
+      description: `${t("dashboard.activity.query")}: "product latency"`,
       timestamp: new Date(Date.now() - 1000 * 60 * 28),
     },
   ]

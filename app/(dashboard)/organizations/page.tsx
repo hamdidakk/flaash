@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/lib/language-context"
 import { Building2, Plus, Users, FolderOpen, ShieldCheck, KeyRound } from "lucide-react"
-import { organizationsMock, projectsMock, formatDisplayDateShort } from "@/lib/mock-data"
+// Backend integration pending for organizations/projects; render with empty data
+const organizationsMock: Array<{ id: string; name: string; plan: string; members: number; updatedAt: string }> = []
+const projectsMock: Array<{ id: string; organizationId: string }> = []
+const formatDisplayDateShort = (value: string) => new Date(value).toLocaleDateString()
 
 export default function OrganizationsPage() {
   const { t } = useLanguage()
@@ -28,7 +31,10 @@ export default function OrganizationsPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-2">
-        {organizations.map((org) => {
+        {organizations.length === 0 ? (
+          <Card className="p-6 text-sm text-muted-foreground">No organizations found.</Card>
+        ) : (
+        organizations.map((org) => {
           const projectCount = projectsMock.filter((project) => project.organizationId === org.id).length
           const totalMembers = org.members
           const lastUpdated = formatDisplayDateShort(org.updatedAt)
@@ -77,7 +83,8 @@ export default function OrganizationsPage() {
               </div>
             </Card>
           )
-        })}
+        }))
+        }
       </div>
     </div>
   )

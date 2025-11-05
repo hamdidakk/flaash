@@ -18,7 +18,10 @@ import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/lib/language-context"
 import { useToast } from "@/hooks/use-toast"
 import { Key, RefreshCw, Copy, Eye, EyeOff, Lock, Unlock, Shield } from "lucide-react"
-import { projectsMock, organizationsMock, formatDisplayDateShort } from "@/lib/mock-data"
+// Replace mock projects/organizations with empty placeholders; keys UI remains self-contained
+const projectsMock: Array<{ id: string; name: string; organizationId: string; apiKey: string; lastActivity: string }> = []
+const organizationsMock: Array<{ id: string; name: string; plan: string; members: number }> = []
+const formatDisplayDateShort = (value: string) => new Date(value).toLocaleDateString()
 import {
   getStoredApiBaseUrl,
   getStoredApiKey,

@@ -8,6 +8,8 @@ type ChunkMetadata = {
   section?: string
   score?: number
   document?: string
+  source?: string
+  isValidated?: boolean
 }
 
 interface ChunkCardProps {
@@ -81,6 +83,16 @@ export function ChunkCard({ chunk, index, highlight, onInspect }: ChunkCardProps
                 {metadata.tokens} tokens
               </Badge>
             )}
+          {metadata?.source && (
+            <Badge variant="outline" className="text-xs">
+              {metadata.source}
+            </Badge>
+          )}
+          {metadata?.isValidated !== undefined && (
+            <Badge variant={metadata.isValidated ? "default" : "secondary"} className="text-xs">
+              {metadata.isValidated ? "validated" : "unvalidated"}
+            </Badge>
+          )}
           </div>
         </div>
 

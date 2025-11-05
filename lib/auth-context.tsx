@@ -3,6 +3,17 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import { AppError } from "./error-handler"
+import {
+  setStoredApiBaseUrl,
+  setStoredApiKey,
+  getStoredApiBaseUrl,
+  getStoredApiKey,
+  listDocumentNames,
+  setStoredTokens,
+  clearStoredTokens,
+  getStoredRefreshToken,
+  getStoredAccessToken,
+} from "@/lib/dakkom-api"
 
 interface User {
   id: string
@@ -16,7 +27,8 @@ interface User {
 interface AuthContextType {
   user: User | null
   isLoading: boolean
-  login: (email: string, password: string) => Promise<void>
+  loginWithApiConfig: (baseUrl: string, apiKey: string) => Promise<void>
+  loginWithCredentials: (username: string, password: string) => Promise<void>
   signup: (email: string, password: string, name: string) => Promise<void>
   logout: () => void
   updateUser: (updates: Partial<User>) => void
@@ -44,26 +56,97 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = async (email: string, password: string) => {
-    if (!email || !password) {
-      throw new AppError(400, "Email and password are required")
+  // Auto-login if env/local storage provides API config and no user yet
+  useEffect(() => {
+    if (user) return
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname
+      if (path.startsWith("/admin")) return
+    }
+    const autoFlag = process.env.NEXT_PUBLIC_ENABLE_LOGIN
+    // If login UI is disabled (default), try auto-login
+    const shouldAuto = !autoFlag || autoFlag.toLowerCase() !== "true"
+    const base = getStoredApiBaseUrl()
+    const key = getStoredApiKey()
+    if (shouldAuto && base && key) {
+      // fire and forget
+      void loginWithApiConfig(base, key)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+
+  const loginWithApiConfig = async (baseUrl: string, apiKey: string) => {
+    if (!baseUrl || !apiKey) {
+      throw new AppError(400, "API base URL and API key are required")
     }
 
-    // Mock login - accept any credentials
+    // Persist API config
+    setStoredApiBaseUrl(baseUrl.trim())
+    setStoredApiKey(apiKey.trim())
+
+    // Validate by hitting an authenticated endpoint
+    try {
+      await listDocumentNames()
+    } catch (e) {
+      throw new AppError(401, "Invalid API configuration or key", { error: String(e) })
+    }
+
+    const email = "api@local"
     const mockUser: User = {
-      id: "1",
+      id: "api-user",
       email,
-      name: email.split("@")[0],
+      name: "API User",
       role: "admin",
-      organizationId: "1",
-      organizationName: "Acme Corp",
+      organizationId: "default",
+      organizationName: getStoredApiBaseUrl() || "API",
     }
 
     setUser(mockUser)
     if (typeof window !== "undefined") {
       localStorage.setItem("user", JSON.stringify(mockUser))
     }
-    router.push("/home")
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname
+      if (path === "/login" || path === "/signup" || path === "/admin") {
+        router.push("/home")
+      }
+    }
+  }
+
+  const loginWithCredentials = async (username: string, password: string) => {
+    if (!username || !password) {
+      throw new AppError(400, "Username and password are required")
+    }
+    const base = getStoredApiBaseUrl()
+    if (!base) throw new AppError(400, "API base URL missing")
+    const resp = await fetch(`/api/dakkom/auth/login/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+    if (!resp.ok) {
+      const text = await resp.text()
+      throw new AppError(401, text || "Login failed")
+    }
+    const data = (await resp.json()) as { access: string; refresh: string }
+    setStoredTokens(data.access, data.refresh)
+
+    const mockUser: User = {
+      id: "jwt-user",
+      email: `${username}@local`,
+      name: username,
+      role: "admin",
+      organizationId: "default",
+      organizationName: getStoredApiBaseUrl() || "API",
+    }
+    setUser(mockUser)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(mockUser))
+      const path = window.location.pathname
+      if (path === "/login" || path === "/signup" || path === "/admin") {
+        router.push("/home")
+      }
+    }
   }
 
   const signup = async (email: string, password: string, name: string) => {
@@ -88,12 +171,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/onboarding")
   }
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      const refresh = getStoredRefreshToken()
+      if (refresh) {
+        await fetch(`/api/dakkom/auth/logout/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${getStoredAccessToken()}` },
+          body: JSON.stringify({ refresh }),
+        })
+      }
+    } catch {}
+    clearStoredTokens()
     setUser(null)
     if (typeof window !== "undefined") {
       localStorage.removeItem("user")
     }
-    router.push("/login")
+    router.push("/admin")
   }
 
   const updateUser = (updates: Partial<User>) => {
@@ -107,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, isLoading, loginWithApiConfig, loginWithCredentials, signup, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

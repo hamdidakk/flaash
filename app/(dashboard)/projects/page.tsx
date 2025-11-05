@@ -14,7 +14,21 @@ import {
 } from "@/components/ui/select"
 import { useLanguage } from "@/lib/language-context"
 import { FolderOpen, Plus, ShieldCheck, FileText, MessageSquare, KeyRound, Clock } from "lucide-react"
-import { organizationsMock, projectsMock, formatDisplayDateShort } from "@/lib/mock-data"
+// Backend integration pending for organizations/projects; render with empty data
+const organizationsMock: Array<{ id: string; name: string; plan: string; members: number; projects: number }> = []
+const projectsMock: Array<{
+  id: string
+  organizationId: string
+  name: string
+  status: "active" | "paused" | "archived"
+  documents: number
+  queries: number
+  apiKeyLastFour: string
+  createdAt: string
+  lastActivity: string
+}> = []
+
+const formatDisplayDateShort = (value: string) => new Date(value).toLocaleDateString()
 
 export default function ProjectsPage() {
   const { t } = useLanguage()
@@ -74,7 +88,10 @@ export default function ProjectsPage() {
           </div>
 
           <div className="grid gap-4">
-            {filteredProjects.map((project) => {
+            {filteredProjects.length === 0 ? (
+              <Card className="p-6 text-sm text-muted-foreground">No projects found.</Card>
+            ) : (
+            filteredProjects.map((project) => {
               const maskedKey = `sk-****-****-${project.apiKeyLastFour}`
 
               return (
@@ -138,7 +155,8 @@ export default function ProjectsPage() {
                   </div>
                 </Card>
               )
-            })}
+            }))
+            }
           </div>
         </div>
     </div>

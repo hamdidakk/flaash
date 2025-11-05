@@ -1,7 +1,7 @@
 "use client"
 
 import { ChatMessage } from "@/components/chat-message"
-import type { RagMessage, CitationLink } from "@/lib/mock-data"
+import type { RagMessage, CitationLink } from "@/lib/types"
 
 interface ChatMessagesListProps {
   messages: RagMessage[]

@@ -8,15 +8,8 @@ import { ChatSettingsPanel, type ChatSettings } from "@/components/chat/chat-set
 import { ChatMessagesList } from "@/components/chat/chat-messages-list"
 import { ChatInput } from "@/components/chat/chat-input"
 import { ChunksDialog } from "@/components/documents/chunks-dialog"
-import {
-  initialChatMessages,
-  simulateRagResponse,
-  findChunkById,
-  getChunksForDocument,
-  type RagMessage,
-  type CitationLink,
-  type ChunkRecord,
-} from "@/lib/mock-data"
+import { type RagMessage, type CitationLink, type ChunkRecord } from "@/lib/types"
+import { ragGeneration, getDocumentChunksByName } from "@/lib/dakkom-api"
 
 const DEFAULT_CHAT_SETTINGS: ChatSettings = {
   model: "gpt-4o",
@@ -30,7 +23,16 @@ const DEFAULT_CHAT_SETTINGS: ChatSettings = {
 export default function ChatPage() {
   const { t } = useLanguage()
   const [settings, setSettings] = useState<ChatSettings>(DEFAULT_CHAT_SETTINGS)
-  const [messages, setMessages] = useState<RagMessage[]>(initialChatMessages)
+  const [messages, setMessages] = useState<RagMessage[]>([
+    {
+      id: "assistant_welcome",
+      role: "assistant",
+      content:
+        "Bonjour ! Pose-moi une question sur tes documents et je te donnerai une réponse sourcée avec les passages pertinents.",
+      citations: [],
+      timestamp: "À l'instant",
+    },
+  ])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isChunkDialogOpen, setIsChunkDialogOpen] = useState(false)
@@ -98,25 +100,76 @@ export default function ChatPage() {
     setInput("")
     setIsLoading(true)
 
-    // Simule une latence réseau
-    setTimeout(() => {
-      const assistantMessage = simulateRagResponse(userMessage.content, {
-        collectionId: settings.collectionId,
-        promptType: settings.promptType,
-        model: settings.model,
+    try {
+      const payload: Record<string, unknown> = {
+        query: userMessage.content,
+        collection_name: "document_collection",
         temperature: settings.temperature,
-      })
+        prompt: settings.promptType,
+        model: settings.model,
+      }
+
+      const res = await ragGeneration(payload)
+
+      const citations: CitationLink[] = (res.retrieved_documents ?? []).map((doc: any, idx: number) => ({
+        id: `${doc.chunk_id ?? idx}`,
+        chunkId: doc.chunk_id ?? String(idx),
+        documentId: doc.source_file ?? "",
+        document: doc.source_file ?? "",
+        page: undefined,
+        contentPreview: doc.document ?? "",
+        score: typeof doc.probability === "number" ? doc.probability : undefined,
+      }))
+
+      const retrievedDocuments = citations.map((c, idx) => ({
+        id: `${c.chunkId}_${idx}`,
+        chunkId: c.chunkId,
+        documentId: c.documentId,
+        documentName: c.document,
+        snippet: c.contentPreview,
+        score: c.score,
+        metadata: {},
+      }))
+
+      const assistantMessage: RagMessage = {
+        id: `assistant_${Date.now()}`,
+        role: "assistant",
+        content: res.generated_response?.text ?? "",
+        citations,
+        retrievedDocuments,
+        metadata: {
+          model: settings.model,
+          temperature: settings.temperature,
+          promptType: settings.promptType,
+          collectionId: settings.collectionId,
+        },
+        timestamp: new Date().toLocaleTimeString(),
+      }
       setMessages((prev) => [...prev, assistantMessage])
+    } catch (e) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `assistant_error_${Date.now()}`,
+          role: "assistant",
+          content: t("errors.generic.description"),
+          citations: [],
+        },
+      ])
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
-  const handleCitationClick = (citation: CitationLink) => {
-    const chunk = findChunkById(citation.chunkId)
-    const documentChunks = chunk ? [chunk] : getChunksForDocument(citation.documentId)
-
+  const handleCitationClick = async (citation: CitationLink) => {
     setChunkDialogDocument(citation.document)
-    setChunkDialogContent(documentChunks)
+    try {
+      const res = await getDocumentChunksByName(citation.document)
+      const chunks: ChunkRecord[] = res.chunks.map((c: any) => ({ id: c.id, content: c.value }))
+      setChunkDialogContent(chunks)
+    } catch {
+      setChunkDialogContent([])
+    }
     setIsChunkDialogOpen(true)
   }
 

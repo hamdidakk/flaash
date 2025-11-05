@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Button } from "@/components/ui/button"
 import { Settings } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
-import { knowledgeCollections, type RagPromptType } from "@/lib/mock-data"
+import type { RagPromptType } from "@/lib/types"
 import { Label } from "@/components/ui/label"
 import {
   Select,
@@ -40,11 +40,11 @@ export function ChatSettingsPanel({ settings, onSettingsChange }: ChatSettingsPa
         name: t("chat.collections.all"),
         description: t("chat.collections.allDescription"),
       },
-      ...knowledgeCollections.map((collection) => ({
-        id: collection.id,
-        name: collection.name,
-        description: collection.description,
-      })),
+      {
+        id: "document_collection",
+        name: "Default collection",
+        description: t("chat.collections.defaultDescription") ?? "Document collection par défaut",
+      },
     ],
     [t],
   )

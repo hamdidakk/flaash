@@ -2,6 +2,8 @@
 
 import { PublicWidget } from "@/components/public/Widget"
 
-export default function RootPage() {
+export default function WidgetPage() {
   return <PublicWidget />
 }
+
+

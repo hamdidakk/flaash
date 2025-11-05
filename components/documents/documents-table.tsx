@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"
 import { Eye, Trash2, FileText } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { DocumentStatusBadge } from "@/components/document-status-badge"
-import type { DocumentStatus } from "@/lib/mock-data"
+import type { DocumentStatus } from "@/lib/types"
 
 interface DocumentRow {
   id: string
