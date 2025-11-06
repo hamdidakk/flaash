@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { ErrorPage } from "@/components/error-page"
+import { PublicFooter } from "@/components/public/PublicFooter"
 
 export default function Error({
   error,
@@ -14,5 +15,10 @@ export default function Error({
     console.error("[v0] Error caught by error boundary:", error)
   }, [error])
 
-  return <ErrorPage code={500} reset={reset} />
+  return (
+    <div style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+      <ErrorPage code={500} reset={reset} />
+      <PublicFooter />
+    </div>
+  )
 }

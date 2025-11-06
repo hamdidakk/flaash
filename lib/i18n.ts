@@ -2,6 +2,91 @@ export type Language = "en" | "fr"
 
 export const translations = {
   en: {
+    public: {
+      nav: {
+        home: "Home",
+        shop: "Shop",
+        about: "About",
+        guide: "Guide",
+        subscription: "Subscription",
+        chat: "Chat FLAASH",
+      },
+      hero: {
+        title: "The future, explained by FLAASH",
+        subtitle:
+          "Discover the latest issue and chat with our AI Agent trained on our publications. Ask questions, get sourced answers.",
+        ctaShop: "Buy the latest issue",
+        ctaChat: "Talk to the AI",
+      },
+      agent: {
+        title: "AI Agent",
+        subtitle:
+          "Ask questions about science‑fiction, technologies and their impacts. The Agent answers with citations from FLAASH.",
+        ctaChat: "Talk to the AI",
+      },
+      themes: {
+        title: "Key themes",
+        surveillance: {
+          title: "Mass surveillance",
+          example: "How do cities monitor their citizens?",
+        },
+        ai: { title: "Artificial intelligence", example: "AI and justice" },
+        shortages: { title: "Shortages", example: "Energy, water, critical metals" },
+        education: { title: "Education", example: "Learning and AI" },
+        health: { title: "Health", example: "AI‑assisted diagnosis" },
+        environment: { title: "Environment", example: "Data centers footprint" },
+      },
+      footer: {
+        strapline: "Magazine & Public AI Agent",
+        resources: "Resources",
+        legalTech: "Legal & Technical",
+        shop: "Shop",
+        about: "About",
+        guide: "User Guide",
+        legal: "Legal Mentions / T&Cs",
+        privacy: "Privacy Policy",
+        engine: "AI Agent (Dakkom)",
+        copyright: "© {year} FLAASH",
+      },
+      subscription: {
+        title: "Choose a plan",
+        subtitle: "Start for free, then subscribe for extended usage and advanced features.",
+        plans: {
+          free: { name: "Discover", desc: "Try the public AI Agent" },
+          paid: { name: "Subscriber", desc: "For regular and advanced usage" },
+          ctaChat: "Talk to the AI",
+          ctaSubscribe: "Subscribe",
+        },
+      },
+      about: {
+        title: "About FLAASH",
+        p1:
+          "FLAASH is a magazine and editorial lab exploring possible futures through science‑fiction, research and innovation.",
+        mission: { title: "Mission", p: "Narrate technological and social shifts and provide guidance for decisions today." },
+        approach: { title: "Approach", p: "A mix of magazine, workshops and tools, bringing together authors, researchers, designers and practitioners." },
+        agent: { title: "AI Agent", p: "A public assistant trained on FLAASH content. It answers with verifiable citations and excerpts." },
+        what: {
+          title: "What we publish",
+          items: [
+            "Thematic issues (print & digital)",
+            "Articles and foresight analyses",
+            "Interviews with experts and practitioners",
+            "Experiences and tools (workshops, educational resources)",
+          ],
+        },
+        team: {
+          title: "The Team",
+          p: "FLAASH brings together authors, researchers, designers and engineers, working with specialist contributors.",
+        },
+        history: {
+          title: "History at a glance",
+          a: { y: "2019‑2021", p: "First editorial experiments and public workshops." },
+          b: { y: "2022‑2024", p: "Launch of the magazine and partnerships." },
+          c: { y: "2025", p: "Launch of the public AI Agent and resource portal." },
+        },
+        ctas: { chat: "Talk to the AI", shop: "Go to the shop", guide: "User Guide" },
+      },
+    },
     common: {
       loading: "Loading...",
       save: "Save",
@@ -526,6 +611,91 @@ export const translations = {
     },
   },
   fr: {
+    public: {
+      nav: {
+        home: "Accueil",
+        shop: "Boutique",
+        about: "À Propos",
+        guide: "Guide",
+        subscription: "Abonnement",
+        chat: "Chat FLAASH",
+      },
+      hero: {
+        title: "Le futur, expliqué par FLAASH",
+        subtitle:
+          "Découvrez le dernier numéro et échangez avec notre Agent IA entraîné sur nos publications. Posez des questions, obtenez des réponses sourcées.",
+        ctaShop: "Acheter le dernier numéro",
+        ctaChat: "Parler à l'IA",
+      },
+      agent: {
+        title: "Agent IA",
+        subtitle:
+          "Posez des questions sur la science‑fiction, les technologies et leurs impacts. L’Agent répond avec des citations issues de FLAASH.",
+        ctaChat: "Parler à l'IA",
+      },
+      themes: {
+        title: "Thématiques clés",
+        surveillance: {
+          title: "Surveillance de masse",
+          example: "Comment les villes surveillent‑elles leurs citoyens ?",
+        },
+        ai: { title: "Intelligence artificielle", example: "IA et justice" },
+        shortages: { title: "Pénuries", example: "Énergie, eau, métaux critiques" },
+        education: { title: "Éducation", example: "Apprentissages et IA" },
+        health: { title: "Santé", example: "Diagnostic assisté par IA" },
+        environment: { title: "Environnement", example: "Empreinte des data centers" },
+      },
+      footer: {
+        strapline: "Revue & Agent IA public",
+        resources: "Ressources",
+        legalTech: "Légal & Technique",
+        shop: "Boutique",
+        about: "À Propos",
+        guide: "Guide d'utilisation",
+        legal: "Mentions Légales / CGU",
+        privacy: "Politique de Confidentialité",
+        engine: "Agent IA (Dakkom)",
+        copyright: "© {year} FLAASH",
+      },
+      subscription: {
+        title: "Choisir un abonnement",
+        subtitle: "Commencez gratuitement, puis passez à l’abonnement pour un usage étendu et des fonctionnalités avancées.",
+        plans: {
+          free: { name: "Découverte", desc: "Pour essayer l’Agent IA public" },
+          paid: { name: "Abonné", desc: "Pour un usage régulier et avancé" },
+          ctaChat: "Parler à l’IA",
+          ctaSubscribe: "S’abonner",
+        },
+      },
+      about: {
+        title: "À propos de FLAASH",
+        p1:
+          "FLAASH est une revue et un laboratoire éditorial qui explore les futurs possibles à travers la science‑fiction, la recherche et l’innovation.",
+        mission: { title: "Mission", p: "Mettre en récit les mutations technologiques et sociales et donner des repères pour décider aujourd’hui." },
+        approach: { title: "Approche", p: "Un croisement entre revue, ateliers et outils, associant auteurs, chercheurs, designers et praticiens." },
+        agent: { title: "Agent IA", p: "Un assistant public entraîné sur des contenus FLAASH. Il répond avec des citations et extraits vérifiables." },
+        what: {
+          title: "Ce que nous publions",
+          items: [
+            "Numéros thématiques (papier & numérique)",
+            "Articles et analyses de prospective",
+            "Entretiens avec experts et praticiens",
+            "Expériences et outils (ateliers, ressources pédagogiques)",
+          ],
+        },
+        team: {
+          title: "L’équipe",
+          p: "FLAASH réunit auteurs, chercheurs, designers et ingénieurs, avec des contributeurs spécialisés.",
+        },
+        history: {
+          title: "Histoire en bref",
+          a: { y: "2019‑2021", p: "Premières expérimentations éditoriales et ateliers publics." },
+          b: { y: "2022‑2024", p: "Lancement de la revue et partenariats." },
+          c: { y: "2025", p: "Mise en ligne de l’Agent IA public et du portail de ressources." },
+        },
+        ctas: { chat: "Parler à l’IA", shop: "Aller à la boutique", guide: "Guide d’utilisation" },
+      },
+    },
     common: {
       loading: "Chargement...",
       save: "Enregistrer",

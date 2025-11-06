@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { ErrorPage } from "@/components/error-page"
 import { LanguageProvider } from "@/lib/language-context"
+import { PublicFooter } from "@/components/public/PublicFooter"
 
 export default function GlobalError({
   error,
@@ -15,13 +16,16 @@ export default function GlobalError({
     console.error("[v0] Global error caught:", error)
   }, [error])
 
-  return (
-    <html lang="fr">
-      <body>
-        <LanguageProvider>
-          <ErrorPage code={500} reset={reset} />
-        </LanguageProvider>
-      </body>
-    </html>
-  )
+      return (
+        <html lang="fr">
+          <body>
+            <LanguageProvider>
+              <div style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+                <ErrorPage code={500} reset={reset} />
+                <PublicFooter />
+              </div>
+            </LanguageProvider>
+          </body>
+        </html>
+      )
 }

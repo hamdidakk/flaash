@@ -56,12 +56,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  // Auto-login if env/local storage provides API config and no user yet
+  // Auto-login if env/local storage provides API config and no user yet (dashboard pages only)
   useEffect(() => {
     if (user) return
     if (typeof window !== "undefined") {
       const path = window.location.pathname
-      if (path.startsWith("/admin")) return
+      // Skip auto-login on all public pages
+      const isPublic = ["/", "/chat", "/widget", "/about", "/guide", "/abonnement", "/privacy", "/legal"].includes(path)
+      if (path.startsWith("/admin") || isPublic) return
     }
     const autoFlag = process.env.NEXT_PUBLIC_ENABLE_LOGIN
     // If login UI is disabled (default), try auto-login
