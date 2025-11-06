@@ -248,6 +248,15 @@ export async function ragGeneration(payload: Record<string, unknown>) {
   })
 }
 
+// Public variant: allow calls without requiring X-API-Key (handled by proxy if present)
+export async function ragGenerationPublic(payload: Record<string, unknown>) {
+  return dakkomFetch<{ generated_response: DakkomRagResponse }>("/api/v1/rag-generation/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    skipAuthCheck: true,
+  })
+}
+
 export async function runEvaluation(payload: Record<string, unknown>) {
   return dakkomFetch<{ evaluation_id: string }>("/api/v1/evaluation/", {
     method: "POST",

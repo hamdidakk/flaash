@@ -11,7 +11,13 @@ interface ChatMessagesListProps {
 
 export function ChatMessagesList({ messages, isLoading, onCitationClick }: ChatMessagesListProps) {
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-4">
+    <div
+      className="flex-1 overflow-y-auto p-6 space-y-4"
+      role="log"
+      aria-live="polite"
+      aria-relevant="additions text"
+      aria-busy={isLoading ? "true" : "false"}
+    >
       {messages.map((message) => (
         <ChatMessage key={message.id} message={message} onCitationClick={onCitationClick} />
       ))}
@@ -20,7 +26,7 @@ export function ChatMessagesList({ messages, isLoading, onCitationClick }: ChatM
           message={{
             id: "loading",
             role: "assistant",
-            content: "Thinking...",
+            content: "En cours de génération…",
             citations: [],
           }}
         />
