@@ -13,6 +13,9 @@ import { Ticker } from "@/components/public/blocks/Ticker"
 import { ThemeGrid } from "@/components/public/blocks/ThemeGrid"
 import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 import { TalkToIAIcon } from "@/components/public/blocks/TalkToIAIcon"
+import { HeroSplit } from "@/components/public/blocks/HeroSplit"
+import { SecondaryCTA } from "@/components/public/ui/SecondaryCTA"
+import { PageSection } from "@/components/public/ui/PageSection"
 
 export function HomeClient({ coverUrl }: { coverUrl: string }) {
   const { t } = useLanguage()
@@ -20,34 +23,24 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
     <>
       <PageView page="home" />
 
-      <section className="relative bg-gradient-to-b from-white to-gray-50 hero-future">
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[.06] [background:radial-gradient(circle_at_30%_20%,#141A2A_0%,#0A0C14_70%)]" />
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-2 md:items-center">
-          <div className="fade-in-up">
-            <h1 className="display-title text-3xl tracking-tight md:text-4xl">{t("public.hero.title")}</h1>
-            <p className="mt-3 text-gray-600">{t("public.hero.subtitle")}</p>
-            <div className="mt-6 flex gap-4">
-              <ButtonCTA href="/chat" className="group" icon={<span>💬</span>}>
-                {t("public.hero.ctaChat")}
-              </ButtonCTA>
-              <TrackedLink
-                href="https://boutique.flaash.fr"
-                external
-                event="cta_boutique_hero"
-                className="inline-flex items-center rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100"
-              >
-                <span aria-hidden>📰</span>
-                <span className="ml-2">{t("public.hero.ctaShop")}</span>
-              </TrackedLink>
-            </div>
-          </div>
+      <HeroSplit
+        className="bg-gradient-to-b from-white to-gray-50 hero-future"
+        heading={t("public.hero.title")}
+        subtitle={t("public.hero.subtitle")}
+        primaryCta={
+          <ButtonCTA href="/chat" className="group" icon={<span>💬</span>}>{t("public.hero.ctaChat")}</ButtonCTA>
+        }
+        secondaryCta={<SecondaryCTA href="https://boutique.flaash.fr" external event="cta_boutique_hero" icon={<span>📰</span>}>{t("public.hero.ctaShop")}</SecondaryCTA>}
+        right={
           <SectionCard className="transition-transform hover:translate-y-1 bg-[#0b1120] text-white border-transparent md:-mt-2">
             <TalkToIAIcon caption={t("public.hero.greeting")} ctaLabel={t("public.hero.ctaChat")} />
           </SectionCard>
-        </div>
-      </section>
+        }
+      >
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[.06] [background:radial-gradient(circle_at_30%_20%,#141A2A_0%,#0A0C14_70%)]" />
+      </HeroSplit>
 
-      <section className="mx-auto max-w-6xl px-4 py-8">
+      <PageSection py="8">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
           {[
             { icon: "💡", text: t("public.why.one") },
@@ -63,7 +56,7 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
             </SectionCard>
           ))}
         </div>
-      </section>
+      </PageSection>
 
       <Ticker
         ariaLabel="Exemples de questions"
@@ -75,7 +68,7 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
         ]}
       />
 
-      <section className="mx-auto max-w-6xl px-4 py-10">
+      <PageSection py="10">
         <div className="card-future rounded-xl border border-gray-200 bg-white p-6 md:p-8">
           <h2 className="text-xl font-semibold tracking-tight">{t("public.hero.title")}</h2>
           <p className="mt-2 text-gray-600">{t("public.hero.subtitle")}</p>
@@ -85,7 +78,7 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
             </TrackedLink>
           </div>
         </div>
-      </section>
+      </PageSection>
 
       <section className="mx-auto max-w-6xl px-4 pb-12">
         <SectionHeader as="h3" title={t("public.themes.title")} icon={<span>🌐</span>} className="text-sm" />
@@ -104,12 +97,12 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16">
+      <PageSection className="pb-16">
         <div className="rounded-xl border border-gray-200 bg-white p-6">
           <div className="text-sm font-semibold tracking-tight">{t("public.agent.title")}</div>
           <QuickAsk defaultValue={t("public.themes.ai.example")} placeholder={t("public.chat.placeholder")} ctaLabel={t("public.agent.ctaChat")} />
         </div>
-      </section>
+      </PageSection>
     </>
   )
 }

@@ -45,8 +45,8 @@ export function PublicHeader() {
   }, [])
 
   return (
-    <header className={`public-header sticky top-0 z-[1000] w-full border-b border-gray-100 transition-all pointer-events-auto ${
-      isScrolled ? "bg-white/90 backdrop-blur shadow-md" : "bg-white/60"
+    <header className={`public-header sticky top-0 z-[2000] isolate w-full border-b border-gray-100 transition-all pointer-events-auto ${
+      isScrolled ? "bg-white/95 shadow-md" : "bg-white/80"
     }`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded focus:bg-black focus:px-3 focus:py-1 focus:text-white">
         Aller au contenu principal
@@ -63,7 +63,7 @@ export function PublicHeader() {
           />
         </Link>
 
-        <nav className="hidden gap-7 md:flex" aria-label="Navigation principale">
+        <nav className="relative z-[2100] hidden items-center gap-7 md:flex pointer-events-auto" aria-label="Navigation principale">
           {navItems.map((item) =>
             item.external ? (
               <a
@@ -71,7 +71,7 @@ export function PublicHeader() {
                 href={item.href}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-600 hover:text-gray-900"
                 onClick={() => trackEvent("nav_boutique")}
               >
                 {t(item.labelKey)}

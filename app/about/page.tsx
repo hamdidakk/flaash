@@ -5,11 +5,14 @@ import { PublicFooter } from "@/components/public/PublicFooter"
 import { useLanguage } from "@/lib/language-context"
 import { translations } from "@/lib/i18n"
 import Link from "next/link"
+import { ButtonCTA } from "@/components/public/ui/ButtonCTA"
 import { useEffect, useState } from "react"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { AnchorNav } from "@/components/public/ui/AnchorNav"
 import { Timeline } from "@/components/public/blocks/Timeline"
+import { HeroSplit } from "@/components/public/blocks/HeroSplit"
+import { SecondaryCTA } from "@/components/public/ui/SecondaryCTA"
 
 export default function AboutPage() {
   const { t, language } = useLanguage()
@@ -25,10 +28,15 @@ export default function AboutPage() {
   return (
     <main>
       <PublicHeader />
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-900">{t("public.about.title")}</h1>
-        <p className="mt-3 max-w-3xl text-base text-gray-700">{t("public.about.p1")}</p>
+      <HeroSplit
+        containerClassName="py-16"
+        heading={<span className="text-slate-900">{t("public.about.title")}</span>}
+        subtitle={<span className="max-w-3xl inline-block">{t("public.about.p1")}</span>}
+        right={<SectionCard variant="surface" className="text-4xl flex items-center justify-center min-h-[160px]">🧭</SectionCard>}
+        className="px-4"
+      />
 
+      <section className="mx-auto max-w-6xl px-4">
         <AnchorNav
           ariaLabel={language === "fr" ? "Sommaire" : "Table of contents"}
           items={[
@@ -82,18 +90,15 @@ export default function AboutPage() {
         </SectionCard>
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/chat" className="group cta-futuriste btn-pulse inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold text-white hover:translate-y-[-1px]">
-            <span aria-hidden>🤖</span>
-            <span className="ml-2">{t("public.about.ctas.chat")}</span>
-          </Link>
-          <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="inline-flex items-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-200 hover:bg-gray-50">
-            <span aria-hidden>🛒</span>
-            <span className="ml-2">{t("public.about.ctas.shop")}</span>
-          </a>
-          <Link href="/guide" className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
-            <span aria-hidden>📘</span>
-            <span className="ml-2">{t("public.about.ctas.guide")}</span>
-          </Link>
+          <ButtonCTA href="/chat" icon={<span>🤖</span>}>
+            {t("public.about.ctas.chat")}
+          </ButtonCTA>
+          <SecondaryCTA href="https://boutique.flaash.fr" external event="about_shop" icon={<span>🛒</span>}>
+            {t("public.about.ctas.shop")}
+          </SecondaryCTA>
+          <SecondaryCTA href="/guide" event="about_guide" icon={<span>📘</span>}>
+            {t("public.about.ctas.guide")}
+          </SecondaryCTA>
         </div>
 
         {showTop && (

@@ -6,6 +6,7 @@ import { AnchorNav } from "@/components/public/ui/AnchorNav"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { FAQAccordion } from "@/components/public/blocks/FAQAccordion"
+import { HeroSplit } from "@/components/public/blocks/HeroSplit"
 
 type GuideContent = {
   title: string
@@ -133,9 +134,14 @@ export function GuideClient() {
   const { language } = useLanguage()
   const c = DEFAULTS[language]
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">{c.title}</h1>
-      <p className="mt-2 text-gray-600 leading-relaxed">{c.intro}</p>
+    <section className="mx-auto max-w-6xl px-4 py-12">
+      <HeroSplit
+        containerClassName="px-0 py-0"
+        heading={<span>{c.title}</span>}
+        subtitle={<span className="max-w-3xl inline-block">{c.intro}</span>}
+        right={<SectionCard variant="surface" className="text-4xl flex items-center justify-center min-h-[140px]">📘</SectionCard>}
+        className="max-w-6xl mx-auto"
+      />
 
       <AnchorNav
         ariaLabel="Sommaire"
@@ -146,7 +152,7 @@ export function GuideClient() {
         ]}
       />
 
-      <div className="mt-8 grid gap-6">
+      <div className="mt-8 grid gap-6 max-w-4xl">
         <SectionCard className="fade-in-up">
           <SectionHeader title={c.whatIs.title} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
           <p className="mt-2 text-gray-600 leading-relaxed">{c.whatIs.p1}</p>
