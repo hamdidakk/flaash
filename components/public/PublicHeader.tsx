@@ -20,6 +20,7 @@ export function PublicHeader() {
   const pathname = usePathname()
   const { t } = useLanguage()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     setMobileOpen(false)
@@ -33,8 +34,19 @@ export function PublicHeader() {
     return () => window.removeEventListener("keydown", onKey)
   }, [])
 
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 4)
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
   return (
-    <header className="public-header relative z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur shadow-sm">
+    <header className={`public-header sticky top-0 z-50 w-full border-b border-gray-100 transition-all ${
+      isScrolled ? "bg-white/90 backdrop-blur shadow-md" : "bg-white/60"
+    }`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded focus:bg-black focus:px-3 focus:py-1 focus:text-white">
         Aller au contenu principal
       </a>
@@ -45,7 +57,7 @@ export function PublicHeader() {
             alt="FLAASH"
             width={420}
             height={110}
-            className="h-10 w-auto md:h-12"
+            className="h-9 w-auto md:h-10"
             priority
           />
         </Link>
@@ -67,8 +79,10 @@ export function PublicHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-sm hover:text-gray-900 ${
-                  pathname === item.href ? "text-gray-900" : "text-gray-600"
+                className={`relative text-sm transition-colors ${
+                  pathname === item.href
+                    ? "text-gray-900 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:bg-gradient-to-r after:from-cyan-400 after:to-violet-500"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 {t(item.labelKey)}
@@ -81,10 +95,11 @@ export function PublicHeader() {
           <LanguageSwitcher />
           <Link
             href="/chat"
-            className="cta-chat hidden md:inline-flex rounded-md bg-black px-3 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            className="group cta-chat hidden md:inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white btn-pulse"
             onClick={() => trackEvent("cta_chat_header")}
           >
-            {t("public.nav.chat")}
+            <span aria-hidden>🤖</span>
+            <span className="ml-2">Explorer avec l’IA</span>
           </Link>
           <button
             type="button"
@@ -108,13 +123,14 @@ export function PublicHeader() {
               <div className="mb-2 flex items-center justify-between gap-2">
                 <Link
                   href="/chat"
-                  className="cta-chat inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium text-white"
+                  className="cta-chat inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white"
                   onClick={() => {
                     trackEvent("cta_chat_header")
                     setMobileOpen(false)
                   }}
                 >
-                  {t("public.nav.chat")}
+                  <span aria-hidden>🤖</span>
+                  <span className="ml-2">Explorer avec l’IA</span>
                 </Link>
                 <button
                   type="button"

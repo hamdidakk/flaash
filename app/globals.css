@@ -124,6 +124,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  html { scroll-behavior: smooth; }
 
   /* TailAdmin-style scrollbar */
   ::-webkit-scrollbar {
@@ -241,10 +242,29 @@
   transform: translateY(6px);
   animation: fadeUp 480ms ease forwards;
 }
+/* Generic fade-in-up (unscoped) */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeUp 520ms ease forwards;
+}
 @keyframes fadeUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
+/* Ticker bande défilante */
+.ticker__track {
+  animation: ticker 30s linear infinite;
+  will-change: transform;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* FAQ chevron rotation */
+details[open] .chev { transform: rotate(180deg); }
 

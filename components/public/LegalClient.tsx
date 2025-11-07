@@ -21,7 +21,7 @@ export function LegalClient() {
     title: "Legal Mentions / Terms",
     updated: "Last updated",
     publisher: {
-      title: "Site Publisher",
+      title: "Information about the site publisher",
       name: "Name",
       form: "Company form",
       siret: "SIRET",
@@ -31,23 +31,35 @@ export function LegalClient() {
       director: "Publication Director",
     },
     hosting: { title: "Hosting", host: "Host", address: "Address", website: "Website" },
-    ip: { title: "Intellectual Property", p: `All content (texts, images, trademarks, logos, graphics and sounds) on this site is owned by ${companyName} or its partners and protected by applicable laws. Any reproduction or representation, in whole or in part, is prohibited without prior written authorization.` },
+    ip: { title: "Copyright and content", p: `All content (texts, images, trademarks, logos, graphics and sounds) on this site is owned by ${companyName} or its partners and protected by applicable laws. Any reproduction or representation, in whole or in part, is prohibited without prior written authorization.` },
     terms: {
-      title: "Terms of Use",
+      title: "Terms of use",
       items: [
         `The public demo service is provided "as is". ${companyName} does not guarantee the accuracy or completeness of the AI Assistant answers.`,
         "Users agree not to submit unlawful, defamatory, or third‑party protected content without authorization.",
         `In case of abuse, ${companyName} reserves the right to limit access to the service.`,
       ],
     },
-    liability: { title: "Liability", p: `${companyName} shall not be liable for direct or indirect damages resulting from the use of the site or the information provided. Hyperlinks to third‑party sites are provided for information purposes.` },
-    privacy: { title: "Personal Data", p: `Data collection and processing are described in the Privacy Policy. To exercise your rights (access, rectification, erasure, objection), contact us at ` },
+    liability: { title: "Limitation of liability", p: `${companyName} shall not be liable for direct or indirect damages resulting from the use of the site or the information provided. Hyperlinks to third‑party sites are provided for information purposes.` },
+    privacy: { title: "Personal data", p: `Data collection and processing are described in the Privacy Policy. To exercise your rights (access, rectification, erasure, objection), contact us at ` },
     law: { title: "Applicable Law", p: "This site is governed by French law. In case of dispute, the competent courts shall be those of the publisher’s jurisdiction." },
+    intro: "Flaash is committed to offering a transparent service, compliant with applicable French laws.",
+    toc: [
+      "Publisher",
+      "Hosting",
+      "Copyright",
+      "Terms",
+      "Liability",
+      "Personal data",
+      "Applicable law",
+    ],
+    linkPrivacy: "See also our Privacy Policy",
+    updateNote: "These legal notices may be changed at any time. Please check them regularly.",
   } : {
     title: "Mentions Légales / CGU",
     updated: "Dernière mise à jour",
     publisher: {
-      title: "Éditeur du site",
+      title: "Informations sur l’éditeur du site",
       name: "Nom",
       form: "Forme",
       siret: "SIRET",
@@ -57,7 +69,7 @@ export function LegalClient() {
       director: "Directeur de la publication",
     },
     hosting: { title: "Hébergement", host: "Hébergeur", address: "Adresse", website: "Site web" },
-    ip: { title: "Propriété intellectuelle", p: `L’ensemble des contenus (textes, images, marques, logos, éléments graphiques et sonores) présents sur le site sont la propriété de ${companyName} ou de ses partenaires, et sont protégés par le droit d’auteur et les lois en vigueur. Toute reproduction ou représentation, totale ou partielle, est interdite sans autorisation écrite préalable.` },
+    ip: { title: "Droits d’auteur et contenu", p: `L’ensemble des contenus (textes, images, marques, logos, éléments graphiques et sonores) présents sur le site sont la propriété de ${companyName} ou de ses partenaires, et sont protégés par le droit d’auteur et les lois en vigueur. Toute reproduction ou représentation, totale ou partielle, est interdite sans autorisation écrite préalable.` },
     terms: {
       title: "Conditions d’utilisation",
       items: [
@@ -66,66 +78,92 @@ export function LegalClient() {
         `En cas d’abus, ${companyName} se réserve le droit de limiter l’accès au service.`,
       ],
     },
-    liability: { title: "Responsabilité", p: `${companyName} ne pourra être tenue responsable des dommages directs ou indirects résultant de l’utilisation du site ou des informations fournies. Les liens hypertextes vers des sites tiers sont fournis à titre informatif.` },
+    liability: { title: "Limite de responsabilité", p: `${companyName} ne pourra être tenue responsable des dommages directs ou indirects résultant de l’utilisation du site ou des informations fournies. Les liens hypertextes vers des sites tiers sont fournis à titre informatif.` },
     privacy: { title: "Données personnelles", p: `La collecte et le traitement des données sont décrits dans la Politique de Confidentialité. Pour exercer vos droits (accès, rectification, suppression, opposition), contactez‑nous à ` },
     law: { title: "Droit applicable", p: "Le présent site est régi par le droit français. En cas de litige, les tribunaux compétents seront ceux du ressort de l’éditeur." },
+    intro: "Flaash s’engage à offrir un service transparent et conforme aux lois françaises en vigueur.",
+    toc: [
+      "Éditeur",
+      "Hébergement",
+      "Propriété intellectuelle",
+      "Conditions d’utilisation",
+      "Responsabilité",
+      "Données personnelles",
+      "Droit applicable",
+    ],
+    linkPrivacy: "👉 Consultez aussi notre Politique de Confidentialité",
+    updateNote: "Ces mentions légales peuvent être modifiées à tout moment. Nous vous invitons à les consulter régulièrement.",
   }
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">{T.title}</h1>
-      <p className="mt-2 text-sm text-gray-500">{T.updated}: {lastUpdate}</p>
+      <h1 className="mb-2 flex items-center gap-2 text-3xl font-bold text-gray-900">📜 {T.title}</h1>
+      <p className="text-sm text-gray-500">{T.updated}: {lastUpdate}</p>
+      <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.intro}</p>
+      <p className="mt-2 text-sm text-gray-600"><a className="underline underline-offset-4" href="/privacy">{T.linkPrivacy}</a></p>
 
-      <div className="mt-8 space-y-8 text-gray-700">
-        <section>
-          <h2 className="text-xl font-semibold">{T.publisher.title}</h2>
-          <ul className="mt-3 space-y-1 text-sm">
-            <li><span className="font-medium">{T.publisher.name} :</span> {companyName}</li>
-            <li><span className="font-medium">{T.publisher.form} :</span> {companyForm}</li>
-            <li><span className="font-medium">{T.publisher.siret} :</span> {companySiret}</li>
-            <li><span className="font-medium">{T.publisher.address} :</span> {companyAddress}</li>
-            <li><span className="font-medium">{T.publisher.email} :</span> <a className="underline" href={`mailto:${companyEmail}`}>{companyEmail}</a></li>
-            <li><span className="font-medium">{T.publisher.phone} :</span> {companyPhone}</li>
-            <li><span className="font-medium">{T.publisher.director} :</span> {directorName}</li>
-          </ul>
-        </section>
+      <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label={language === "fr" ? "Sommaire" : "Table of contents"}>
+        {T.toc.map((label, idx) => (
+          <a key={label} href={`#sec_${idx+1}`} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-gray-700 hover:bg-gray-50">
+            {label}
+          </a>
+        ))}
+      </nav>
 
-        <section>
-          <h2 className="text-xl font-semibold">{T.hosting.title}</h2>
-          <ul className="mt-3 space-y-1 text-sm">
-            <li><span className="font-medium">{T.hosting.host} :</span> {hostName}</li>
-            <li><span className="font-medium">{T.hosting.address} :</span> {hostAddress}</li>
-            <li><span className="font-medium">{T.hosting.website} :</span> <a href={hostWebsite} target="_blank" rel="noreferrer noopener" className="underline">{hostWebsite}</a></li>
-          </ul>
-        </section>
+      <div className="mt-6 rounded-2xl bg-gray-50 p-6 shadow-sm">
+        <div className="space-y-6 text-[15px] leading-relaxed text-gray-700">
+          <section id="sec_1" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.publisher.title}</h2>
+            <ul className="space-y-1">
+              <li><span className="font-semibold">{T.publisher.name} :</span> {companyName}</li>
+              <li><span className="font-semibold">{T.publisher.form} :</span> {companyForm}</li>
+              <li><span className="font-semibold">{T.publisher.siret} :</span> {companySiret}</li>
+              <li><span className="font-semibold">{T.publisher.address} :</span> {companyAddress}</li>
+              <li><span className="font-semibold">{T.publisher.email} :</span> <a className="rounded bg-blue-50 px-2 py-0.5 font-medium text-blue-700 underline" href={`mailto:${companyEmail}`}>{companyEmail}</a></li>
+              <li><span className="font-semibold">{T.publisher.phone} :</span> {companyPhone}</li>
+              <li><span className="font-semibold">{T.publisher.director} :</span> {directorName}</li>
+            </ul>
+          </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{T.ip.title}</h2>
-          <p className="mt-3 text-sm">{T.ip.p}</p>
-        </section>
+          <section id="sec_2" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.hosting.title}</h2>
+            <ul className="space-y-1">
+              <li><span className="font-semibold">{T.hosting.host} :</span> {hostName}</li>
+              <li><span className="font-semibold">{T.hosting.address} :</span> {hostAddress}</li>
+              <li><span className="font-semibold">{T.hosting.website} :</span> <a href={hostWebsite} target="_blank" rel="noreferrer noopener" className="underline underline-offset-4">{hostWebsite}</a></li>
+            </ul>
+          </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{T.terms.title}</h2>
-          <ul className="mt-3 list-disc space-y-2 pl-6 text-sm">
-            {T.terms.items.map((it) => (<li key={it}>{it}</li>))}
-          </ul>
-        </section>
+          <section id="sec_3" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.ip.title}</h2>
+            <p>{T.ip.p}</p>
+          </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{T.liability.title}</h2>
-          <p className="mt-3 text-sm">{T.liability.p}</p>
-        </section>
+          <section id="sec_4" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.terms.title}</h2>
+            <ul className="list-disc space-y-2 pl-6">
+              {T.terms.items.map((it) => (<li key={it}>{it}</li>))}
+            </ul>
+          </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{T.privacy.title}</h2>
-          <p className="mt-3 text-sm">{T.privacy.p}<a className="underline" href={`mailto:${companyEmail}`}>{companyEmail}</a>.</p>
-        </section>
+          <section id="sec_5" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.liability.title}</h2>
+            <p>{T.liability.p}</p>
+          </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{T.law.title}</h2>
-          <p className="mt-3 text-sm">{T.law.p}</p>
-        </section>
+          <section id="sec_6" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.privacy.title}</h2>
+            <p>{T.privacy.p}<a className="rounded bg-blue-50 px-2 py-0.5 font-medium text-blue-700 underline" href={`mailto:${companyEmail}`}>{companyEmail}</a>.</p>
+          </section>
+
+          <section id="sec_7" className="fade-in-up border-l-4 border-blue-200 pl-4">
+            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.law.title}</h2>
+            <p>{T.law.p}</p>
+          </section>
+        </div>
       </div>
+
+      <p className="mt-4 text-sm text-gray-600">{T.updateNote}</p>
     </section>
   )
 }

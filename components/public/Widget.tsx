@@ -209,9 +209,14 @@ export function PublicWidget() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="card-future w-full max-w-2xl p-4">
-        <h1 className="mb-2 text-xl font-semibold">{TEXT.title}</h1>
+    <div className="mx-auto w-full p-0">
+      <Card className="flex w-full flex-col rounded-2xl border border-gray-100 bg-white p-0 shadow-md">
+        <div className="px-6 pt-6">
+          <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-gray-800">
+            <span aria-hidden>🤖</span> Assistant FLAASH
+          </h2>
+          <p className="mb-4 text-sm text-gray-600">explorateur du futur — formé sur les publications et analyses de la revue</p>
+        </div>
         {showUpsell && (
           <div className="mb-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
             <div className="font-medium">{TEXT.upsellTitle}</div>
@@ -225,20 +230,26 @@ export function PublicWidget() {
             </div>
           </div>
         )}
-        <div className="flex h-[60vh] md:h-[70vh] flex-col gap-2">
+        {messages.length <= 1 && (
+          <div className="px-6 text-center text-sm text-gray-600">
+            <p>Bienvenue 👋</p>
+            <p>Posez vos questions sur les articles, les thèmes et les futurs possibles explorés par FLAASH.</p>
+          </div>
+        )}
+        <div className="flex min-h-[60vh] max-h-[calc(100dvh-220px)] flex-col">
           <ChatMessagesList messages={messages} isLoading={isLoading} onCitationClick={handleCitationClick} />
           <ChatInput value={input} onChange={setInput} onSend={() => handleSend()} disabled={isLoading || showUpsell || cooldownLeftMs > 0} />
           {cooldownLeftMs > 0 && (
             <p className="text-center text-xs text-muted-foreground">{TEXT.cooldown(Math.ceil(cooldownLeftMs / 1000))}</p>
           )}
-          <div className="flex flex-wrap gap-2 pt-1">
+          <div className="flex flex-wrap gap-2 px-6 pb-6 pt-1">
             {TEXT.prompts.map((q) => (
               <Button
                 key={q}
                 type="button"
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="h-auto px-2 py-1 text-xs"
+                className="h-auto rounded-lg bg-gray-100 px-3 py-1 text-xs hover:bg-gray-200"
                 disabled={isLoading || showUpsell || cooldownLeftMs > 0}
                 onClick={() => handleSend(q)}
               >

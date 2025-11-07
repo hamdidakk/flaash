@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { FileText } from "lucide-react"
@@ -19,14 +18,26 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
   const hasRetrievedDocuments = retrievedDocuments && retrievedDocuments.length > 0
 
   return (
-    <div className={cn("flex gap-3", isUser ? "justify-end" : "justify-start")}>
-      <Card
-        className={cn("max-w-[80%] p-4", isUser ? "bg-primary text-primary-foreground" : "bg-muted")}
+    <div className={cn("flex items-start gap-3", isUser ? "justify-end flex-row-reverse" : "justify-start")}> 
+      <div
+        className={cn(
+          "flex size-8 shrink-0 select-none items-center justify-center rounded-full text-base",
+          isUser ? "bg-blue-100" : "bg-gray-200",
+        )}
+        aria-hidden
+      >
+        {isUser ? "🧑" : "🤖"}
+      </div>
+      <div
+        className={cn(
+          "max-w-[80%] rounded-2xl border p-4 text-gray-800 fade-in-up",
+          isUser ? "bg-blue-50 border-blue-100" : "bg-gray-50 border-gray-100",
+        )}
         role="group"
         aria-live="polite"
       >
         <div className="space-y-2">
-          <p className="text-sm leading-relaxed whitespace-pre-line">{content}</p>
+          <p className="whitespace-pre-line text-sm leading-relaxed">{content}</p>
 
           {metadata && (metadata.collectionName || metadata.model || metadata.promptType) && (
             <div className="flex flex-wrap gap-2 pt-1 text-[11px] text-muted-foreground">
@@ -54,7 +65,7 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
           )}
 
           {(hasCitations || hasRetrievedDocuments) && (
-            <div className="space-y-3 pt-2 border-t border-border/50">
+            <div className="space-y-3 border-t border-border/50 pt-2">
               {hasCitations && (
                 <div className="space-y-2">
                   <p className="text-xs font-medium opacity-70">{t("chat.citations")}</p>
@@ -100,10 +111,10 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
                               </Badge>
                             )}
                           </div>
-                          {(doc.metadata?.page || doc.metadata?.section) && (
+                          {(Boolean((doc.metadata as any)?.page) || Boolean((doc.metadata as any)?.section)) && (
                             <p className="text-[11px] text-muted-foreground">
-                              {doc.metadata?.page && `p.${doc.metadata.page}`}
-                              {doc.metadata?.section && `${doc.metadata?.page ? " • " : ""}${doc.metadata.section}`}
+                              {!!(doc.metadata as any)?.page && `p.${String((doc.metadata as any)?.page)}`}
+                              {!!(doc.metadata as any)?.section && `${(doc.metadata as any)?.page ? " • " : ""}${String((doc.metadata as any)?.section)}`}
                             </p>
                           )}
                           <p className="text-xs leading-relaxed text-muted-foreground line-clamp-4">{doc.snippet}</p>
@@ -126,9 +137,9 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
             </div>
           )}
 
-          {timestamp && <p className="text-xs opacity-50 pt-1">{timestamp}</p>}
+          {timestamp && <p className="pt-1 text-xs opacity-50">{timestamp}</p>}
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

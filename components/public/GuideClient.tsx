@@ -129,75 +129,95 @@ export function GuideClient() {
   const { language } = useLanguage()
   const c = DEFAULTS[language]
   return (
-    <section className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">{c.title}</h1>
-      <p className="mt-2 text-gray-600">{c.intro}</p>
+    <section className="mx-auto max-w-4xl px-4 py-12">
+      <h1 className="text-3xl font-semibold tracking-tight">{c.title}</h1>
+      <p className="mt-2 text-gray-600 leading-relaxed">{c.intro}</p>
 
-      <div className="mt-10 space-y-8">
-        <section>
-          <h2 className="text-xl font-semibold">{c.whatIs.title}</h2>
-          <p className="mt-2 text-gray-700">{c.whatIs.p1}</p>
+      <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label="Sommaire">
+        {[{"href":"#citations","label":"D’où viennent les citations ?"},{"href":"#limites","label":"Limites de l’édition publique"},{"href":"#confidentialite","label":"Confidentialité & respect"}].map((l)=> (
+          <a key={l.href} href={l.href} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-gray-700 hover:bg-gray-50">{l.label}</a>
+        ))}
+      </nav>
+
+      <div className="mt-8 grid gap-6">
+        <section id="definition" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-indigo-600">{c.whatIs.title}</h2>
+          <p className="mt-2 text-gray-600 leading-relaxed">{c.whatIs.p1}</p>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.howTo.title}</h2>
-          <ol className="mt-2 list-decimal space-y-2 pl-6 text-gray-700">
+        <section id="utilisation" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-indigo-600">{c.howTo.title}</h2>
+          <ol className="mt-2 space-y-2 text-gray-700 leading-relaxed">
             {c.howTo.steps.map((s) => (
-              <li key={s}>{s.replace("/chat", "")}<Link href="/chat" className="underline">/chat</Link>{s.endsWith(".") ? "" : ""}</li>
+              <li key={s} className="flex items-start gap-2">
+                <span className="mt-1 select-none">✅</span>
+                <span>{s.replace("/chat", "")}<Link href="/chat" className="underline">/chat</Link>{s.endsWith(".") ? "" : ""}</span>
+              </li>
             ))}
           </ol>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.citations.title}</h2>
-          <p className="mt-2 text-gray-700">{c.citations.p1} <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">boutique</a>.</p>
+        <section id="citations" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-blue-600">{c.citations.title.replace("3)", "💬")}</h2>
+          <p className="mt-2 text-gray-600 leading-relaxed">Chez FLAASH, chaque réponse est fondée sur des sources vérifiées. Voici comment nous citons les contenus.</p>
+          <p className="mt-2 text-gray-700 leading-relaxed">{c.citations.p1} <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">boutique</a>.</p>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.limits.title}</h2>
-          <ul className="mt-2 list-disc space-y-2 pl-6 text-gray-700">
+        <section id="limites" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-indigo-600">{c.limits.title.replace("4)", "⚠")}</h2>
+          <p className="mt-2 text-gray-600 leading-relaxed">Nous voulons que chacun puisse tester librement : voici les limites de l’édition publique.</p>
+          <ul className="mt-2 space-y-2 text-gray-700 leading-relaxed">
             {c.limits.items.map((it) => (
-              <li key={it}>{it}</li>
+              <li key={it} className="flex items-start gap-2"><span className="mt-1 select-none">🔒</span><span>{it}</span></li>
             ))}
           </ul>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.tips.title}</h2>
-          <ul className="mt-2 list-disc space-y-2 pl-6 text-gray-700">
+        <section id="conseils" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-indigo-600">{c.tips.title.replace("5)", "💡")}</h2>
+          <ul className="mt-2 space-y-2 text-gray-700 leading-relaxed">
             {c.tips.items.map((it) => (
-              <li key={it}>{it}</li>
+              <li key={it} className="flex items-start gap-2"><span className="mt-1 select-none">✨</span><span>{it}</span></li>
             ))}
           </ul>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.privacy.title}</h2>
-          <p className="mt-2 text-gray-700">{c.privacy.p1}</p>
+        <section id="confidentialite" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-blue-600">{c.privacy.title.replace("6)", "🔒 Notre engagement : confidentialité et respect")}</h2>
+          <p className="mt-2 text-gray-600 leading-relaxed">{c.privacy.p1}</p>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.shop.title}</h2>
-          <p className="mt-2 text-gray-700">{c.shop.p1} {" "}
-            <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">boutique</a>.
-          </p>
+        <section id="boutique" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-indigo-600">{c.shop.title.replace("7)", "🛍 Acheter la revue")}</h2>
+          <p className="mt-2 text-gray-700 leading-relaxed">{c.shop.p1} <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">boutique</a>.</p>
+          <p className="mt-2 text-gray-700 leading-relaxed">👉 Découvrez nos éditions complètes dans la boutique FLAASH.</p>
         </section>
 
-        <section>
-          <h2 className="text-xl font-semibold">{c.faq.title}</h2>
+        <section id="faq" className="fade-in-up rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition hover:bg-gray-50 hover:shadow-lg">
+          <h2 className="text-xl font-semibold text-indigo-600">{c.faq.title}</h2>
           <div className="mt-2 space-y-3 text-gray-700">
             {c.faq.items.map((f) => (
-              <details key={f.q}>
-                <summary className="cursor-pointer font-medium">{f.q}</summary>
-                <p className="mt-2">{f.a}</p>
+              <details key={f.q} className="group rounded-lg border border-gray-200 p-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between font-semibold text-gray-800">
+                  <span>{f.q}</span>
+                  <svg className="chev h-4 w-4 text-gray-500 transition-transform" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd" />
+                  </svg>
+                </summary>
+                <p className="mt-2 leading-relaxed">{f.a}</p>
               </details>
             ))}
           </div>
+          <p className="mt-3 text-sm text-gray-600">Vous avez une autre question ? Contactez-nous via le chat ou par mail 💌.</p>
         </section>
 
-        <div className="mt-10 flex gap-3">
-          <Link href="/chat" className="cta-futuriste rounded-md px-4 py-2 text-sm font-medium">{c.ctas.chat}</Link>
-          <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="cta-futuriste rounded-md px-4 py-2 text-sm font-medium">{c.ctas.shop}</a>
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:w-fit">
+          <Link href="/chat" className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 px-5 py-2 text-sm font-medium text-white transition-transform hover:scale-105">
+            🤖 <span className="ml-2">{c.ctas.chat}</span>
+          </Link>
+          <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="inline-flex items-center justify-center rounded-2xl border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-900 transition-transform hover:scale-105">
+            🛒 <span className="ml-2">{c.ctas.shop}</span>
+          </a>
         </div>
       </div>
     </section>

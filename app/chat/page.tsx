@@ -1,7 +1,6 @@
 import { PublicHeader } from "@/components/public/PublicHeader"
 import { PublicWidget } from "@/components/public/Widget"
 import { PageView } from "@/components/public/PageView"
-import { PublicFooter } from "@/components/public/PublicFooter"
 export const metadata = {
   title: "Chat FLAASH — Agent IA public",
   description:
@@ -17,13 +16,12 @@ export const metadata = {
 
 export default function PublicChatPage() {
   return (
-    <main id="main" style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+    <main id="main" className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <PublicHeader />
       <PageView page="chat" />
-      <section className="hero-future mx-auto max-w-4xl px-4 py-8">
+      <section className="mx-auto w-full max-w-3xl px-4 py-8">
         <PublicWidget />
       </section>
-      <PublicFooter />
     </main>
   )
 }
