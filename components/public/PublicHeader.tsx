@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"
 import { LanguageSwitcher } from "@/components/public/LanguageSwitcher"
 import { useLanguage } from "@/lib/language-context"
 import { useEffect, useState } from "react"
+import { NavLinkNeon } from "@/components/public/ui/NavLinkNeon"
 
 const navItems = [
   { href: "/", labelKey: "public.nav.home" },
@@ -76,17 +77,7 @@ export function PublicHeader() {
                 {t(item.labelKey)}
               </a>
             ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative text-sm transition-colors ${
-                  pathname === item.href
-                    ? "text-gray-900 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full after:bg-gradient-to-r after:from-cyan-400 after:to-violet-500"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                {t(item.labelKey)}
-              </Link>
+              <NavLinkNeon key={item.href} href={item.href} label={t(item.labelKey)} active={pathname === item.href} />
             ),
           )}
         </nav>

@@ -3,6 +3,11 @@
 import { useLanguage } from "@/lib/language-context"
 import { COMPANY } from "@/lib/site-config"
 import Link from "next/link"
+import { AnchorNav } from "@/components/public/ui/AnchorNav"
+import { SectionCard } from "@/components/public/ui/SectionCard"
+import { SectionHeader } from "@/components/public/ui/SectionHeader"
+import { ContactBadge } from "@/components/public/ui/ContactBadge"
+import { BadgePill } from "@/components/public/ui/BadgePill"
 
 export function PrivacyClient() {
   const { language } = useLanguage()
@@ -111,48 +116,45 @@ export function PrivacyClient() {
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-12">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="flex items-center gap-2 text-3xl font-bold text-gray-900">🔒 {T.title}</h1>
-          <p className="mt-1 text-gray-600">{T.subtitle}</p>
-          <div className="mt-2 inline-flex items-center gap-2 text-xs text-gray-500">
-            <span className="rounded-full bg-green-50 px-2 py-0.5 text-green-700 ring-1 ring-green-200">{language === "fr" ? "Conforme RGPD" : "GDPR compliant"}</span>
-            <span>•</span>
-            <span>{T.updated}: {lastUpdate}</span>
-          </div>
+      <div>
+        <h1 className="flex items-center gap-2 text-3xl font-bold text-gray-900">🔒 {T.title}</h1>
+        <p className="mt-1 text-gray-600">{T.subtitle}</p>
+        <div className="mt-2 inline-flex items-center gap-2 text-xs text-gray-500">
+          <BadgePill color="green">{language === "fr" ? "Conforme RGPD" : "GDPR compliant"}</BadgePill>
+          <span>•</span>
+          <span>{T.updated}: {lastUpdate}</span>
         </div>
       </div>
 
-      <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label={language === "fr" ? "Sommaire" : "Table of contents"}>
-        {T.sections.map((s, idx) => (
-          <a key={s.title} href={`#s${idx+1}`} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-gray-700 hover:bg-gray-50">
-            {idx+1}️⃣ {s.title.replace(/^\d+\)\s*/, "")}
-          </a>
-        ))}
-      </nav>
+      <AnchorNav
+        ariaLabel={language === "fr" ? "Sommaire" : "Table of contents"}
+        items={T.sections.map((s, idx) => ({ href: `#s${idx + 1}`, label: `${idx + 1}️⃣ ${s.title.replace(/^\d+\)\s*/, "")}` }))}
+      />
 
       <div className="mt-8 space-y-6 text-gray-700">
         {T.sections.map((s, idx) => (
-          <section key={s.title} id={`s${idx+1}`} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-800"><span className="mr-2 select-none">{icons[idx] ?? ""}</span>{s.title}</h2>
-            {s.items && (
-              <ul className="mt-3 space-y-2 text-sm">
-                {s.items.map((it: string) => (
-                  <li key={it} className="flex items-start gap-2"><span className="mt-0.5 select-none">•</span><span>{renderWithStrong(it)}</span></li>
-                ))}
-              </ul>
-            )}
-            {s.p && (
-              <p className="mt-3 text-sm leading-relaxed">
-                {renderWithStrong(s.p)} {s.title.includes("Droits") || s.title.includes("Rights") ? (
-                  <>
-                    <span className="ml-1">{language === "fr" ? "Contact :" : "Contact:"}</span>
-                    <a className="ml-1 rounded-md bg-blue-50 px-2 py-0.5 font-medium text-blue-700 underline decoration-blue-400" href={`mailto:${companyEmail}`}>{companyEmail}</a>.
-                  </>
-                ) : null}
-              </p>
-            )}
-          </section>
+          <SectionCard key={s.title}>
+            <section id={`s${idx + 1}`}>
+              <SectionHeader title={s.title} icon={<span>{icons[idx] ?? ""}</span>} />
+              {s.items && (
+                <ul className="mt-3 space-y-2 text-sm">
+                  {s.items.map((it: string) => (
+                    <li key={it} className="flex items-start gap-2"><span className="mt-0.5 select-none">•</span><span>{renderWithStrong(it)}</span></li>
+                  ))}
+                </ul>
+              )}
+              {s.p && (
+                <p className="mt-3 text-sm leading-relaxed">
+                  {renderWithStrong(s.p)} {s.title.includes("Droits") || s.title.includes("Rights") ? (
+                    <>
+                      <span className="ml-1">{language === "fr" ? "Contact :" : "Contact:"}</span>
+                      <span className="ml-1"><ContactBadge email={companyEmail} /></span>.
+                    </>
+                  ) : null}
+                </p>
+              )}
+            </section>
+          </SectionCard>
         ))}
       </div>
 

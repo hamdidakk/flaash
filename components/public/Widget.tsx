@@ -6,6 +6,9 @@ import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { ChatMessagesList } from "@/components/chat/chat-messages-list"
 import { ChatInput } from "@/components/chat/chat-input"
+import { WidgetHeader } from "@/components/public/chat/WidgetHeader"
+import { PromptsChips } from "@/components/public/chat/PromptsChips"
+import { TypingIndicator } from "@/components/public/chat/TypingIndicator"
 import type { RagMessage, CitationLink, ChunkRecord } from "@/lib/types"
 import { getDocumentChunksByName, ragGenerationPublic } from "@/lib/dakkom-api"
 import { ChunksDialog } from "@/components/documents/chunks-dialog"
@@ -211,12 +214,7 @@ export function PublicWidget() {
   return (
     <div className="mx-auto w-full p-0">
       <Card className="flex w-full flex-col rounded-2xl border border-gray-100 bg-white p-0 shadow-md">
-        <div className="px-6 pt-6">
-          <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-gray-800">
-            <span aria-hidden>🤖</span> Assistant FLAASH
-          </h2>
-          <p className="mb-4 text-sm text-gray-600">explorateur du futur — formé sur les publications et analyses de la revue</p>
-        </div>
+        <WidgetHeader title={TEXT.title} subtitle="explorateur du futur — formé sur les publications et analyses de la revue" />
         {showUpsell && (
           <div className="mb-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
             <div className="font-medium">{TEXT.upsellTitle}</div>
@@ -242,21 +240,7 @@ export function PublicWidget() {
           {cooldownLeftMs > 0 && (
             <p className="text-center text-xs text-muted-foreground">{TEXT.cooldown(Math.ceil(cooldownLeftMs / 1000))}</p>
           )}
-          <div className="flex flex-wrap gap-2 px-6 pb-6 pt-1">
-            {TEXT.prompts.map((q) => (
-              <Button
-                key={q}
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-auto rounded-lg bg-gray-100 px-3 py-1 text-xs hover:bg-gray-200"
-                disabled={isLoading || showUpsell || cooldownLeftMs > 0}
-                onClick={() => handleSend(q)}
-              >
-                {q}
-              </Button>
-            ))}
-          </div>
+          <PromptsChips prompts={TEXT.prompts} disabled={isLoading || showUpsell || cooldownLeftMs > 0} onPick={(q) => handleSend(q)} />
         </div>
       </Card>
 

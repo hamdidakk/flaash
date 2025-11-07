@@ -2,6 +2,10 @@
 
 import { useLanguage } from "@/lib/language-context"
 import { COMPANY, HOST } from "@/lib/site-config"
+import { AnchorNav } from "@/components/public/ui/AnchorNav"
+import { SectionCard } from "@/components/public/ui/SectionCard"
+import { SectionHeader } from "@/components/public/ui/SectionHeader"
+import { ContactBadge } from "@/components/public/ui/ContactBadge"
 
 export function LegalClient() {
   const { language } = useLanguage()
@@ -102,65 +106,57 @@ export function LegalClient() {
       <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.intro}</p>
       <p className="mt-2 text-sm text-gray-600"><a className="underline underline-offset-4" href="/privacy">{T.linkPrivacy}</a></p>
 
-      <nav className="mt-6 flex flex-wrap gap-2 text-sm" aria-label={language === "fr" ? "Sommaire" : "Table of contents"}>
-        {T.toc.map((label, idx) => (
-          <a key={label} href={`#sec_${idx+1}`} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-gray-700 hover:bg-gray-50">
-            {label}
-          </a>
-        ))}
-      </nav>
+      <AnchorNav ariaLabel={language === "fr" ? "Sommaire" : "Table of contents"} items={T.toc.map((label, idx) => ({ href: `#sec_${idx + 1}`, label }))} />
 
-      <div className="mt-6 rounded-2xl bg-gray-50 p-6 shadow-sm">
-        <div className="space-y-6 text-[15px] leading-relaxed text-gray-700">
-          <section id="sec_1" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.publisher.title}</h2>
-            <ul className="space-y-1">
-              <li><span className="font-semibold">{T.publisher.name} :</span> {companyName}</li>
-              <li><span className="font-semibold">{T.publisher.form} :</span> {companyForm}</li>
-              <li><span className="font-semibold">{T.publisher.siret} :</span> {companySiret}</li>
-              <li><span className="font-semibold">{T.publisher.address} :</span> {companyAddress}</li>
-              <li><span className="font-semibold">{T.publisher.email} :</span> <a className="rounded bg-blue-50 px-2 py-0.5 font-medium text-blue-700 underline" href={`mailto:${companyEmail}`}>{companyEmail}</a></li>
-              <li><span className="font-semibold">{T.publisher.phone} :</span> {companyPhone}</li>
-              <li><span className="font-semibold">{T.publisher.director} :</span> {directorName}</li>
-            </ul>
-          </section>
+      <div className="mt-6 grid gap-6">
+        <SectionCard id="sec_1">
+          <SectionHeader title={T.publisher.title} />
+          <ul className="mt-3 space-y-1 text-[15px] leading-relaxed text-gray-700">
+            <li><span className="font-semibold">{T.publisher.name} :</span> {companyName}</li>
+            <li><span className="font-semibold">{T.publisher.form} :</span> {companyForm}</li>
+            <li><span className="font-semibold">{T.publisher.siret} :</span> {companySiret}</li>
+            <li><span className="font-semibold">{T.publisher.address} :</span> {companyAddress}</li>
+            <li><span className="font-semibold">{T.publisher.email} :</span> <ContactBadge email={companyEmail} /></li>
+            <li><span className="font-semibold">{T.publisher.phone} :</span> {companyPhone}</li>
+            <li><span className="font-semibold">{T.publisher.director} :</span> {directorName}</li>
+          </ul>
+        </SectionCard>
 
-          <section id="sec_2" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.hosting.title}</h2>
-            <ul className="space-y-1">
-              <li><span className="font-semibold">{T.hosting.host} :</span> {hostName}</li>
-              <li><span className="font-semibold">{T.hosting.address} :</span> {hostAddress}</li>
-              <li><span className="font-semibold">{T.hosting.website} :</span> <a href={hostWebsite} target="_blank" rel="noreferrer noopener" className="underline underline-offset-4">{hostWebsite}</a></li>
-            </ul>
-          </section>
+        <SectionCard id="sec_2">
+          <SectionHeader title={T.hosting.title} />
+          <ul className="mt-3 space-y-1 text-[15px] leading-relaxed text-gray-700">
+            <li><span className="font-semibold">{T.hosting.host} :</span> {hostName}</li>
+            <li><span className="font-semibold">{T.hosting.address} :</span> {hostAddress}</li>
+            <li><span className="font-semibold">{T.hosting.website} :</span> <a href={hostWebsite} target="_blank" rel="noreferrer noopener" className="underline underline-offset-4">{hostWebsite}</a></li>
+          </ul>
+        </SectionCard>
 
-          <section id="sec_3" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.ip.title}</h2>
-            <p>{T.ip.p}</p>
-          </section>
+        <SectionCard id="sec_3">
+          <SectionHeader title={T.ip.title} />
+          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.ip.p}</p>
+        </SectionCard>
 
-          <section id="sec_4" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.terms.title}</h2>
-            <ul className="list-disc space-y-2 pl-6">
-              {T.terms.items.map((it) => (<li key={it}>{it}</li>))}
-            </ul>
-          </section>
+        <SectionCard id="sec_4">
+          <SectionHeader title={T.terms.title} />
+          <ul className="mt-3 list-disc space-y-2 pl-6 text-[15px] leading-relaxed text-gray-700">
+            {T.terms.items.map((it) => (<li key={it}>{it}</li>))}
+          </ul>
+        </SectionCard>
 
-          <section id="sec_5" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.liability.title}</h2>
-            <p>{T.liability.p}</p>
-          </section>
+        <SectionCard id="sec_5">
+          <SectionHeader title={T.liability.title} />
+          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.liability.p}</p>
+        </SectionCard>
 
-          <section id="sec_6" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.privacy.title}</h2>
-            <p>{T.privacy.p}<a className="rounded bg-blue-50 px-2 py-0.5 font-medium text-blue-700 underline" href={`mailto:${companyEmail}`}>{companyEmail}</a>.</p>
-          </section>
+        <SectionCard id="sec_6">
+          <SectionHeader title={T.privacy.title} />
+          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.privacy.p}<ContactBadge email={companyEmail} />.</p>
+        </SectionCard>
 
-          <section id="sec_7" className="fade-in-up border-l-4 border-blue-200 pl-4">
-            <h2 className="mb-2 text-base font-semibold text-gray-800">{T.law.title}</h2>
-            <p>{T.law.p}</p>
-          </section>
-        </div>
+        <SectionCard id="sec_7">
+          <SectionHeader title={T.law.title} />
+          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.law.p}</p>
+        </SectionCard>
       </div>
 
       <p className="mt-4 text-sm text-gray-600">{T.updateNote}</p>
