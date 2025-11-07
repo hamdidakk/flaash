@@ -45,7 +45,7 @@ export function PublicHeader() {
   }, [])
 
   return (
-    <header className={`public-header sticky top-0 z-50 w-full border-b border-gray-100 transition-all ${
+    <header className={`public-header sticky top-0 z-[1000] w-full border-b border-gray-100 transition-all pointer-events-auto ${
       isScrolled ? "bg-white/90 backdrop-blur shadow-md" : "bg-white/60"
     }`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded focus:bg-black focus:px-3 focus:py-1 focus:text-white">
@@ -63,7 +63,7 @@ export function PublicHeader() {
           />
         </Link>
 
-        <nav className="hidden gap-6 md:flex" aria-label="Navigation principale">
+        <nav className="hidden gap-7 md:flex" aria-label="Navigation principale">
           {navItems.map((item) =>
             item.external ? (
               <a
@@ -90,7 +90,7 @@ export function PublicHeader() {
             onClick={() => trackEvent("cta_chat_header")}
           >
             <span aria-hidden>🤖</span>
-            <span className="ml-2">Explorer avec l’IA</span>
+            <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
           </Link>
           <button
             type="button"
@@ -109,7 +109,7 @@ export function PublicHeader() {
 
       {mobileOpen && (
         <div className="md:hidden" id="mobile-menu">
-          <div className="absolute right-0 top-full z-50 w-[50vw] max-w-sm border-t border-gray-100 bg-white shadow-lg">
+          <div className="fixed right-0 top-16 z-[1100] w-[70vw] max-w-sm border-t border-gray-100 bg-white shadow-lg">
             <nav className="px-4 pb-4 pt-3" aria-label="Navigation mobile">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <Link
@@ -121,7 +121,7 @@ export function PublicHeader() {
                   }}
                 >
                   <span aria-hidden>🤖</span>
-                  <span className="ml-2">Explorer avec l’IA</span>
+                  <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
                 </Link>
                 <button
                   type="button"

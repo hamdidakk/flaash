@@ -20,7 +20,7 @@ export default function GlobalError({
         <html lang="fr">
           <body>
             <LanguageProvider>
-              <div style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+              <div>
                 <ErrorPage code={500} reset={reset} />
                 <PublicFooter />
               </div>

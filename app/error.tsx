@@ -16,7 +16,7 @@ export default function Error({
   }, [error])
 
   return (
-    <div style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+    <div>
       <ErrorPage code={500} reset={reset} />
       <PublicFooter />
     </div>

@@ -14,15 +14,28 @@ export const translations = {
       hero: {
         title: "The future, explained by FLAASH",
         subtitle:
-          "Discover the latest issue and chat with our AI Agent trained on our publications. Ask questions, get sourced answers.",
+          "Discover the latest issue and chat with our AI agent, trained on all our publications. Ask questions, explore the future and get sourced answers.",
         ctaShop: "Buy the latest issue",
         ctaChat: "Talk to the AI",
+        ctaExplore: "Explore with the AI",
+        greeting: "Hello, explorer of the future 👋 Ask me a question about science‑fiction or emerging technologies.",
       },
       agent: {
         title: "AI Agent",
         subtitle:
           "Ask questions about science‑fiction, technologies and their impacts. The Agent answers with citations from FLAASH.",
         ctaChat: "Talk to the AI",
+      },
+      why: {
+        one: "Why FLAASH?",
+        two: "Verified sources, AI trained on our publications",
+        three: "Cross‑analysis between science and fiction",
+        four: "An editorial lens on possible futures",
+      },
+      quickAsk: {
+        heading: "Ask your first question to the AI",
+        cta: "Talk to the AI",
+        placeholder: "Ask a question...",
       },
       themes: {
         title: "Key themes",
@@ -47,6 +60,9 @@ export const translations = {
         privacy: "Privacy Policy",
         engine: "AI Agent (Dakkom)",
         copyright: "© {year} FLAASH",
+      },
+      navExtra: {
+        exploreAI: "Explore with AI",
       },
       subscription: {
         title: "Choose a plan",
@@ -623,15 +639,28 @@ export const translations = {
       hero: {
         title: "Le futur, expliqué par FLAASH",
         subtitle:
-          "Découvrez le dernier numéro et échangez avec notre Agent IA entraîné sur nos publications. Posez des questions, obtenez des réponses sourcées.",
+          "Découvrez le dernier numéro et échangez avec notre agent IA, entraîné sur toutes nos publications. Posez vos questions, explorez le futur et obtenez des réponses sourcées.",
         ctaShop: "Acheter le dernier numéro",
         ctaChat: "Parler à l'IA",
+        ctaExplore: "Explorer avec l’IA",
+        greeting: "Bonjour, explorateur du futur 👋 Posez‑moi une question sur la science‑fiction ou les technologies émergentes.",
       },
       agent: {
         title: "Agent IA",
         subtitle:
           "Posez des questions sur la science‑fiction, les technologies et leurs impacts. L’Agent répond avec des citations issues de FLAASH.",
         ctaChat: "Parler à l'IA",
+      },
+      why: {
+        one: "Pourquoi FLAASH ?",
+        two: "Sources vérifiées, IA entraînée sur nos publications",
+        three: "Analyses croisées entre science et fiction",
+        four: "Un regard éditorial sur les futurs possibles",
+      },
+      quickAsk: {
+        heading: "Posez votre première question à l’IA",
+        cta: "Parler à l’IA",
+        placeholder: "Posez une question...",
       },
       themes: {
         title: "Thématiques clés",
@@ -656,6 +685,9 @@ export const translations = {
         privacy: "Politique de Confidentialité",
         engine: "Agent IA (Dakkom)",
         copyright: "© {year} FLAASH",
+      },
+      navExtra: {
+        exploreAI: "Explorer avec l’IA",
       },
       subscription: {
         title: "Choisir un abonnement",

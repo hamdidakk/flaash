@@ -2,10 +2,11 @@
 
 import { useLanguage } from "@/lib/language-context"
 import { COMPANY, HOST } from "@/lib/site-config"
-import { AnchorNav } from "@/components/public/ui/AnchorNav"
+// import { AnchorNav } from "@/components/public/ui/AnchorNav"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { ContactBadge } from "@/components/public/ui/ContactBadge"
+import { BubbleGrid } from "@/components/public/blocks/BubbleGrid"
 
 export function LegalClient() {
   const { language } = useLanguage()
@@ -106,7 +107,21 @@ export function LegalClient() {
       <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.intro}</p>
       <p className="mt-2 text-sm text-gray-600"><a className="underline underline-offset-4" href="/privacy">{T.linkPrivacy}</a></p>
 
-      <AnchorNav ariaLabel={language === "fr" ? "Sommaire" : "Table of contents"} items={T.toc.map((label, idx) => ({ href: `#sec_${idx + 1}`, label }))} />
+      {/* Sommaire supprimé au profit des bulles (BubbleGrid) */}
+
+      <BubbleGrid
+        title={language === "fr" ? "Mentions légales et conditions d’utilisation" : "Legal notices & terms"}
+        items={[
+          { label: T.publisher.title, href: "#sec_1", icon: "🏢", tooltip: language === "fr" ? "Informations sur l’éditeur du site" : "Site publisher info" },
+          { label: T.hosting.title, href: "#sec_2", icon: "💻", tooltip: language === "fr" ? "Serveur et prestataire technique" : "Hosting provider" },
+          { label: T.ip.title, href: "#sec_3", icon: "⚙️", tooltip: language === "fr" ? "Droits d’auteur et contenu" : "Copyright & content" },
+          { label: T.terms.title, href: "#sec_4", icon: "📜", tooltip: language === "fr" ? "Règles d’utilisation" : "Usage terms" },
+          { label: T.liability.title, href: "#sec_5", icon: "⚖️", tooltip: language === "fr" ? "Limite de responsabilité" : "Liability" },
+          { label: T.privacy.title, href: "#sec_6", icon: "🔒", tooltip: language === "fr" ? "Lien vers la confidentialité" : "Privacy link" },
+          { label: T.law.title, href: "#sec_7", icon: "📌", tooltip: language === "fr" ? "Droit applicable" : "Applicable law" },
+        ]}
+        tone="gray"
+      />
 
       <div className="mt-6 grid gap-6">
         <SectionCard id="sec_1">

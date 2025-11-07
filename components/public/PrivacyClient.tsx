@@ -3,11 +3,12 @@
 import { useLanguage } from "@/lib/language-context"
 import { COMPANY } from "@/lib/site-config"
 import Link from "next/link"
-import { AnchorNav } from "@/components/public/ui/AnchorNav"
+// import { AnchorNav } from "@/components/public/ui/AnchorNav"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { ContactBadge } from "@/components/public/ui/ContactBadge"
 import { BadgePill } from "@/components/public/ui/BadgePill"
+import { BubbleGrid } from "@/components/public/blocks/BubbleGrid"
 
 export function PrivacyClient() {
   const { language } = useLanguage()
@@ -126,9 +127,33 @@ export function PrivacyClient() {
         </div>
       </div>
 
-      <AnchorNav
-        ariaLabel={language === "fr" ? "Sommaire" : "Table of contents"}
-        items={T.sections.map((s, idx) => ({ href: `#s${idx + 1}`, label: `${idx + 1}️⃣ ${s.title.replace(/^\d+\)\s*/, "")}` }))}
+      {/* Sommaire supprimé au profit des bulles (BubbleGrid) */}
+
+      <BubbleGrid
+        title={language === "fr" ? "Transparence sur vos données" : "Transparency about your data"}
+        intro={language === "fr" ? "🔒 Nous respectons votre vie privée. Découvrez comment nous collectons, utilisons et protégeons vos données." : "🔒 We respect your privacy. Learn how we collect, use, and protect your data."}
+        items={
+          language === "fr"
+            ? [
+                { label: "Données collectées", href: "#s1", icon: "📊", tooltip: "Quelles données sont collectées ?" },
+                { label: "Finalités & base légale", href: "#s2", icon: "🎯", tooltip: "Finalités et base légale" },
+                { label: "Durées", href: "#s3", icon: "⏳", tooltip: "Combien de temps gardons‑nous vos données ?" },
+                { label: "Destinataires & transferts", href: "#s4", icon: "🌍", tooltip: "Destinataires et transferts" },
+                { label: "Cookies & traceurs", href: "#s5", icon: "🍪", tooltip: "Cookies et traceurs" },
+                { label: "Vos droits", href: "#s6", icon: "🧑‍⚖️", tooltip: "Vos droits" },
+                { label: "Sécurité", href: "#s7", icon: "🔐", tooltip: "Comment vos données sont‑elles protégées ?" },
+              ]
+            : [
+                { label: "Data collected", href: "#s1", icon: "📊", tooltip: "What data is collected?" },
+                { label: "Purposes & legal basis", href: "#s2", icon: "🎯", tooltip: "Purposes and legal basis" },
+                { label: "Retention", href: "#s3", icon: "⏳", tooltip: "How long do we keep your data?" },
+                { label: "Recipients & transfers", href: "#s4", icon: "🌍", tooltip: "Recipients and transfers" },
+                { label: "Cookies & trackers", href: "#s5", icon: "🍪", tooltip: "Cookies and trackers" },
+                { label: "Your rights", href: "#s6", icon: "🧑‍⚖️", tooltip: "Your rights" },
+                { label: "Security", href: "#s7", icon: "🔐", tooltip: "Security" },
+              ]
+        }
+        tone="blue"
       />
 
       <div className="mt-8 space-y-6 text-gray-700">

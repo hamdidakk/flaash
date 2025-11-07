@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+    <main>
       <PublicHeader />
       <PrivacyClient />
       <PublicFooter />

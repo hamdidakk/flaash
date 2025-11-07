@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function SubscriptionPage() {
   return (
-    <main style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+    <main>
       <PublicHeader />
       <SubscriptionClient />
       <PublicFooter />

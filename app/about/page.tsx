@@ -23,7 +23,7 @@ export default function AboutPage() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
   return (
-    <main style={{ paddingBottom: "var(--public-footer-height, 96px)" }}>
+    <main>
       <PublicHeader />
       <section className="mx-auto max-w-6xl px-4 py-16">
         <h1 className="text-4xl font-semibold tracking-tight text-slate-900">{t("public.about.title")}</h1>

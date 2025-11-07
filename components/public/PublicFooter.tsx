@@ -31,7 +31,7 @@ export function PublicFooter() {
     <footer
       ref={ref as any}
       role="contentinfo"
-      className="relative md:fixed md:bottom-0 md:left-0 md:right-0 border-t border-zinc-800 bg-zinc-950 text-zinc-200"
+      className="relative border-t border-zinc-800 bg-zinc-950 text-zinc-200"
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-6 md:grid-cols-3">
         <div className="space-y-2">
