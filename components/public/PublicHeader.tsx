@@ -89,7 +89,7 @@ export function PublicHeader() {
                 {t("public.nav.themes")}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            <DropdownMenuContent align="start" className="z-[3000]">
               <DropdownMenuItem asChild>
                 <Link href="/themes" onClick={() => trackEvent("nav_theme_select", { slug: "all" } as any)}>
                   {language === "fr" ? "Toutes les thématiques" : "All themes"}
