@@ -76,7 +76,7 @@ export default function AboutPage() {
           </SectionCard>
         </div>
 
-        <SectionCard>
+        <SectionCard className="mt-12">
           <section id="histoire" className="fade-in-up">
             <SectionHeader as="h3" title={t("public.about.history.title")} icon={<span>⏳</span>} />
             <Timeline
@@ -89,7 +89,7 @@ export default function AboutPage() {
           </section>
         </SectionCard>
 
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-12 mb-12 flex flex-wrap items-center justify-center gap-3">
           <ButtonCTA href="/chat" icon={<span>🤖</span>}>
             {t("public.about.ctas.chat")}
           </ButtonCTA>
