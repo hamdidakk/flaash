@@ -29,6 +29,7 @@ export function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const themes = getThemes(language)
+  const remainingNav = navItems.filter((i) => i.href !== "/")
 
   useEffect(() => {
     setMobileOpen(false)
@@ -71,6 +72,9 @@ export function PublicHeader() {
         </Link>
 
         <nav className="relative z-[2100] hidden items-center gap-7 md:flex pointer-events-auto" aria-label="Navigation principale">
+          {/* 1) Accueil en premier */}
+          <NavLinkNeon href="/" label={t("public.nav.home")} active={pathname === "/"} />
+          {/* 2) Thématiques en deuxième */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -101,7 +105,8 @@ export function PublicHeader() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          {navItems.map((item) =>
+          {/* 3) Le reste des entrées */}
+          {remainingNav.map((item) =>
             item.external ? (
               <a
                 key={item.href}
@@ -171,6 +176,16 @@ export function PublicHeader() {
                   </svg>
                 </button>
               </div>
+              {/* 1) Accueil en premier */}
+              <div className="mb-1">
+                <Link
+                  href="/"
+                  className={`rounded-md px-2 py-2 text-base hover:bg-gray-50 ${pathname === "/" ? "text-gray-900" : "text-gray-800"}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {t("public.nav.home")}
+                </Link>
+              </div>
               <div className="mb-2">
                 <div className="px-2 py-1 text-xs font-medium uppercase tracking-wide text-gray-500">
                   {t("public.nav.themes")}
@@ -197,7 +212,7 @@ export function PublicHeader() {
                 </div>
               </div>
               <div className="flex max-h-[60vh] flex-col gap-1 overflow-auto">
-                {navItems.map((item) =>
+                {remainingNav.map((item) =>
                   item.external ? (
                     <a
                       key={item.href}
