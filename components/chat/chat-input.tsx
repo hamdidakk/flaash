@@ -13,22 +13,41 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ value, onChange, onSend, disabled }: ChatInputProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   return (
-    <div className="border-t p-4">
+    <form
+      className="sticky bottom-0 border-t bg-white/90 p-4 backdrop-blur supports-[backdrop-filter]:bg-white/70"
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSend()
+      }}
+      aria-label={t("chat.formAriaLabel")}
+    >
       <div className="flex gap-2">
         <Input
-          placeholder={t("chat.placeholder")}
+          placeholder={
+            language === "fr"
+              ? "Posez une question sur un article, un thème ou une citation FLAASH…"
+              : "Ask about an article, a theme or a FLAASH citation…"
+          }
+          aria-label={t("chat.inputAriaLabel")}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && onSend()}
           disabled={disabled}
+          className="h-11 rounded-xl px-4 py-3 text-sm"
         />
-        <Button onClick={onSend} disabled={disabled}>
+        <Button
+          type="submit"
+          aria-label={t("chat.sendAriaLabel")}
+          onClick={onSend}
+          disabled={disabled}
+          className="size-11 shrink-0 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 p-0 text-white hover:scale-105"
+        >
           <Send className="h-4 w-4" />
         </Button>
       </div>
-    </div>
+    </form>
   )
 }

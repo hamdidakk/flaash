@@ -29,7 +29,17 @@ interface CostManagementCardProps {
 
 export function CostManagementCard({ data }: CostManagementCardProps) {
   const { t } = useLanguage()
-  const usagePercentage = (data.alerts.current / data.alerts.threshold) * 100
+  const safeTotal = Number(data.totalCost) || 0
+  const safeTokens = Number(data.tokensUsed) || 0
+  const safeEstimated = Number(data.estimatedCost) || 0
+  const bd = data.breakdown || { embedding: 0, completion: 0, search: 0, storage: 0 }
+  const embedding = Number(bd.embedding) || 0
+  const completion = Number(bd.completion) || 0
+  const search = Number(bd.search) || 0
+  const storage = Number(bd.storage) || 0
+  const alertCurrent = Number(data.alerts?.current) || 0
+  const alertThreshold = Number(data.alerts?.threshold) || 0
+  const usagePercentage = alertThreshold > 0 ? (alertCurrent / alertThreshold) * 100 : 0
 
   return (
     <Card className="p-6 space-y-6">
@@ -50,7 +60,7 @@ export function CostManagementCard({ data }: CostManagementCardProps) {
             <DollarSign className="h-4 w-4" />
             {t("dashboard.costs.totalCost")}
           </div>
-          <div className="text-2xl font-bold">${data.totalCost.toFixed(2)}</div>
+          <div className="text-2xl font-bold">${safeTotal.toFixed(2)}</div>
         </div>
 
         <div className="space-y-2">
@@ -58,7 +68,7 @@ export function CostManagementCard({ data }: CostManagementCardProps) {
             <TrendingUp className="h-4 w-4" />
             {t("dashboard.costs.tokensUsed")}
           </div>
-          <div className="text-2xl font-bold">{(data.tokensUsed / 1000).toFixed(1)}K</div>
+          <div className="text-2xl font-bold">{(safeTokens / 1000).toFixed(1)}K</div>
         </div>
 
         <div className="space-y-2">
@@ -66,7 +76,7 @@ export function CostManagementCard({ data }: CostManagementCardProps) {
             <DollarSign className="h-4 w-4" />
             {t("dashboard.costs.estimatedCost")}
           </div>
-          <div className="text-2xl font-bold">${data.estimatedCost.toFixed(2)}</div>
+          <div className="text-2xl font-bold">${safeEstimated.toFixed(2)}</div>
         </div>
       </div>
 
@@ -79,33 +89,33 @@ export function CostManagementCard({ data }: CostManagementCardProps) {
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{t("dashboard.costs.operations.embedding")}</span>
-              <span className="font-medium">${data.breakdown.embedding.toFixed(2)}</span>
+              <span className="font-medium">${embedding.toFixed(2)}</span>
             </div>
-            <Progress value={(data.breakdown.embedding / data.totalCost) * 100} className="h-2" />
+            <Progress value={safeTotal > 0 ? (embedding / safeTotal) * 100 : 0} className="h-2" />
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{t("dashboard.costs.operations.completion")}</span>
-              <span className="font-medium">${data.breakdown.completion.toFixed(2)}</span>
+              <span className="font-medium">${completion.toFixed(2)}</span>
             </div>
-            <Progress value={(data.breakdown.completion / data.totalCost) * 100} className="h-2" />
+            <Progress value={safeTotal > 0 ? (completion / safeTotal) * 100 : 0} className="h-2" />
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{t("dashboard.costs.operations.search")}</span>
-              <span className="font-medium">${data.breakdown.search.toFixed(2)}</span>
+              <span className="font-medium">${search.toFixed(2)}</span>
             </div>
-            <Progress value={(data.breakdown.search / data.totalCost) * 100} className="h-2" />
+            <Progress value={safeTotal > 0 ? (search / safeTotal) * 100 : 0} className="h-2" />
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{t("dashboard.costs.operations.storage")}</span>
-              <span className="font-medium">${data.breakdown.storage.toFixed(2)}</span>
+              <span className="font-medium">${storage.toFixed(2)}</span>
             </div>
-            <Progress value={(data.breakdown.storage / data.totalCost) * 100} className="h-2" />
+            <Progress value={safeTotal > 0 ? (storage / safeTotal) * 100 : 0} className="h-2" />
           </div>
         </div>
       </div>
@@ -120,10 +130,10 @@ export function CostManagementCard({ data }: CostManagementCardProps) {
             <div className="space-y-1">
               <div className="flex items-center justify-between text-xs text-orange-700 dark:text-orange-300">
                 <span>
-                  {t("dashboard.costs.current")}: ${data.alerts.current.toFixed(2)}
+              {t("dashboard.costs.current")}: ${alertCurrent.toFixed(2)}
                 </span>
                 <span>
-                  {t("dashboard.costs.threshold")}: ${data.alerts.threshold.toFixed(2)}
+                  {t("dashboard.costs.threshold")}: ${alertThreshold.toFixed(2)}
                 </span>
               </div>
               <Progress value={usagePercentage} className="h-2 bg-orange-200 dark:bg-orange-900" />

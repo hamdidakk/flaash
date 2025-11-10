@@ -17,8 +17,10 @@ export function ErrorPage({ code, reset }: ErrorPageProps) {
   const router = useRouter()
   const { t } = useLanguage()
 
-  const errorKey = code === "generic" ? "generic" : (String(code) as keyof typeof t.errors)
-  const error = t.errors[errorKey]
+  const errorKey = code === "generic" ? "generic" : String(code)
+  const title = t(`errors.${errorKey}.title`)
+  const description = t(`errors.${errorKey}.description`)
+  const actionLabel = t(`errors.${errorKey}.action`)
 
   const handleAction = () => {
     if (code === 401) {
@@ -43,10 +45,10 @@ export function ErrorPage({ code, reset }: ErrorPageProps) {
   return (
     <ErrorLayout>
       <ErrorCard
-        title={error.title}
-        description={error.description}
+        title={title}
+        description={description}
         code={code !== "generic" ? code : undefined}
-        action={<ErrorActionButton label={error.action} icon={getIcon()} onClick={handleAction} />}
+        action={<ErrorActionButton label={actionLabel} icon={getIcon()} onClick={handleAction} />}
       />
     </ErrorLayout>
   )

@@ -124,6 +124,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  html { scroll-behavior: smooth; }
 
   /* TailAdmin-style scrollbar */
   ::-webkit-scrollbar {
@@ -142,3 +143,140 @@
     @apply bg-muted-foreground/30;
   }
 }
+
+/* Futuristic theme (optional, enabled by adding .theme-futuriste on <body>) */
+.cta-futuriste,
+.cta-chat {
+  background: linear-gradient(90deg, #00e0ff, #8a2eff);
+  color: #ffffff;
+  border: 0;
+  box-shadow: 0 0 0 rgba(0, 224, 255, 0);
+  transition: box-shadow 200ms ease, transform 120ms ease;
+}
+.cta-futuriste:hover,
+.cta-chat:hover {
+  box-shadow: 0 0 18px rgba(0, 224, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.theme-futuriste {
+  --background: #0e0e12; /* noir bleuté */
+  --foreground: #eaeaea;
+  --card: #161a20; /* léger glow */
+  --card-foreground: #eaeaea;
+  --popover: #161a20;
+  --popover-foreground: #eaeaea;
+  --primary: #00e0ff; /* cyan néon */
+  --primary-foreground: #0e0e12;
+  --secondary: #ff007a; /* magenta vibrant */
+  --secondary-foreground: #ffffff;
+  --muted: #12151a;
+  --muted-foreground: #9ca3af;
+  --accent: #11131a;
+  --accent-foreground: #eaeaea;
+  --border: #1f2430;
+  --input: #1b202a;
+  --ring: #00e0ff;
+
+  /* profondeur subtile du fond */
+  background-image:
+    radial-gradient(1200px 800px at 0% 0%, rgba(255,255,255,0.03), transparent 60%),
+    radial-gradient(900px 700px at 100% 100%, rgba(0,224,255,0.06), transparent 60%);
+  background-blend-mode: screen;
+}
+
+.theme-futuriste .public-header {
+  @apply bg-black/80 backdrop-blur border-b-0;
+}
+
+.theme-futuriste .cta-futuriste,
+.theme-futuriste .cta-chat {
+  background: linear-gradient(90deg, #00e0ff, #8a2eff);
+  color: #0e0e12;
+  box-shadow: 0 0 0px rgba(0, 224, 255, 0.0);
+  transition: box-shadow 200ms ease, transform 120ms ease;
+  position: relative;
+}
+.theme-futuriste .cta-futuriste:hover,
+.theme-futuriste .cta-chat:hover {
+  box-shadow: 0 0 24px rgba(0, 224, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.theme-futuriste .btn-pulse {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(0, 224, 255, 0); }
+  50% { box-shadow: 0 0 22px rgba(0, 224, 255, 0.28); }
+}
+
+.theme-futuriste .card-future {
+  background: #161a20;
+  border-color: #242a36;
+}
+.theme-futuriste .card-future:hover {
+  box-shadow: 0 0 0 1px #00e0ff inset, 0 0 18px rgba(0, 224, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.theme-futuriste .hero-future {
+  background: linear-gradient(135deg, rgba(0, 224, 255, 0.08), rgba(138, 46, 255, 0.08));
+}
+
+.theme-futuriste .logo-auto {
+  filter: invert(1) brightness(1.2);
+}
+
+.theme-futuriste .display-title {
+  font-weight: 700;
+  text-shadow: 0 0 18px rgba(0, 224, 255, 0.25);
+}
+
+.theme-futuriste .hero-future p {
+  color: #bfc2c7;
+}
+
+.theme-futuriste .fade-in-up {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeUp 480ms ease forwards;
+}
+/* Generic fade-in-up (unscoped) */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeUp 520ms ease forwards;
+}
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ticker bande défilante */
+.ticker__track {
+  animation: ticker 30s linear infinite;
+  will-change: transform;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* FAQ chevron rotation */
+details[open] .chev { transform: rotate(180deg); }
+
+/* Subtle neon pulses for IA icon */
+.ia-halo { animation: iaNeon 3s ease-in-out infinite; }
+.ia-outer-ring, .ia-base-ring { animation: iaRing 4s ease-in-out infinite; }
+@keyframes iaNeon {
+  0%, 100% { filter: blur(16px) brightness(1); opacity: .55; }
+  50% { filter: blur(20px) brightness(1.08); opacity: .8; }
+}
+@keyframes iaRing {
+  0%, 100% { box-shadow: 0 0 12px rgba(59,130,246,.3); }
+  50% { box-shadow: 0 0 16px rgba(59,130,246,.5); }
+}
+

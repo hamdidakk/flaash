@@ -1,3 +1,5 @@
+// Sentry removed
+
 export type ErrorCode = 400 | 401 | 403 | 404 | 500 | 503
 
 export class AppError extends Error {
@@ -74,13 +76,26 @@ export class ErrorLogger {
       this.logs.pop()
     }
 
-    // Log to console in development
+    // Log to console in development with structured payload
     if (process.env.NODE_ENV === "development") {
-      console.error("[v0] Error logged:", log)
+      const isClientError = error.code >= 400 && error.code < 500
+      try {
+        const payload = JSON.stringify(log, null, 2)
+        if (isClientError) {
+          console.warn("[v0] Warning:", payload)
+        } else {
+          console.error("[v0] Error logged:", payload)
+        }
+      } catch {
+        if (isClientError) {
+          console.warn("[v0] Warning:", log)
+        } else {
+          console.error("[v0] Error logged:", log)
+        }
+      }
     }
 
-    // In production, you would send this to an error tracking service
-    // Example: Sentry, LogRocket, etc.
+    // Hook for external error tracking can be added here if needed
   }
 
   static getLogs(): ErrorLog[] {

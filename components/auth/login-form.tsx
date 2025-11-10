@@ -10,10 +10,10 @@ import { FormField } from "./form-field"
 import Link from "next/link"
 
 export function LoginForm() {
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
+  const { loginWithCredentials } = useAuth()
   const { t } = useLanguage()
   const { showError } = useErrorHandler()
 
@@ -21,7 +21,7 @@ export function LoginForm() {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await login(email, password)
+      await loginWithCredentials(username, password)
     } catch (error) {
       console.error("[v0] Login error:", error)
       showError(error)
@@ -33,12 +33,11 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <FormField
-        id="email"
-        label={t("auth.email")}
-        type="email"
-        placeholder="name@example.com"
-        value={email}
-        onChange={setEmail}
+        id="username"
+        label={t("auth.username")}
+        type="text"
+        value={username}
+        onChange={setUsername}
         required
         disabled={isLoading}
       />
@@ -50,11 +49,6 @@ export function LoginForm() {
         onChange={setPassword}
         required
         disabled={isLoading}
-        helperText={
-          <Link href="#" className="text-sm text-muted-foreground hover:text-primary">
-            {t("auth.forgotPassword")}
-          </Link>
-        }
       />
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? t("common.loading") : t("auth.login")}

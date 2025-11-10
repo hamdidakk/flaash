@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText } from "lucide-react"
@@ -12,6 +12,14 @@ import { DocumentsTable } from "@/components/documents/documents-table"
 import { ChunksDialog } from "@/components/documents/chunks-dialog"
 import { UploadDocumentDialog } from "@/components/documents/upload-document-dialog"
 import { DeleteDocumentDialog } from "@/components/documents/delete-document-dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import type { KnowledgeDocument, ChunkRecord } from "@/lib/types"
+import { listDocumentNames, getDocumentChunksByName, removeDocumentByName } from "@/lib/dakkom-api"
 
 export default function DocumentsPage() {
   const { t } = useLanguage()
@@ -19,75 +27,61 @@ export default function DocumentsPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFrom, setDateFrom] = useState("")
   const [dateTo, setDateTo] = useState("")
-  const [selectedDoc, setSelectedDoc] = useState<any>(null)
+  const [documents, setDocuments] = useState<KnowledgeDocument[]>([])
+  const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | null>(null)
+  const [selectedChunks, setSelectedChunks] = useState<ChunkRecord[]>([])
   const [showChunks, setShowChunks] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
+  const [uploadMode, setUploadMode] = useState<"single" | "batch">("single")
   const [showDelete, setShowDelete] = useState(false)
-  const [documentToDelete, setDocumentToDelete] = useState<any>(null)
+  const [documentToDelete, setDocumentToDelete] = useState<KnowledgeDocument | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
-  // Mock data
-  const documents = [
-    {
-      id: 1,
-      name: "Product Specifications.pdf",
-      status: "completed",
-      chunks: 45,
-      size: "2.3 MB",
-      uploadedAt: "2025-01-15 10:30",
-    },
-    {
-      id: 2,
-      name: "User Manual v2.docx",
-      status: "processing",
-      chunks: 0,
-      size: "1.8 MB",
-      uploadedAt: "2025-01-15 11:45",
-    },
-    {
-      id: 3,
-      name: "Technical Documentation.pdf",
-      status: "completed",
-      chunks: 128,
-      size: "5.7 MB",
-      uploadedAt: "2025-01-14 09:15",
-    },
-    { id: 4, name: "API Reference.md", status: "failed", chunks: 0, size: "450 KB", uploadedAt: "2025-01-14 14:20" },
-  ]
+  const formatDisplayDate = (value: string) => new Date(value).toLocaleString()
 
-  const mockChunks = [
-    {
-      id: 1,
-      content:
-        "This is the first chunk of the document containing important information about the product specifications...",
-      page: 1,
-      score: 0.95,
-    },
-    {
-      id: 2,
-      content: "The second chunk discusses technical requirements and implementation details for the system...",
-      page: 2,
-      score: 0.89,
-    },
-    {
-      id: 3,
-      content: "Additional context about performance metrics and benchmarking results...",
-      page: 3,
-      score: 0.87,
-    },
-  ]
+  const reloadDocuments = async () => {
+    try {
+      setIsLoading(true)
+      const res = await listDocumentNames()
+      const nowIso = new Date().toISOString()
+      const mapped: KnowledgeDocument[] = res.documents.map((name, idx) => ({
+        id: `${name}-${idx}`,
+        name,
+        status: "completed",
+        size: "",
+        chunkCount: 0,
+        ingestionProgress: 100,
+        uploadedAtRaw: nowIso,
+        source: "API",
+        owner: "",
+      }))
+      setDocuments(mapped)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    void reloadDocuments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const filteredDocs = documents.filter((doc) => {
-    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const query = searchQuery.toLowerCase()
+    const matchesSearch =
+      doc.name.toLowerCase().includes(query) ||
+      doc.owner.toLowerCase().includes(query) ||
+      doc.source.toLowerCase().includes(query)
     const matchesStatus = statusFilter === "all" || doc.status === statusFilter
 
     let matchesDateRange = true
     if (dateFrom || dateTo) {
-      const docDate = new Date(doc.uploadedAt)
+      const docDate = new Date(doc.uploadedAtRaw)
       if (dateFrom) {
         matchesDateRange = matchesDateRange && docDate >= new Date(dateFrom)
       }
       if (dateTo) {
-        matchesDateRange = matchesDateRange && docDate <= new Date(dateTo + " 23:59:59")
+        matchesDateRange = matchesDateRange && docDate <= new Date(`${dateTo}T23:59:59`)
       }
     }
 
@@ -100,26 +94,72 @@ export default function DocumentsPage() {
     setDateTo("")
   }
 
-  const handleViewChunks = (doc: any) => {
+  const handleViewChunks = async (doc: KnowledgeDocument) => {
     setSelectedDoc(doc)
+    try {
+      const res = await getDocumentChunksByName(doc.name)
+      const chunks: ChunkRecord[] = res.chunks.map((c) => ({
+        id: c.id,
+        content: c.value,
+        metadata: { document: doc.name, documentId: doc.id, source: c.source, isValidated: c.is_validated },
+      }))
+      setSelectedChunks(chunks)
+    } catch {
+      setSelectedChunks([])
+    }
     setShowChunks(true)
   }
 
-  const handleDelete = (doc: any) => {
+  const handleDelete = (doc: KnowledgeDocument) => {
     setDocumentToDelete(doc)
     setShowDelete(true)
   }
+
+  const handleUploadComplete = () => {
+    void reloadDocuments()
+  }
+
+  const handleOpenUpload = (mode: "single" | "batch") => {
+    setUploadMode(mode)
+    setShowUpload(true)
+  }
+
+  const handleDeleteConfirmed = async () => {
+    if (!documentToDelete) return
+    try {
+      await removeDocumentByName(documentToDelete.name)
+      await reloadDocuments()
+    } finally {
+      setShowDelete(false)
+      setDocumentToDelete(null)
+    }
+  }
+
+  const tableRows = filteredDocs.map((doc) => ({
+    ...doc,
+    uploadedAt: formatDisplayDate(doc.uploadedAtRaw),
+  }))
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={t("documents.title")}
         description={t("documents.description")}
-        action={
-          <Button onClick={() => setShowUpload(true)}>
-            <Upload className="mr-2 h-4 w-4" />
-            {t("documents.upload")}
-          </Button>
+        actions={
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Upload className="mr-2 h-4 w-4" />
+                {t("documents.upload")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onSelect={() => handleOpenUpload("single")}>{t("documents.upload")}</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleOpenUpload("batch")}>
+                {t("documents.uploadDialog.batchMode")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         }
       />
 
@@ -135,26 +175,34 @@ export default function DocumentsPage() {
         onClearFilters={handleClearFilters}
       />
 
-      {filteredDocs.length === 0 ? (
-        <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />
-      ) : (
-        <DocumentsTable documents={filteredDocs} onViewChunks={handleViewChunks} onDelete={handleDelete} />
-      )}
+        {isLoading ? (
+          <div className="text-center text-sm text-muted-foreground py-8">{t("common.loading")}</div>
+        ) : tableRows.length === 0 ? (
+          <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />
+        ) : (
+          <DocumentsTable documents={tableRows} onViewChunks={handleViewChunks} onDelete={handleDelete} />
+        )}
 
-      <ChunksDialog
-        open={showChunks}
-        onOpenChange={setShowChunks}
-        documentName={selectedDoc?.name}
-        chunks={mockChunks}
-      />
+        <ChunksDialog
+          open={showChunks}
+          onOpenChange={setShowChunks}
+          documentName={selectedDoc?.name}
+          chunks={selectedChunks}
+        />
 
-      <UploadDocumentDialog open={showUpload} onOpenChange={setShowUpload} />
+        <UploadDocumentDialog
+          open={showUpload}
+          onOpenChange={setShowUpload}
+          onUploadComplete={handleUploadComplete}
+          mode={uploadMode}
+        />
 
-      <DeleteDocumentDialog
-        open={showDelete}
-        onOpenChange={setShowDelete}
-        documentName={documentToDelete?.name || ""}
-      />
+        <DeleteDocumentDialog
+          open={showDelete}
+          onOpenChange={setShowDelete}
+          documentName={documentToDelete?.name || ""}
+          onDeleteComplete={handleDeleteConfirmed}
+        />
     </div>
   )
 }

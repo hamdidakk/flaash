@@ -6,22 +6,17 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { ChunkCard } from "@/components/chunk-card"
 import { useLanguage } from "@/lib/language-context"
-
-interface Chunk {
-  id: number
-  content: string
-  page: number
-  score: number
-}
+import type { ChunkRecord } from "@/lib/types"
 
 interface ChunksDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   documentName?: string
-  chunks: Chunk[]
+  chunks: ChunkRecord[]
+  onInspectChunk?: (chunkId: string | number) => void
 }
 
-export function ChunksDialog({ open, onOpenChange, documentName, chunks }: ChunksDialogProps) {
+export function ChunksDialog({ open, onOpenChange, documentName, chunks, onInspectChunk }: ChunksDialogProps) {
   const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -52,7 +47,15 @@ export function ChunksDialog({ open, onOpenChange, documentName, chunks }: Chunk
               {searchQuery ? t("documents.chunks.noResults") : t("documents.empty.description")}
             </div>
           ) : (
-            filteredChunks.map((chunk) => <ChunkCard key={chunk.id} chunk={chunk} />)
+              filteredChunks.map((chunk, index) => (
+                <ChunkCard
+                  key={chunk.id}
+                  chunk={chunk}
+                  index={index}
+                  highlight={searchQuery}
+                  onInspect={onInspectChunk}
+                />
+              ))
           )}
         </div>
       </DialogContent>

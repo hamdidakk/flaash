@@ -2,6 +2,8 @@
 
 import { useEffect } from "react"
 import { ErrorPage } from "@/components/error-page"
+import { LanguageProvider } from "@/lib/language-context"
+import { PublicFooter } from "@/components/public/PublicFooter"
 
 export default function GlobalError({
   error,
@@ -14,11 +16,16 @@ export default function GlobalError({
     console.error("[v0] Global error caught:", error)
   }, [error])
 
-  return (
-    <html lang="fr">
-      <body>
-        <ErrorPage code={500} reset={reset} />
-      </body>
-    </html>
-  )
+      return (
+        <html lang="fr">
+          <body>
+            <LanguageProvider>
+              <div>
+                <ErrorPage code={500} reset={reset} />
+                <PublicFooter />
+              </div>
+            </LanguageProvider>
+          </body>
+        </html>
+      )
 }

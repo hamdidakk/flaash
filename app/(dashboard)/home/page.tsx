@@ -1,66 +1,24 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { PageHeader } from "@/components/page-header"
 import { StatsGrid } from "@/components/dashboard/stats-grid"
 import { QuickActionsSection } from "@/components/dashboard/quick-actions-section"
 import { RecentActivitySection } from "@/components/dashboard/recent-activity-section"
 import { CostManagementCard } from "@/components/dashboard/cost-management-card"
+import { getCostSnapshot } from "@/lib/telemetry"
 import { FileText, MessageSquare, Search, TrendingUp, Upload, Settings } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+// Replace mock stats with minimal placeholders; can be fed from backend later
 
 export default function HomePage() {
   const { t } = useLanguage()
-  const [stats, setStats] = useState({
-    documents: 0,
-    chunks: 0,
-    conversations: 0,
-    searches: 0,
-  })
 
-  const [costData, setCostData] = useState({
-    totalCost: 0,
-    tokensUsed: 0,
-    estimatedCost: 0,
-    breakdown: {
-      embedding: 0,
-      completion: 0,
-      search: 0,
-      storage: 0,
-    },
-    alerts: {
-      threshold: 0,
-      current: 0,
-      isNearLimit: false,
-    },
-  })
-
-  useEffect(() => {
-    // Mock data - replace with real API call
-    setStats({
-      documents: 1247,
-      chunks: 8934,
-      conversations: 523,
-      searches: 2891,
-    })
-
-    setCostData({
-      totalCost: 127.5,
-      tokensUsed: 2847500,
-      estimatedCost: 145.2,
-      breakdown: {
-        embedding: 45.3,
-        completion: 62.8,
-        search: 12.4,
-        storage: 7.0,
-      },
-      alerts: {
-        threshold: 150.0,
-        current: 127.5,
-        isNearLimit: true,
-      },
-    })
-  }, [])
+  const snapshot = getCostSnapshot()
+  const totalDocuments = 0
+  const totalChunks = 0
+  const totalSearches = (snapshot as any).breakdown?.search ? Math.round(((snapshot as any).breakdown.search / 0.003) || 0) : 0
+  const totalConversations = (snapshot as any).breakdown?.completion ? Math.round(((snapshot as any).breakdown.completion / 0.02) || 0) : 0
+  const costData = snapshot
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -93,50 +51,50 @@ export default function HomePage() {
 
   const recentActivity = [
     {
-      id: "1",
+      id: "activity-upload",
       type: "upload" as const,
       title: t("dashboard.activity.documentUploaded"),
-      description: "technical-specs.pdf",
+      description: "",
       timestamp: new Date(Date.now() - 1000 * 60 * 5),
     },
     {
-      id: "2",
+      id: "activity-chat",
       type: "chat" as const,
       title: t("dashboard.activity.newConversation"),
-      description: "RAG query about product features",
-      timestamp: new Date(Date.now() - 1000 * 60 * 15),
+      description: t("dashboard.activity.chatFallback"),
+      timestamp: new Date(Date.now() - 1000 * 60 * 14),
     },
     {
-      id: "3",
+      id: "activity-search",
       type: "search" as const,
       title: t("dashboard.activity.searchPerformed"),
-      description: `${t("dashboard.activity.query")}: "authentication methods"`,
-      timestamp: new Date(Date.now() - 1000 * 60 * 30),
+      description: `${t("dashboard.activity.query")}: "product latency"`,
+      timestamp: new Date(Date.now() - 1000 * 60 * 28),
     },
   ]
 
   const statsData = [
     {
       title: t("dashboard.stats.documents"),
-      value: stats.documents,
+      value: totalDocuments,
       icon: FileText,
       trend: { value: 12, isPositive: true },
     },
     {
       title: t("dashboard.stats.chunks"),
-      value: stats.chunks,
+      value: totalChunks,
       icon: TrendingUp,
       trend: { value: 8, isPositive: true },
     },
     {
       title: t("dashboard.stats.conversations"),
-      value: stats.conversations,
+      value: totalConversations,
       icon: MessageSquare,
       trend: { value: 5, isPositive: true },
     },
     {
       title: t("dashboard.stats.searches"),
-      value: stats.searches,
+      value: totalSearches,
       icon: Search,
       trend: { value: 15, isPositive: true },
     },

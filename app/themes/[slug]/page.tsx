@@ -1,0 +1,173 @@
+import Link from "next/link"
+import { getThemeBySlug, getThemes, getAllThemeSlugs } from "@/lib/themes"
+import type { Language } from "@/lib/i18n"
+import { PageSection } from "@/components/public/ui/PageSection"
+import { SectionHeader } from "@/components/public/ui/SectionHeader"
+import { SectionCard } from "@/components/public/ui/SectionCard"
+import { HeroSplit } from "@/components/public/blocks/HeroSplit"
+import { QuickAsk } from "@/components/public/blocks/QuickAsk"
+import { notFound } from "next/navigation"
+import { PublicHeader } from "@/components/public/PublicHeader"
+import { PublicFooter } from "@/components/public/PublicFooter"
+import { ThemeVisual } from "@/components/public/blocks/ThemeVisual"
+import { headers } from "next/headers"
+
+export const dynamic = "force-dynamic"
+export const dynamicParams = true
+export const revalidate = 0
+
+export async function generateStaticParams() {
+  return getAllThemeSlugs().map((slug) => ({ slug }))
+}
+
+async function detectLanguage(): Promise<Language> {
+  try {
+    const h = await headers()
+    const cookieHeader = h.get("cookie") || ""
+    const match = cookieHeader.match(/(?:^|;\s*)language=(en|fr)/)
+    if (match) return match[1] as Language
+    const al = h.get("accept-language") || ""
+    return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  } catch {}
+  return "fr"
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug: raw } = await params
+  const slug = decodeURIComponent(String(raw || "")).trim().toLowerCase()
+  const lang = await detectLanguage()
+  const fallback = lang === "fr" ? ("en" as Language) : ("fr" as Language)
+  const theme = getThemeBySlug(slug, lang) ?? getThemeBySlug(slug, fallback)
+  if (!theme) return {}
+  const title = `${theme.title} | FLAASH`
+  const description = theme.short
+  return {
+    title,
+    description,
+    alternates: { canonical: `/themes/${theme.slug}` },
+    openGraph: {
+      title,
+      description,
+      images: theme.coverImage ? [{ url: theme.coverImage }] : undefined,
+      type: "article",
+    },
+  }
+}
+
+export default async function ThemeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Normalize slug to be safe with case/encoding
+  const { slug: raw } = await params
+  const slug = decodeURIComponent(String(raw || "")).trim().toLowerCase()
+  // Resolve content without relying on headers/cookies to avoid runtime issues
+  const language = await detectLanguage()
+  const fallback = language === "fr" ? ("en" as Language) : ("fr" as Language)
+  const theme = getThemeBySlug(slug, language) ?? getThemeBySlug(slug, fallback)
+  if (!theme) return notFound()
+
+  const related = getThemes(language).filter((t) => t.slug !== theme.slug).slice(0, 3)
+
+  return (
+    <main id="main">
+      <PublicHeader />
+      <PageSection py="12">
+        <HeroSplit
+          heading={`${theme.icon} ${theme.title}`}
+          subtitle={theme.description}
+          containerClassName="py-6"
+          right={<ThemeVisual slug={theme.slug} icon={theme.icon} title={theme.title} subtitle={theme.short} variant="hero" />}
+        />
+
+        {theme.sections && theme.sections.length > 0 ? (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {theme.sections.map((sec) => (
+              <SectionCard key={sec.id}>
+                <h3 className="text-base font-semibold text-gray-900">{sec.title}</h3>
+                <div className="mt-2 space-y-2 text-sm text-gray-700">
+                  {sec.paragraphs.map((p, idx) => (
+                    <p key={idx}>{p}</p>
+                  ))}
+                </div>
+              </SectionCard>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-8">
+          <SectionHeader
+            title={language === "fr" ? "À la une" : "Featured"}
+            subtitle={language === "fr" ? "Sélection d’articles de la thématique" : "Selection of articles in this theme"}
+            icon="⭐"
+          />
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {theme.posts.map((p) => (
+              <SectionCard key={p.id} className="flex flex-col justify-between overflow-hidden">
+                <ThemeVisual slug={theme.slug} icon={theme.icon} title={theme.title} tag={p.tags?.[0]} />
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <time dateTime={p.date}>{new Date(p.date).toLocaleDateString("fr-FR")}</time>
+                  {p.tags && p.tags.length > 0 ? (
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-700">
+                      {p.tags[0]}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="mt-1">
+                  <h3 className="text-base font-semibold text-gray-900">{p.title}</h3>
+                  <p className="mt-2 text-sm text-gray-700">{p.excerpt}</p>
+                </div>
+                <div className="mt-3">
+                  <Link href={`/chat?prefill=${encodeURIComponent(p.title)}`} className="text-sm font-medium text-indigo-600 hover:underline">
+                    {"Interroger l’IA à partir de cet article →"}
+                  </Link>
+                </div>
+              </SectionCard>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <SectionHeader
+            title={language === "fr" ? "Posez une question" : "Ask a question"}
+            subtitle={language === "fr" ? "Interrogez l’Agent IA sur cette thématique" : "Ask the AI Agent about this theme"}
+            icon="🤖"
+          />
+          <QuickAsk
+            defaultValue={theme.examples[0] || ""}
+            placeholder={
+              language === "fr"
+                ? "Ex. : Quelles évolutions sociétales liées à l’IA ?"
+                : "Ex.: What societal shifts are tied to AI?"
+            }
+            ctaLabel={language === "fr" ? "Interroger l’Agent IA" : "Talk to the AI"}
+          />
+        </div>
+
+        <div className="mt-10">
+          <SectionHeader
+            title={language === "fr" ? "Thématiques liées" : "Related themes"}
+            subtitle={language === "fr" ? "Explorez d’autres rubriques proches" : "Explore adjacent categories"}
+            icon="🧭"
+          />
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            {related.map((r) => (
+              <SectionCard key={r.id}>
+                <h4 className="text-sm font-semibold text-gray-900">
+                  <span className="mr-2 select-none">{r.icon}</span>
+                  {r.title}
+                </h4>
+                <p className="mt-2 text-sm text-gray-700">{r.short}</p>
+                <div className="mt-3">
+                  <Link href={`/themes/${r.slug}`} className="text-sm font-medium text-indigo-600 hover:underline">
+                    {language === "fr" ? "Découvrir →" : "Explore →"}
+                  </Link>
+                </div>
+              </SectionCard>
+            ))}
+          </div>
+        </div>
+      </PageSection>
+      <PublicFooter />
+    </main>
+  )
+}
+
+

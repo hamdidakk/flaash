@@ -1,29 +1,14 @@
-"use client"
-
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/lib/auth-context"
+import { PublicHeader } from "@/components/public/PublicHeader"
+import { PublicFooter } from "@/components/public/PublicFooter"
+import { HomeClient } from "@/components/public/HomeClient"
 
 export default function RootPage() {
-  const router = useRouter()
-  const { user, isLoading } = useAuth()
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (user) {
-        router.push("/home")
-      } else {
-        router.push("/login")
-      }
-    }
-  }, [user, isLoading, router])
-
+  const coverUrl = process.env.NEXT_PUBLIC_FLAASH_COVER_URL || "/talk-ia.png"
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="flex items-center gap-2">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        <p className="text-sm text-muted-foreground">Loading...</p>
-      </div>
-    </div>
+    <main id="main">
+      <PublicHeader />
+      <HomeClient coverUrl={coverUrl} />
+      <PublicFooter />
+    </main>
   )
 }

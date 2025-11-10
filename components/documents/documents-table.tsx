@@ -5,20 +5,26 @@ import { Card } from "@/components/ui/card"
 import { Eye, Trash2, FileText } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { DocumentStatusBadge } from "@/components/document-status-badge"
+import type { DocumentStatus } from "@/lib/types"
 
-interface Document {
-  id: number
+interface DocumentRow {
+  id: string
   name: string
-  status: string
-  chunks: number
+  status: DocumentStatus
+  chunkCount: number
   size: string
   uploadedAt: string
+  owner: string
+  source: string
+  ingestionProgress: number
+  lastError?: string
+  batchId?: string
 }
 
 interface DocumentsTableProps {
-  documents: Document[]
-  onViewChunks: (doc: Document) => void
-  onDelete?: (doc: Document) => void
+  documents: DocumentRow[]
+  onViewChunks: (doc: DocumentRow) => void
+  onDelete?: (doc: DocumentRow) => void
 }
 
 export function DocumentsTable({ documents, onViewChunks, onDelete }: DocumentsTableProps) {
@@ -42,15 +48,31 @@ export function DocumentsTable({ documents, onViewChunks, onDelete }: DocumentsT
             {documents.map((doc) => (
               <tr key={doc.id} className="hover:bg-muted/50">
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">{doc.name}</span>
+                  <div className="flex items-start gap-3">
+                    <FileText className="h-4 w-4 text-muted-foreground mt-1" />
+                    <div>
+                      <p className="font-medium leading-tight">{doc.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {doc.owner} • {doc.source}
+                      </p>
+                      {doc.batchId && (
+                        <p className="text-[11px] text-muted-foreground/80">Batch {doc.batchId}</p>
+                      )}
+                    </div>
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <DocumentStatusBadge status={doc.status} />
+                  <div className="space-y-1">
+                    <DocumentStatusBadge status={doc.status} />
+                    {doc.status === "processing" && (
+                      <p className="text-xs text-muted-foreground">{doc.ingestionProgress}%</p>
+                    )}
+                    {doc.status === "failed" && doc.lastError && (
+                      <p className="text-xs text-destructive/80 line-clamp-2">{doc.lastError}</p>
+                    )}
+                  </div>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">{doc.chunks}</td>
+                <td className="px-4 py-3 text-muted-foreground">{doc.chunkCount}</td>
                 <td className="px-4 py-3 text-muted-foreground">{doc.size}</td>
                 <td className="px-4 py-3 text-muted-foreground text-sm">{doc.uploadedAt}</td>
                 <td className="px-4 py-3">
@@ -59,7 +81,8 @@ export function DocumentsTable({ documents, onViewChunks, onDelete }: DocumentsT
                       variant="ghost"
                       size="sm"
                       onClick={() => onViewChunks(doc)}
-                      disabled={doc.status !== "completed"}
+                      disabled={doc.status !== "completed" || doc.chunkCount === 0}
+                      aria-label={t("documents.chunks.title")}
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
