@@ -1,0 +1,117 @@
+"use client"
+
+import Image from "next/image"
+import Link from "next/link"
+import { useLanguage } from "@/lib/language-context"
+import { getThemeBySlug, getThemes } from "@/lib/themes"
+import { PageSection } from "@/components/public/ui/PageSection"
+import { SectionHeader } from "@/components/public/ui/SectionHeader"
+import { SectionCard } from "@/components/public/ui/SectionCard"
+import { HeroSplit } from "@/components/public/blocks/HeroSplit"
+import { QuickAsk } from "@/components/public/blocks/QuickAsk"
+import { notFound } from "next/navigation"
+
+export default function ThemeDetailPage({ params }: { params: { slug: string } }) {
+  const { language } = useLanguage()
+  const theme = getThemeBySlug(params.slug, language)
+  if (!theme) return notFound()
+
+  const related = getThemes(language).filter((t) => t.slug !== theme.slug).slice(0, 3)
+
+  return (
+    <main id="main">
+      <PageSection containerClassName="py-10">
+        <HeroSplit
+          heading={`${theme.icon} ${theme.title}`}
+          subtitle={theme.description}
+          containerClassName="py-6"
+          right={
+            <SectionCard variant="future" className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <div className="text-5xl">{theme.icon}</div>
+                <p className="mt-2 text-sm text-gray-600">{theme.short}</p>
+                {theme.coverImage ? (
+                  <div className="mt-4 overflow-hidden rounded-xl border">
+                    <Image
+                      src={theme.coverImage}
+                      width={640}
+                      height={360}
+                      alt={theme.title}
+                      className="h-auto w-full"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </SectionCard>
+          }
+        />
+
+        <div className="mt-8">
+          <SectionHeader
+            title={language === "fr" ? "À la une" : "Featured"}
+            subtitle={language === "fr" ? "Sélection d’articles de la thématique" : "Selection of articles in this theme"}
+            icon="⭐"
+          />
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {theme.posts.map((p) => (
+              <SectionCard key={p.id} className="flex flex-col justify-between">
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900">{p.title}</h3>
+                  <p className="mt-2 text-sm text-gray-700">{p.excerpt}</p>
+                </div>
+                <div className="mt-3">
+                  <Link href={`/chat?prefill=${encodeURIComponent(p.title)}`} className="text-sm font-medium text-indigo-600 hover:underline">
+                    {language === "fr" ? "Interroger l’IA à partir de cet article →" : "Ask the AI about this article →"}
+                  </Link>
+                </div>
+              </SectionCard>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <SectionHeader
+            title={language === "fr" ? "Posez une question" : "Ask a question"}
+            subtitle={language === "fr" ? "Interrogez l’Agent IA sur cette thématique" : "Ask the AI Agent about this theme"}
+            icon="🤖"
+          />
+          <QuickAsk
+            defaultValue={theme.examples[0] || ""}
+            placeholder={
+              language === "fr"
+                ? "Ex. : Quelles évolutions sociétales liées à l’IA ?"
+                : "Ex.: What societal shifts are tied to AI?"
+            }
+            ctaLabel={language === "fr" ? "Interroger l’Agent IA" : "Talk to the AI"}
+          />
+        </div>
+
+        <div className="mt-10">
+          <SectionHeader
+            title={language === "fr" ? "Thématiques liées" : "Related themes"}
+            subtitle={language === "fr" ? "Explorez d’autres rubriques proches" : "Explore adjacent categories"}
+            icon="🧭"
+          />
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            {related.map((r) => (
+              <SectionCard key={r.id}>
+                <h4 className="text-sm font-semibold text-gray-900">
+                  <span className="mr-2 select-none">{r.icon}</span>
+                  {r.title}
+                </h4>
+                <p className="mt-2 text-sm text-gray-700">{r.short}</p>
+                <div className="mt-3">
+                  <Link href={`/themes/${r.slug}`} className="text-sm font-medium text-indigo-600 hover:underline">
+                    {language === "fr" ? "Découvrir →" : "Explore →"}
+                  </Link>
+                </div>
+              </SectionCard>
+            ))}
+          </div>
+        </div>
+      </PageSection>
+    </main>
+  )
+}
+
+

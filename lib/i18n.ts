@@ -5,6 +5,7 @@ export const translations = {
     public: {
       nav: {
         home: "Home",
+            themes: "Themes",
         shop: "Shop",
         about: "About",
         guide: "Guide",
@@ -630,6 +631,7 @@ export const translations = {
     public: {
       nav: {
         home: "Accueil",
+            themes: "Thématiques",
         shop: "Boutique",
         about: "À Propos",
         guide: "Guide",

@@ -8,10 +8,16 @@ import { LanguageSwitcher } from "@/components/public/LanguageSwitcher"
 import { useLanguage } from "@/lib/language-context"
 import { useEffect, useState } from "react"
 import { NavLinkNeon } from "@/components/public/ui/NavLinkNeon"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { getThemes } from "@/lib/themes"
 
 const navItems = [
   { href: "/", labelKey: "public.nav.home" },
-  { href: "https://boutique.flaash.fr", labelKey: "public.nav.shop", external: true },
   { href: "/about", labelKey: "public.nav.about" },
   { href: "/guide", labelKey: "public.nav.guide" },
   { href: "/abonnement", labelKey: "public.nav.subscription" },
@@ -19,9 +25,10 @@ const navItems = [
 
 export function PublicHeader() {
   const pathname = usePathname()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const themes = getThemes(language)
 
   useEffect(() => {
     setMobileOpen(false)
@@ -64,6 +71,36 @@ export function PublicHeader() {
         </Link>
 
         <nav className="relative z-[2100] hidden items-center gap-7 md:flex pointer-events-auto" aria-label="Navigation principale">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={
+                  pathname?.startsWith("/themes")
+                    ? "relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-900 after:pointer-events-none after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-gradient-to-r after:from-cyan-400 after:to-violet-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2"
+                    : "relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2"
+                }
+                aria-label={t("public.nav.themes")}
+                onClick={() => trackEvent("nav_themes_open")}
+              >
+                {t("public.nav.themes")}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem asChild>
+                <Link href="/themes" onClick={() => trackEvent("nav_theme_select", { slug: "all" } as any)}>
+                  {language === "fr" ? "Toutes les thématiques" : "All themes"}
+                </Link>
+              </DropdownMenuItem>
+              {themes.map((th) => (
+                <DropdownMenuItem key={th.id} asChild>
+                  <Link href={`/themes/${th.slug}`} onClick={() => trackEvent("nav_theme_select", { slug: th.slug } as any)}>
+                    <span className="mr-2 select-none">{th.icon}</span>
+                    {th.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           {navItems.map((item) =>
             item.external ? (
               <a
@@ -133,6 +170,31 @@ export function PublicHeader() {
                     <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
                 </button>
+              </div>
+              <div className="mb-2">
+                <div className="px-2 py-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+                  {t("public.nav.themes")}
+                </div>
+                <div className="mt-1 flex flex-col">
+                  <Link
+                    href="/themes"
+                    className="rounded-md px-2 py-2 text-base text-gray-800 hover:bg-gray-50"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {language === "fr" ? "Toutes les thématiques" : "All themes"}
+                  </Link>
+                  {themes.map((th) => (
+                    <Link
+                      key={th.id}
+                      href={`/themes/${th.slug}`}
+                      className="rounded-md px-2 py-2 text-base text-gray-800 hover:bg-gray-50"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <span className="mr-2 select-none">{th.icon}</span>
+                      {th.title}
+                    </Link>
+                  ))}
+                </div>
               </div>
               <div className="flex max-h-[60vh] flex-col gap-1 overflow-auto">
                 {navItems.map((item) =>
