@@ -31,13 +31,13 @@ export function BubbleGrid({
     <SectionCard>
       <SectionHeader title={title} />
       {intro ? <p className="mt-2 text-sm text-gray-600">{intro}</p> : null}
-      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((it) => (
           <Link
             key={it.href}
             href={it.href}
             title={it.tooltip}
-            className={`group relative mx-auto flex h-[80px] w-full max-w-[260px] min-w-[200px] cursor-pointer items-center justify-center rounded-full border px-4 text-center text-sm leading-tight transition ${toneClasses} whitespace-normal`}
+            className={`group relative mx-auto flex min-h-[76px] w-full max-w-full cursor-pointer items-center justify-center rounded-full border px-4 py-3 text-center text-sm leading-tight transition ${toneClasses} whitespace-normal`}
           >
             <span className="flex flex-col items-center justify-center gap-0.5">
               {it.icon ? <span aria-hidden className="select-none">{it.icon}</span> : null}
