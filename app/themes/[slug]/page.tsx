@@ -102,8 +102,27 @@ export default async function ThemeDetailPage({ params }: { params: { slug: stri
           />
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {theme.posts.map((p) => (
-              <SectionCard key={p.id} className="flex flex-col justify-between">
-                <div>
+              <SectionCard key={p.id} className="flex flex-col justify-between overflow-hidden">
+                {p.coverImage ? (
+                  <div className="mb-3 overflow-hidden rounded-md border">
+                    <Image
+                      src={p.coverImage}
+                      alt={p.title}
+                      width={640}
+                      height={360}
+                      className="h-auto w-full"
+                    />
+                  </div>
+                ) : null}
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <time dateTime={p.date}>{new Date(p.date).toLocaleDateString(language === "fr" ? "fr-FR" : "en-US")}</time>
+                  {p.tags && p.tags.length > 0 ? (
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-700">
+                      {p.tags[0]}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="mt-1">
                   <h3 className="text-base font-semibold text-gray-900">{p.title}</h3>
                   <p className="mt-2 text-sm text-gray-700">{p.excerpt}</p>
                 </div>

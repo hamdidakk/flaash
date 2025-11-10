@@ -23,6 +23,7 @@ export type ThemeRecord = {
     excerpt: Record<Language, string>
     date: string
     coverImage?: string
+    tags?: Record<Language, string[]>
   }>
 }
 
@@ -49,6 +50,7 @@ export type LocalizedTheme = {
     excerpt: string
     date: string
     coverImage?: string
+    tags?: string[]
   }>
 }
 
@@ -112,6 +114,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-10",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Travail", "Éthique"], en: ["Work", "Ethics"] },
       },
       {
         id: "soc-2",
@@ -126,6 +129,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-18",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Politiques"], en: ["Policy"] },
       },
       {
         id: "soc-3",
@@ -140,6 +144,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-25",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Formation"], en: ["Skills"] },
       },
       {
         id: "soc-4",
@@ -154,6 +159,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-03-03",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Données"], en: ["Data"] },
       },
     ],
   },
@@ -216,6 +222,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-01-15",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Climat"], en: ["Climate"] },
       },
       {
         id: "city-2",
@@ -230,6 +237,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-01-28",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Matériaux"], en: ["Materials"] },
       },
       {
         id: "city-3",
@@ -244,6 +252,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-07",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Mobilités"], en: ["Mobility"] },
       },
       {
         id: "city-4",
@@ -258,6 +267,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-16",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Écologie"], en: ["Ecology"] },
       },
     ],
   },
@@ -320,6 +330,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2024-12-20",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Design"], en: ["Design"] },
       },
       {
         id: "art-2",
@@ -334,6 +345,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-01-05",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Données"], en: ["Data"] },
       },
       {
         id: "art-3",
@@ -348,6 +360,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-01-22",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Fiction"], en: ["Fiction"] },
       },
       {
         id: "art-4",
@@ -362,6 +375,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-02",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Ateliers"], en: ["Workshops"] },
       },
     ],
   },
@@ -424,6 +438,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-03-01",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["IA"], en: ["AI"] },
       },
       {
         id: "sci-2",
@@ -438,6 +453,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-03-08",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Robotique"], en: ["Robotics"] },
       },
       {
         id: "sci-3",
@@ -452,6 +468,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-03-15",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Bio‑tech"], en: ["Bio‑tech"] },
       },
       {
         id: "sci-4",
@@ -466,6 +483,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-03-22",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Énergie"], en: ["Energy"] },
       },
     ],
   },
@@ -528,6 +546,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-05",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Débat"], en: ["Debate"] },
       },
       {
         id: "col-2",
@@ -542,6 +561,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-14",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Création"], en: ["Creation"] },
       },
       {
         id: "col-3",
@@ -556,6 +576,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-21",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Ateliers"], en: ["Workshops"] },
       },
       {
         id: "col-4",
@@ -570,6 +591,7 @@ const THEMES: ThemeRecord[] = [
         },
         date: "2025-02-27",
         coverImage: "/placeholder.jpg",
+        tags: { fr: ["Sources"], en: ["Sources"] },
       },
     ],
   },
@@ -593,6 +615,7 @@ function mapTheme(rec: ThemeRecord, lang: Language): LocalizedTheme {
       excerpt: p.excerpt[lang],
       date: p.date,
       coverImage: p.coverImage,
+      tags: p.tags?.[lang],
     })),
     sections: rec.sections?.map((s) => ({
       id: s.id,
