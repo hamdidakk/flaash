@@ -113,6 +113,48 @@ const THEMES: ThemeRecord[] = [
         date: "2025-02-10",
         coverImage: "/placeholder.jpg",
       },
+      {
+        id: "soc-2",
+        slug: "politique-publique-et-algorithmes",
+        title: {
+          fr: "Politiques publiques & algorithmes",
+          en: "Public policy & algorithms",
+        },
+        excerpt: {
+          fr: "Transparence, auditabilité et gouvernance des systèmes d’IA dans l’action publique.",
+          en: "Transparency, auditability and governance of AI systems in public action.",
+        },
+        date: "2025-02-18",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "soc-3",
+        slug: "competences-de-demain",
+        title: {
+          fr: "Compétences de demain",
+          en: "Skills for tomorrow",
+        },
+        excerpt: {
+          fr: "Cartographie des compétences hybrides à l’ère des assistants IA.",
+          en: "Mapping hybrid skills in the age of AI assistants.",
+        },
+        date: "2025-02-25",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "soc-4",
+        slug: "ethique-de-la-donnees",
+        title: {
+          fr: "Éthique de la donnée au quotidien",
+          en: "Everyday data ethics",
+        },
+        excerpt: {
+          fr: "Pratiques concrètes pour concilier innovation et respect des personnes.",
+          en: "Concrete practices to reconcile innovation with respect for people.",
+        },
+        date: "2025-03-03",
+        coverImage: "/placeholder.jpg",
+      },
     ],
   },
   {
@@ -173,6 +215,48 @@ const THEMES: ThemeRecord[] = [
           en: "Foresight on technical and social choices to decarbonize the city.",
         },
         date: "2025-01-15",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "city-2",
+        slug: "materiaux-circulaires-urbains",
+        title: {
+          fr: "Matériaux circulaires urbains",
+          en: "Urban circular materials",
+        },
+        excerpt: {
+          fr: "Réemploi, bio‑matériaux et circuits courts pour l’architecture.",
+          en: "Reuse, biomaterials and short supply chains for architecture.",
+        },
+        date: "2025-01-28",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "city-3",
+        slug: "mobilites-sobres",
+        title: {
+          fr: "Mobilités sobres et inclusives",
+          en: "Low‑impact inclusive mobility",
+        },
+        excerpt: {
+          fr: "Concilier accessibilité, sécurité et réduction de l’empreinte.",
+          en: "Reconciling accessibility, safety and footprint reduction.",
+        },
+        date: "2025-02-07",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "city-4",
+        slug: "nature-technologique",
+        title: {
+          fr: "Nature technologique en ville",
+          en: "Technological nature in cities",
+        },
+        excerpt: {
+          fr: "Capteurs, végétalisation et écologies hybrides.",
+          en: "Sensors, greening and hybrid ecologies.",
+        },
+        date: "2025-02-16",
         coverImage: "/placeholder.jpg",
       },
     ],
@@ -237,6 +321,48 @@ const THEMES: ThemeRecord[] = [
         date: "2024-12-20",
         coverImage: "/placeholder.jpg",
       },
+      {
+        id: "art-2",
+        slug: "poetique-des-donnees",
+        title: {
+          fr: "Poétique des données",
+          en: "Poetics of data",
+        },
+        excerpt: {
+          fr: "Transformer des datasets en récits et images sensibles.",
+          en: "Turning datasets into evocative stories and images.",
+        },
+        date: "2025-01-05",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "art-3",
+        slug: "fictions-politiques",
+        title: {
+          fr: "Fictions politiques",
+          en: "Political fictions",
+        },
+        excerpt: {
+          fr: "Explorer les institutions possibles par le récit.",
+          en: "Exploring possible institutions through storytelling.",
+        },
+        date: "2025-01-22",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "art-4",
+        slug: "atelier-ia-creative",
+        title: {
+          fr: "Ateliers d’IA créative",
+          en: "Creative AI workshops",
+        },
+        excerpt: {
+          fr: "Pratiques pédagogiques pour imaginer collectivement.",
+          en: "Pedagogical practices for collective imagination.",
+        },
+        date: "2025-02-02",
+        coverImage: "/placeholder.jpg",
+      },
     ],
   },
   {
@@ -299,6 +425,48 @@ const THEMES: ThemeRecord[] = [
         date: "2025-03-01",
         coverImage: "/placeholder.jpg",
       },
+      {
+        id: "sci-2",
+        slug: "robotique-collaborative",
+        title: {
+          fr: "Robotique collaborative",
+          en: "Collaborative robotics",
+        },
+        excerpt: {
+          fr: "Cobots, sécurité et nouvelles chaînes de valeur.",
+          en: "Cobots, safety and new value chains.",
+        },
+        date: "2025-03-08",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "sci-3",
+        slug: "biotech-et-societe",
+        title: {
+          fr: "Bio‑tech et société",
+          en: "Bio‑tech and society",
+        },
+        excerpt: {
+          fr: "Promesses médicales, bio‑sécurité et accès équitable.",
+          en: "Medical promises, bio‑security and equitable access.",
+        },
+        date: "2025-03-15",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "sci-4",
+        slug: "energie-et-computation",
+        title: {
+          fr: "Énergie & computation",
+          en: "Energy & computation",
+        },
+        excerpt: {
+          fr: "Empreinte énergétique des modèles et innovations matérielles.",
+          en: "Models’ energy footprint and hardware innovations.",
+        },
+        date: "2025-03-22",
+        coverImage: "/placeholder.jpg",
+      },
     ],
   },
   {
@@ -359,6 +527,48 @@ const THEMES: ThemeRecord[] = [
           en: "AI‑guided debate based on FLAASH articles.",
         },
         date: "2025-02-05",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "col-2",
+        slug: "ia-coauteur",
+        title: {
+          fr: "Quand l’IA devient co‑auteur",
+          en: "When AI becomes a co‑author",
+        },
+        excerpt: {
+          fr: "Processus créatif, attribution et responsabilité.",
+          en: "Creative process, attribution and responsibility.",
+        },
+        date: "2025-02-14",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "col-3",
+        slug: "experiences-guidees-par-ia",
+        title: {
+          fr: "Expériences guidées par IA",
+          en: "AI‑guided experiences",
+        },
+        excerpt: {
+          fr: "Prototypages d’atelier et méthodologies pédagogiques.",
+          en: "Workshop prototyping and pedagogical methods.",
+        },
+        date: "2025-02-21",
+        coverImage: "/placeholder.jpg",
+      },
+      {
+        id: "col-4",
+        slug: "debats-contradictoires",
+        title: {
+          fr: "Débats contradictoires IA",
+          en: "Contradictory AI debates",
+        },
+        excerpt: {
+          fr: "Comparer des positions opposées avec traçabilité des sources.",
+          en: "Contrast opposite positions with source traceability.",
+        },
+        date: "2025-02-27",
         coverImage: "/placeholder.jpg",
       },
     ],
