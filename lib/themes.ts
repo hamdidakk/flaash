@@ -72,7 +72,7 @@ const THEMES: ThemeRecord[] = [
       en: "Articles about evolving lifestyles, public policy, work and AI ethics. A cross‑reading of social transformations.",
     },
     colorClass: "from-blue-50 to-purple-50",
-    coverImage: "/placeholder.jpg",
+    coverImage: "/theme-1.png",
     examples: {
       fr: [
         "Comment l’IA transforme-t-elle le travail aujourd’hui ?",
@@ -85,19 +85,32 @@ const THEMES: ThemeRecord[] = [
     },
     sections: [
       {
-        id: "overview",
-        title: { fr: "Aperçu", en: "Overview" },
+        id: "social",
+        title: { fr: "Mutations sociales", en: "Social shifts" },
         paragraphs: {
           fr: [
-            "Le rapport entre technologies et organisation du travail évolue rapidement: automatisation, outillage IA, nouvelles compétences.",
-            "Nous cartographions les controverses et présentons des cas d’usage vérifiables.",
+            "Nous analysons comment l’IA et les technologies redessinent les organisations, le travail et la vie quotidienne.",
+            "Chaque dossier combine données, terrain et retours d’expérience pour identifier des signaux faibles utiles.",
           ],
           en: [
-            "The relationship between technology and the organization of work evolves fast: automation, AI tooling, new skills.",
-            "We map controversies and present verifiable use cases.",
+            "We analyse how AI and technology reshape organisations, work and everyday life.",
+            "Each feature mixes data, fieldwork and feedback to surface useful weak signals.",
           ],
         },
-        image: "/placeholder.jpg",
+      },
+      {
+        id: "policy",
+        title: { fr: "Politiques publiques", en: "Public policy" },
+        paragraphs: {
+          fr: [
+            "Cartographie des régulations émergentes, des controverses et des gouvernances algorithmiques.",
+            "Nous outillons les acteurs pour dialoguer avec les institutions et scénariser des trajectoires.",
+          ],
+          en: [
+            "Mapping emerging regulations, controversies and algorithmic governance.",
+            "We equip stakeholders to engage with institutions and explore trajectories.",
+          ],
+        },
       },
     ],
     posts: [
@@ -113,7 +126,7 @@ const THEMES: ThemeRecord[] = [
           en: "A survey of controversies about automation and responsibility.",
         },
         date: "2025-02-10",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Travail", "Éthique"], en: ["Work", "Ethics"] },
       },
       {
@@ -128,7 +141,7 @@ const THEMES: ThemeRecord[] = [
           en: "Transparency, auditability and governance of AI systems in public action.",
         },
         date: "2025-02-18",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Politiques"], en: ["Policy"] },
       },
       {
@@ -143,7 +156,7 @@ const THEMES: ThemeRecord[] = [
           en: "Mapping hybrid skills in the age of AI assistants.",
         },
         date: "2025-02-25",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Formation"], en: ["Skills"] },
       },
       {
@@ -158,7 +171,7 @@ const THEMES: ThemeRecord[] = [
           en: "Concrete practices to reconcile innovation with respect for people.",
         },
         date: "2025-03-03",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Données"], en: ["Data"] },
       },
     ],
@@ -180,7 +193,7 @@ const THEMES: ThemeRecord[] = [
       en: "Features on sustainable cities, future urbanism and ecological agendas. Reconciling infrastructures and the living.",
     },
     colorClass: "from-green-50 to-emerald-50",
-    coverImage: "/placeholder.jpg",
+    coverImage: "/talk-ia.png",
     examples: {
       fr: [
         "Quelles technologies vont changer nos villes ?",
@@ -193,19 +206,32 @@ const THEMES: ThemeRecord[] = [
     },
     sections: [
       {
-        id: "overview",
-        title: { fr: "Aperçu", en: "Overview" },
+        id: "urban-lab",
+        title: { fr: "Laboratoire urbain", en: "Urban lab" },
         paragraphs: {
           fr: [
-            "Les villes se transforment sous la pression climatique, énergétique et sociale.",
-            "Ce dossier explore des trajectoires concrètes: mobilités, matériaux, production locale.",
+            "Projets pilotes, prototypes d’espaces publics, innovations énergétiques et solutions low-tech.",
+            "Les contributions croisent ingénierie, design urbain, acteurs publics et collectifs citoyens.",
           ],
           en: [
-            "Cities are transforming under climate, energy and social pressures.",
-            "This feature explores concrete trajectories: mobility, materials, local production.",
+            "Pilot projects, public-space prototypes, energy innovations and low-tech solutions.",
+            "Contributors span engineering, urban design, public bodies and citizen collectives.",
           ],
         },
-        image: "/placeholder.jpg",
+      },
+      {
+        id: "ecologies",
+        title: { fr: "Écologies hybrides", en: "Hybrid ecologies" },
+        paragraphs: {
+          fr: [
+            "Biodiversité en ville, sols vivants, agriculture urbaine, renaturation et capteurs environnementaux.",
+            "Nous documentons des stratégies pour concilier infrastructures et cycles du vivant.",
+          ],
+          en: [
+            "Urban biodiversity, living soils, urban farming, rewilding and environmental sensing.",
+            "We document strategies to reconcile infrastructures and life cycles.",
+          ],
+        },
       },
     ],
     posts: [
@@ -221,7 +247,7 @@ const THEMES: ThemeRecord[] = [
           en: "Foresight on technical and social choices to decarbonize the city.",
         },
         date: "2025-01-15",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Climat"], en: ["Climate"] },
       },
       {
@@ -236,7 +262,7 @@ const THEMES: ThemeRecord[] = [
           en: "Reuse, biomaterials and short supply chains for architecture.",
         },
         date: "2025-01-28",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Matériaux"], en: ["Materials"] },
       },
       {
@@ -251,7 +277,7 @@ const THEMES: ThemeRecord[] = [
           en: "Reconciling accessibility, safety and footprint reduction.",
         },
         date: "2025-02-07",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Mobilités"], en: ["Mobility"] },
       },
       {
@@ -266,7 +292,7 @@ const THEMES: ThemeRecord[] = [
           en: "Sensors, greening and hybrid ecologies.",
         },
         date: "2025-02-16",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Écologie"], en: ["Ecology"] },
       },
     ],
@@ -288,7 +314,7 @@ const THEMES: ThemeRecord[] = [
       en: "AI creations, stories, poetry and speculative design to rethink futures.",
     },
     colorClass: "from-pink-50 to-fuchsia-50",
-    coverImage: "/placeholder.jpg",
+    coverImage: "/theme-1.png",
     examples: {
       fr: [
         "Quels romans parlent des futurs de la société ?",
@@ -301,19 +327,32 @@ const THEMES: ThemeRecord[] = [
     },
     sections: [
       {
-        id: "overview",
-        title: { fr: "Aperçu", en: "Overview" },
+        id: "creations",
+        title: { fr: "Créations & récits", en: "Creations & stories" },
         paragraphs: {
           fr: [
-            "La fiction propose des hypothèses vivantes qui nourrissent la réflexion stratégique.",
-            "Nous présentons des œuvres, des pratiques artistiques et des méthodes de design spéculatif.",
+            "Récits spéculatifs, poésie, visuels génératifs et expériences d’écriture augmentée.",
+            "Chaque numéro associe artistes, autrices, chercheur·euses et publics.",
           ],
           en: [
-            "Fiction offers living hypotheses that feed strategic thinking.",
-            "We showcase works, artistic practices and speculative design methods.",
+            "Speculative stories, poetry, generative visuals and augmented writing experiments.",
+            "Each issue gathers artists, writers, researchers and audiences.",
           ],
         },
-        image: "/placeholder.jpg",
+      },
+      {
+        id: "methods",
+        title: { fr: "Méthodes & ateliers", en: "Methods & workshops" },
+        paragraphs: {
+          fr: [
+            "Cartes de scénarios, design fiction, jeux de rôle prospectifs et dispositifs immersifs.",
+            "Nous partageons des outils prêts à l’emploi pour imaginer des futurs collectivement.",
+          ],
+          en: [
+            "Scenario cards, design fiction, foresight roleplay and immersive formats.",
+            "We share ready-to-use tools to imagine futures collectively.",
+          ],
+        },
       },
     ],
     posts: [
@@ -329,7 +368,7 @@ const THEMES: ThemeRecord[] = [
           en: "Methods and examples to explore alternative futures.",
         },
         date: "2024-12-20",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Design"], en: ["Design"] },
       },
       {
@@ -344,7 +383,7 @@ const THEMES: ThemeRecord[] = [
           en: "Turning datasets into evocative stories and images.",
         },
         date: "2025-01-05",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Données"], en: ["Data"] },
       },
       {
@@ -359,7 +398,7 @@ const THEMES: ThemeRecord[] = [
           en: "Exploring possible institutions through storytelling.",
         },
         date: "2025-01-22",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Fiction"], en: ["Fiction"] },
       },
       {
@@ -374,7 +413,7 @@ const THEMES: ThemeRecord[] = [
           en: "Pedagogical practices for collective imagination.",
         },
         date: "2025-02-02",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Ateliers"], en: ["Workshops"] },
       },
     ],
@@ -396,7 +435,7 @@ const THEMES: ThemeRecord[] = [
       en: "Popular science, scientific watch, AI issues, robotics and biotech.",
     },
     colorClass: "from-indigo-50 to-blue-50",
-    coverImage: "/placeholder.jpg",
+    coverImage: "/talk-ia.png",
     examples: {
       fr: [
         "Quelles découvertes IA ont marqué 2024‑2025 ?",
@@ -409,19 +448,32 @@ const THEMES: ThemeRecord[] = [
     },
     sections: [
       {
-        id: "overview",
-        title: { fr: "Aperçu", en: "Overview" },
+        id: "research",
+        title: { fr: "Veille & recherche", en: "Watch & research" },
         paragraphs: {
           fr: [
-            "Veille scientifique et technologique pour éclairer les usages et les limites.",
-            "Une approche critique des promesses et des risques.",
+            "Synthèses des publications scientifiques, état de l’art technologique, entretiens avec expertes et praticiens.",
+            "Nous proposons des repères pour naviguer dans l’actualité de l’IA, de la robotique et des bio-tech.",
           ],
           en: [
-            "Scientific and technological watch to illuminate use cases and limits.",
-            "A critical approach to promises and risks.",
+            "Summaries of scientific papers, tech state of the art, interviews with experts and practitioners.",
+            "We provide anchors to navigate AI, robotics and biotech news.",
           ],
         },
-        image: "/placeholder.jpg",
+      },
+      {
+        id: "ethics",
+        title: { fr: "Éthique & gouvernance", en: "Ethics & governance" },
+        paragraphs: {
+          fr: [
+            "Analyse des impacts sociétaux, enjeux de souveraineté, sobriété énergétique et gouvernance des modèles.",
+            "Des cadres pour aligner innovations, contraintes réglementaires et attentes citoyennes.",
+          ],
+          en: [
+            "Societal impacts, sovereignty issues, energy sobriety and AI governance.",
+            "Frameworks to align innovation, regulation and citizen expectations.",
+          ],
+        },
       },
     ],
     posts: [
@@ -437,7 +489,7 @@ const THEMES: ThemeRecord[] = [
           en: "Summary of recent breakthroughs and their implications.",
         },
         date: "2025-03-01",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["IA"], en: ["AI"] },
       },
       {
@@ -452,7 +504,7 @@ const THEMES: ThemeRecord[] = [
           en: "Cobots, safety and new value chains.",
         },
         date: "2025-03-08",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Robotique"], en: ["Robotics"] },
       },
       {
@@ -467,7 +519,7 @@ const THEMES: ThemeRecord[] = [
           en: "Medical promises, bio‑security and equitable access.",
         },
         date: "2025-03-15",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Bio‑tech"], en: ["Bio‑tech"] },
       },
       {
@@ -482,7 +534,7 @@ const THEMES: ThemeRecord[] = [
           en: "Models’ energy footprint and hardware innovations.",
         },
         date: "2025-03-22",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Énergie"], en: ["Energy"] },
       },
     ],
@@ -504,7 +556,7 @@ const THEMES: ThemeRecord[] = [
       en: "An experimental section where AI writes or debates with our texts.",
     },
     colorClass: "from-slate-50 to-gray-50",
-    coverImage: "/placeholder.jpg",
+    coverImage: "/theme-1.png",
     examples: {
       fr: [
         "L’IA peut‑elle enrichir un débat public ?",
@@ -517,19 +569,32 @@ const THEMES: ThemeRecord[] = [
     },
     sections: [
       {
-        id: "overview",
-        title: { fr: "Aperçu", en: "Overview" },
+        id: "co-writing",
+        title: { fr: "Co-écriture IA", en: "AI co-writing" },
         paragraphs: {
           fr: [
-            "Une section expérimentale où l’IA commente, réécrit ou débat à partir des textes FLAASH.",
-            "Nous documentons la méthode et les garde‑fous éthiques.",
+            "Expériences de rédaction augmentée, d’édition assistée et de dialogues critiques avec des modèles.",
+            "Chaque chronique explicite la provenance des données, les limites et les ajustements opérés.",
           ],
           en: [
-            "An experimental section where AI comments, rewrites or debates from FLAASH texts.",
-            "We document the method and ethical guardrails.",
+            "Augmented writing, assisted editing and critical dialogues with models.",
+            "Each column discloses data provenance, limitations and the adjustments we applied.",
           ],
         },
-        image: "/placeholder.jpg",
+      },
+      {
+        id: "moderation",
+        title: { fr: "Médiation & méthode", en: "Mediation & method" },
+        paragraphs: {
+          fr: [
+            "Cadres de modération, chartes éditoriales, dispositifs pédagogiques pour animer des débats IA.",
+            "Nous partageons les coulisses pour permettre à d’autres structures d’expérimenter en confiance.",
+          ],
+          en: [
+            "Moderation frameworks, editorial charters, pedagogical setups to host AI debates.",
+            "We open up the backstage so other organisations can experiment responsibly.",
+          ],
+        },
       },
     ],
     posts: [
@@ -545,7 +610,7 @@ const THEMES: ThemeRecord[] = [
           en: "AI‑guided debate based on FLAASH articles.",
         },
         date: "2025-02-05",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Débat"], en: ["Debate"] },
       },
       {
@@ -560,7 +625,7 @@ const THEMES: ThemeRecord[] = [
           en: "Creative process, attribution and responsibility.",
         },
         date: "2025-02-14",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Création"], en: ["Creation"] },
       },
       {
@@ -575,7 +640,7 @@ const THEMES: ThemeRecord[] = [
           en: "Workshop prototyping and pedagogical methods.",
         },
         date: "2025-02-21",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/theme-1.png",
         tags: { fr: ["Ateliers"], en: ["Workshops"] },
       },
       {
@@ -590,7 +655,7 @@ const THEMES: ThemeRecord[] = [
           en: "Contrast opposite positions with source traceability.",
         },
         date: "2025-02-27",
-        coverImage: "/placeholder.jpg",
+        coverImage: "/talk-ia.png",
         tags: { fr: ["Sources"], en: ["Sources"] },
       },
     ],

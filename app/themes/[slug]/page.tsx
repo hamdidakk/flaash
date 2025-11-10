@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { getThemeBySlug, getThemes, getAllThemeSlugs } from "@/lib/themes"
 import type { Language } from "@/lib/i18n"
@@ -10,6 +9,8 @@ import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 import { notFound } from "next/navigation"
 import { PublicHeader } from "@/components/public/PublicHeader"
 import { PublicFooter } from "@/components/public/PublicFooter"
+import { ThemeVisual } from "@/components/public/blocks/ThemeVisual"
+import { headers } from "next/headers"
 
 export const dynamic = "force-dynamic"
 export const dynamicParams = true
@@ -19,10 +20,24 @@ export async function generateStaticParams() {
   return getAllThemeSlugs().map((slug) => ({ slug }))
 }
 
+async function detectLanguage(): Promise<Language> {
+  try {
+    const h = await headers()
+    const cookieHeader = h.get("cookie") || ""
+    const match = cookieHeader.match(/(?:^|;\s*)language=(en|fr)/)
+    if (match) return match[1] as Language
+    const al = h.get("accept-language") || ""
+    return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  } catch {}
+  return "fr"
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug: raw } = await params
   const slug = decodeURIComponent(String(raw || "")).trim().toLowerCase()
-  const theme = getThemeBySlug(slug, "fr" as Language) ?? getThemeBySlug(slug, "en" as Language)
+  const lang = await detectLanguage()
+  const fallback = lang === "fr" ? ("en" as Language) : ("fr" as Language)
+  const theme = getThemeBySlug(slug, lang) ?? getThemeBySlug(slug, fallback)
   if (!theme) return {}
   const title = `${theme.title} | FLAASH`
   const description = theme.short
@@ -44,11 +59,12 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
   const { slug: raw } = await params
   const slug = decodeURIComponent(String(raw || "")).trim().toLowerCase()
   // Resolve content without relying on headers/cookies to avoid runtime issues
-  const theme = getThemeBySlug(slug, "fr" as Language) ?? getThemeBySlug(slug, "en" as Language)
+  const language = await detectLanguage()
+  const fallback = language === "fr" ? ("en" as Language) : ("fr" as Language)
+  const theme = getThemeBySlug(slug, language) ?? getThemeBySlug(slug, fallback)
   if (!theme) return notFound()
 
-  const language = "fr" as Language
-  const related = getThemes("fr" as Language).filter((t) => t.slug !== theme.slug).slice(0, 3)
+  const related = getThemes(language).filter((t) => t.slug !== theme.slug).slice(0, 3)
 
   return (
     <main id="main">
@@ -58,25 +74,7 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
           heading={`${theme.icon} ${theme.title}`}
           subtitle={theme.description}
           containerClassName="py-6"
-          right={
-            <SectionCard variant="future" className="flex h-full items-center justify-center">
-              <div className="text-center">
-                <div className="text-5xl">{theme.icon}</div>
-                <p className="mt-2 text-sm text-gray-600">{theme.short}</p>
-                {theme.coverImage ? (
-                  <div className="mt-4 overflow-hidden rounded-xl border">
-                    <Image
-                      src={theme.coverImage}
-                      width={640}
-                      height={360}
-                      alt={theme.title}
-                      className="h-auto w-full"
-                    />
-                  </div>
-                ) : null}
-              </div>
-            </SectionCard>
-          }
+          right={<ThemeVisual slug={theme.slug} icon={theme.icon} title={theme.title} subtitle={theme.short} variant="hero" />}
         />
 
         {theme.sections && theme.sections.length > 0 ? (
@@ -89,11 +87,6 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
                     <p key={idx}>{p}</p>
                   ))}
                 </div>
-                {sec.image ? (
-                  <div className="mt-3 overflow-hidden rounded-lg border">
-                    <Image src={sec.image} alt={sec.title} width={640} height={360} className="h-auto w-full" />
-                  </div>
-                ) : null}
               </SectionCard>
             ))}
           </div>
@@ -108,17 +101,7 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {theme.posts.map((p) => (
               <SectionCard key={p.id} className="flex flex-col justify-between overflow-hidden">
-                {p.coverImage ? (
-                  <div className="mb-3 overflow-hidden rounded-md border">
-                    <Image
-                      src={p.coverImage}
-                      alt={p.title}
-                      width={640}
-                      height={360}
-                      className="h-auto w-full"
-                    />
-                  </div>
-                ) : null}
+                <ThemeVisual slug={theme.slug} icon={theme.icon} title={theme.title} tag={p.tags?.[0]} />
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <time dateTime={p.date}>{new Date(p.date).toLocaleDateString("fr-FR")}</time>
                   {p.tags && p.tags.length > 0 ? (

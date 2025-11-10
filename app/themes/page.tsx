@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { headers } from "next/headers"
 import { getThemes } from "@/lib/themes"
 import { getTranslation, type Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
@@ -10,13 +11,20 @@ import { PublicFooter } from "@/components/public/PublicFooter"
 
 export const dynamic = "force-dynamic"
 
-function detectLanguage(): Language {
-  // Keep it simple server-side to avoid runtime issues; default FR content
+async function detectLanguage(): Promise<Language> {
+  try {
+    const h = await headers()
+    const cookieHeader = h.get("cookie") || ""
+    const match = cookieHeader.match(/(?:^|;\s*)language=(en|fr)/)
+    if (match) return match[1] as Language
+    const al = h.get("accept-language") || ""
+    return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  } catch {}
   return "fr"
 }
 
 export async function generateMetadata() {
-  const lang = "fr" as Language
+  const lang = await detectLanguage()
   const title = lang === "fr" ? "Thématiques | FLAASH" : "Themes | FLAASH"
   const description =
     lang === "fr"
@@ -30,7 +38,7 @@ export async function generateMetadata() {
 }
 
 export default async function ThemesPage() {
-  const language = detectLanguage()
+  const language = await detectLanguage()
   const t = (key: string) => getTranslation(language, key)
   const themes = getThemes(language)
 

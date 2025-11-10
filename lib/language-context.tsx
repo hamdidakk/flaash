@@ -16,13 +16,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("language") as Language
-      if (stored && (stored === "en" || stored === "fr")) {
-        setLanguageState(stored)
-      } else {
-        setLanguageState("fr")
-        localStorage.setItem("language", "fr")
-      }
+      const cookieMatch = document.cookie.match(/(?:^|;\s*)language=(en|fr)/)
+      const stored = localStorage.getItem("language") as Language | null
+      const initial = (cookieMatch?.[1] as Language | undefined) ?? stored ?? "fr"
+      const normalized = initial === "en" ? "en" : "fr"
+      setLanguageState(normalized)
+      localStorage.setItem("language", normalized)
+      document.cookie = `language=${normalized}; path=/; max-age=31536000`
     }
   }, [])
 
@@ -30,6 +30,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLanguageState(lang)
     if (typeof window !== "undefined") {
       localStorage.setItem("language", lang)
+      document.cookie = `language=${lang}; path=/; max-age=31536000`
     }
   }
 
