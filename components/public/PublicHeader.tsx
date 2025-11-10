@@ -134,11 +134,11 @@ export function PublicHeader() {
           <LanguageSwitcher />
           <Link
             href="/chat"
-            className="hidden md:inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-300/60 transition-transform duration-200 ease-out hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2"
+            className="group cta-chat hidden md:inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white btn-pulse"
             onClick={() => trackEvent("cta_chat_header")}
           >
             <span aria-hidden>🤖</span>
-            <span>{t("public.navExtra.exploreAI")}</span>
+            <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
           </Link>
           <button
             type="button"
@@ -162,14 +162,14 @@ export function PublicHeader() {
               <div className="mb-2 flex items-center justify-between gap-2">
                 <Link
                   href="/chat"
-                  className="inline-flex w-full justify-center gap-2 rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-300/60 transition-transform duration-200 ease-out hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2"
+                  className="cta-chat inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white"
                   onClick={() => {
                     trackEvent("cta_chat_header")
                     setMobileOpen(false)
                   }}
                 >
                   <span aria-hidden>🤖</span>
-                  <span>{t("public.navExtra.exploreAI")}</span>
+                  <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
                 </Link>
                 <button
                   type="button"
