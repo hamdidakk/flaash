@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { headers } from "next/headers"
+import { headers, cookies } from "next/headers"
 import { getThemeBySlug, getThemes, getAllThemeSlugs } from "@/lib/themes"
 import type { Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
@@ -11,9 +11,17 @@ import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 import { notFound } from "next/navigation"
 
 function detectLanguage(): Language {
-  const h = headers()
-  const al = h.get("accept-language") || ""
-  return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  try {
+    const c = cookies()
+    const v = c.get("language")?.value
+    if (v === "en" || v === "fr") return v
+  } catch {}
+  try {
+    const h = headers() as any
+    const al = typeof h?.get === "function" ? h.get("accept-language") || "" : ""
+    return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  } catch {}
+  return "fr"
 }
 
 export async function generateStaticParams() {

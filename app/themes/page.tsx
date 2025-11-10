@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { headers } from "next/headers"
+import { headers, cookies } from "next/headers"
 import { getThemes } from "@/lib/themes"
 import { getTranslation, type Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
@@ -8,9 +8,20 @@ import { SectionCard } from "@/components/public/ui/SectionCard"
 import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 
 function detectLanguage(): Language {
-  const h = headers()
-  const al = h.get("accept-language") || ""
-  return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  // 1) Try cookie set by client (when available)
+  try {
+    const c = cookies()
+    const v = c.get("language")?.value
+    if (v === "en" || v === "fr") return v
+  } catch {}
+  // 2) Fallback to Accept-Language header (may be unavailable in some render modes)
+  try {
+    const h = headers() as any
+    const al = typeof h?.get === "function" ? h.get("accept-language") || "" : ""
+    return al.toLowerCase().startsWith("en") ? "en" : "fr"
+  } catch {}
+  // 3) Default
+  return "fr"
 }
 
 export async function generateMetadata() {
