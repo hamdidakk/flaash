@@ -1,6 +1,5 @@
 import Image from "next/image"
 import Link from "next/link"
-import { headers, cookies } from "next/headers"
 import { getThemeBySlug, getThemes, getAllThemeSlugs } from "@/lib/themes"
 import type { Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
@@ -9,28 +8,21 @@ import { SectionCard } from "@/components/public/ui/SectionCard"
 import { HeroSplit } from "@/components/public/blocks/HeroSplit"
 import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 import { notFound } from "next/navigation"
+import { PublicHeader } from "@/components/public/PublicHeader"
+import { PublicFooter } from "@/components/public/PublicFooter"
 
-function detectLanguage(): Language {
-  try {
-    const c = cookies()
-    const v = c.get("language")?.value
-    if (v === "en" || v === "fr") return v
-  } catch {}
-  try {
-    const h = headers() as any
-    const al = typeof h?.get === "function" ? h.get("accept-language") || "" : ""
-    return al.toLowerCase().startsWith("en") ? "en" : "fr"
-  } catch {}
-  return "fr"
-}
+export const dynamic = "force-dynamic"
+export const dynamicParams = true
+export const revalidate = 0
 
 export async function generateStaticParams() {
   return getAllThemeSlugs().map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const language = detectLanguage()
-  const theme = getThemeBySlug(params.slug, language)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug: raw } = await params
+  const slug = decodeURIComponent(String(raw || "")).trim().toLowerCase()
+  const theme = getThemeBySlug(slug, "fr" as Language) ?? getThemeBySlug(slug, "en" as Language)
   if (!theme) return {}
   const title = `${theme.title} | FLAASH`
   const description = theme.short
@@ -47,15 +39,20 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function ThemeDetailPage({ params }: { params: { slug: string } }) {
-  const language = detectLanguage()
-  const theme = getThemeBySlug(params.slug, language)
+export default async function ThemeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Normalize slug to be safe with case/encoding
+  const { slug: raw } = await params
+  const slug = decodeURIComponent(String(raw || "")).trim().toLowerCase()
+  // Resolve content without relying on headers/cookies to avoid runtime issues
+  const theme = getThemeBySlug(slug, "fr" as Language) ?? getThemeBySlug(slug, "en" as Language)
   if (!theme) return notFound()
 
-  const related = getThemes(language).filter((t) => t.slug !== theme.slug).slice(0, 3)
+  const language = "fr" as Language
+  const related = getThemes("fr" as Language).filter((t) => t.slug !== theme.slug).slice(0, 3)
 
   return (
     <main id="main">
+      <PublicHeader />
       <PageSection containerClassName="py-10">
         <HeroSplit
           heading={`${theme.icon} ${theme.title}`}
@@ -123,7 +120,7 @@ export default async function ThemeDetailPage({ params }: { params: { slug: stri
                   </div>
                 ) : null}
                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <time dateTime={p.date}>{new Date(p.date).toLocaleDateString(language === "fr" ? "fr-FR" : "en-US")}</time>
+                  <time dateTime={p.date}>{new Date(p.date).toLocaleDateString("fr-FR")}</time>
                   {p.tags && p.tags.length > 0 ? (
                     <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-700">
                       {p.tags[0]}
@@ -136,7 +133,7 @@ export default async function ThemeDetailPage({ params }: { params: { slug: stri
                 </div>
                 <div className="mt-3">
                   <Link href={`/chat?prefill=${encodeURIComponent(p.title)}`} className="text-sm font-medium text-indigo-600 hover:underline">
-                    {language === "fr" ? "Interroger l’IA à partir de cet article →" : "Ask the AI about this article →"}
+                    {"Interroger l’IA à partir de cet article →"}
                   </Link>
                 </div>
               </SectionCard>
@@ -185,6 +182,7 @@ export default async function ThemeDetailPage({ params }: { params: { slug: stri
           </div>
         </div>
       </PageSection>
+      <PublicFooter />
     </main>
   )
 }

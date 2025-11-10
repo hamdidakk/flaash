@@ -1,31 +1,22 @@
 import Link from "next/link"
-import { headers, cookies } from "next/headers"
 import { getThemes } from "@/lib/themes"
 import { getTranslation, type Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { QuickAsk } from "@/components/public/blocks/QuickAsk"
+import { PublicHeader } from "@/components/public/PublicHeader"
+import { PublicFooter } from "@/components/public/PublicFooter"
+
+export const dynamic = "force-dynamic"
 
 function detectLanguage(): Language {
-  // 1) Try cookie set by client (when available)
-  try {
-    const c = cookies()
-    const v = c.get("language")?.value
-    if (v === "en" || v === "fr") return v
-  } catch {}
-  // 2) Fallback to Accept-Language header (may be unavailable in some render modes)
-  try {
-    const h = headers() as any
-    const al = typeof h?.get === "function" ? h.get("accept-language") || "" : ""
-    return al.toLowerCase().startsWith("en") ? "en" : "fr"
-  } catch {}
-  // 3) Default
+  // Keep it simple server-side to avoid runtime issues; default FR content
   return "fr"
 }
 
 export async function generateMetadata() {
-  const lang = detectLanguage()
+  const lang = "fr" as Language
   const title = lang === "fr" ? "Thématiques | FLAASH" : "Themes | FLAASH"
   const description =
     lang === "fr"
@@ -47,6 +38,7 @@ export default async function ThemesPage() {
 
   return (
     <main id="main">
+      <PublicHeader />
       <PageSection>
         <SectionHeader
           title={t("public.themes.title")}
@@ -93,6 +85,7 @@ export default async function ThemesPage() {
           />
         </div>
       </PageSection>
+      <PublicFooter />
     </main>
   )
 }
