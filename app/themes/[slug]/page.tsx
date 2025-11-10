@@ -53,7 +53,7 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
   return (
     <main id="main">
       <PublicHeader />
-      <PageSection containerClassName="py-10">
+      <PageSection py="12">
         <HeroSplit
           heading={`${theme.icon} ${theme.title}`}
           subtitle={theme.description}

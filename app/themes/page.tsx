@@ -39,7 +39,7 @@ export default async function ThemesPage() {
   return (
     <main id="main">
       <PublicHeader />
-      <PageSection>
+      <PageSection py="12">
         <SectionHeader
           title={t("public.themes.title")}
           subtitle={language === "fr" ? "Rubriques principales de FLAASH" : "FLAASH’s main categories"}
