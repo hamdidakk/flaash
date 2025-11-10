@@ -186,30 +186,25 @@ export function PublicHeader() {
                   {t("public.nav.home")}
                 </Link>
               </div>
-              <div className="mb-2">
-                <div className="px-2 py-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+              <div className="mb-2 flex flex-col">
+                <Link
+                  href="/themes"
+                  className={`rounded-md px-2 py-2 text-base hover:bg-gray-50 ${pathname?.startsWith("/themes") ? "text-gray-900" : "text-gray-800"}`}
+                  onClick={() => setMobileOpen(false)}
+                >
                   {t("public.nav.themes")}
-                </div>
-                <div className="mt-1 flex flex-col">
+                </Link>
+                {themes.map((th) => (
                   <Link
-                    href="/themes"
-                    className="rounded-md px-2 py-2 text-base text-gray-800 hover:bg-gray-50"
+                    key={th.id}
+                    href={`/themes/${th.slug}`}
+                    className="rounded-md px-2 py-2 pl-6 text-[15px] text-gray-800 hover:bg-gray-50"
                     onClick={() => setMobileOpen(false)}
                   >
-                    {language === "fr" ? "Toutes les thématiques" : "All themes"}
+                    <span className="mr-2 select-none">{th.icon}</span>
+                    {th.title}
                   </Link>
-                  {themes.map((th) => (
-                    <Link
-                      key={th.id}
-                      href={`/themes/${th.slug}`}
-                      className="rounded-md px-2 py-2 text-base text-gray-800 hover:bg-gray-50"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      <span className="mr-2 select-none">{th.icon}</span>
-                      {th.title}
-                    </Link>
-                  ))}
-                </div>
+                ))}
               </div>
               <div className="flex max-h-[60vh] flex-col gap-1 overflow-auto">
                 {remainingNav.map((item) =>
