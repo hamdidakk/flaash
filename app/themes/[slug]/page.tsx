@@ -74,6 +74,26 @@ export default async function ThemeDetailPage({ params }: { params: { slug: stri
           }
         />
 
+        {theme.sections && theme.sections.length > 0 ? (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {theme.sections.map((sec) => (
+              <SectionCard key={sec.id}>
+                <h3 className="text-base font-semibold text-gray-900">{sec.title}</h3>
+                <div className="mt-2 space-y-2 text-sm text-gray-700">
+                  {sec.paragraphs.map((p, idx) => (
+                    <p key={idx}>{p}</p>
+                  ))}
+                </div>
+                {sec.image ? (
+                  <div className="mt-3 overflow-hidden rounded-lg border">
+                    <Image src={sec.image} alt={sec.title} width={640} height={360} className="h-auto w-full" />
+                  </div>
+                ) : null}
+              </SectionCard>
+            ))}
+          </div>
+        ) : null}
+
         <div className="mt-8">
           <SectionHeader
             title={language === "fr" ? "À la une" : "Featured"}

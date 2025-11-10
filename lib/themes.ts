@@ -10,6 +10,12 @@ export type ThemeRecord = {
   colorClass?: string
   coverImage?: string
   examples: Record<Language, string[]>
+  sections?: Array<{
+    id: string
+    title: Record<Language, string>
+    paragraphs: Record<Language, string[]>
+    image?: string
+  }>
   posts: Array<{
     id: string
     slug: string
@@ -30,6 +36,12 @@ export type LocalizedTheme = {
   colorClass?: string
   coverImage?: string
   examples: string[]
+  sections?: Array<{
+    id: string
+    title: string
+    paragraphs: string[]
+    image?: string
+  }>
   posts: Array<{
     id: string
     slug: string
@@ -69,6 +81,23 @@ const THEMES: ThemeRecord[] = [
         "Can we reconcile ethics and generative AI?",
       ],
     },
+    sections: [
+      {
+        id: "overview",
+        title: { fr: "Aperçu", en: "Overview" },
+        paragraphs: {
+          fr: [
+            "Le rapport entre technologies et organisation du travail évolue rapidement: automatisation, outillage IA, nouvelles compétences.",
+            "Nous cartographions les controverses et présentons des cas d’usage vérifiables.",
+          ],
+          en: [
+            "The relationship between technology and the organization of work evolves fast: automation, AI tooling, new skills.",
+            "We map controversies and present verifiable use cases.",
+          ],
+        },
+        image: "/placeholder.jpg",
+      },
+    ],
     posts: [
       {
         id: "soc-1",
@@ -114,6 +143,23 @@ const THEMES: ThemeRecord[] = [
         "What does a low‑carbon city look like in 2035?",
       ],
     },
+    sections: [
+      {
+        id: "overview",
+        title: { fr: "Aperçu", en: "Overview" },
+        paragraphs: {
+          fr: [
+            "Les villes se transforment sous la pression climatique, énergétique et sociale.",
+            "Ce dossier explore des trajectoires concrètes: mobilités, matériaux, production locale.",
+          ],
+          en: [
+            "Cities are transforming under climate, energy and social pressures.",
+            "This feature explores concrete trajectories: mobility, materials, local production.",
+          ],
+        },
+        image: "/placeholder.jpg",
+      },
+    ],
     posts: [
       {
         id: "city-1",
@@ -159,6 +205,23 @@ const THEMES: ThemeRecord[] = [
         "How does imagination influence innovation?",
       ],
     },
+    sections: [
+      {
+        id: "overview",
+        title: { fr: "Aperçu", en: "Overview" },
+        paragraphs: {
+          fr: [
+            "La fiction propose des hypothèses vivantes qui nourrissent la réflexion stratégique.",
+            "Nous présentons des œuvres, des pratiques artistiques et des méthodes de design spéculatif.",
+          ],
+          en: [
+            "Fiction offers living hypotheses that feed strategic thinking.",
+            "We showcase works, artistic practices and speculative design methods.",
+          ],
+        },
+        image: "/placeholder.jpg",
+      },
+    ],
     posts: [
       {
         id: "art-1",
@@ -204,6 +267,23 @@ const THEMES: ThemeRecord[] = [
         "What are the risks and promises of bio‑engineering?",
       ],
     },
+    sections: [
+      {
+        id: "overview",
+        title: { fr: "Aperçu", en: "Overview" },
+        paragraphs: {
+          fr: [
+            "Veille scientifique et technologique pour éclairer les usages et les limites.",
+            "Une approche critique des promesses et des risques.",
+          ],
+          en: [
+            "Scientific and technological watch to illuminate use cases and limits.",
+            "A critical approach to promises and risks.",
+          ],
+        },
+        image: "/placeholder.jpg",
+      },
+    ],
     posts: [
       {
         id: "sci-1",
@@ -249,6 +329,23 @@ const THEMES: ThemeRecord[] = [
         "What are the limits of editorial AI?",
       ],
     },
+    sections: [
+      {
+        id: "overview",
+        title: { fr: "Aperçu", en: "Overview" },
+        paragraphs: {
+          fr: [
+            "Une section expérimentale où l’IA commente, réécrit ou débat à partir des textes FLAASH.",
+            "Nous documentons la méthode et les garde‑fous éthiques.",
+          ],
+          en: [
+            "An experimental section where AI comments, rewrites or debates from FLAASH texts.",
+            "We document the method and ethical guardrails.",
+          ],
+        },
+        image: "/placeholder.jpg",
+      },
+    ],
     posts: [
       {
         id: "col-1",
@@ -286,6 +383,12 @@ function mapTheme(rec: ThemeRecord, lang: Language): LocalizedTheme {
       excerpt: p.excerpt[lang],
       date: p.date,
       coverImage: p.coverImage,
+    })),
+    sections: rec.sections?.map((s) => ({
+      id: s.id,
+      title: s.title[lang],
+      paragraphs: s.paragraphs[lang],
+      image: s.image,
     })),
   }
 }
