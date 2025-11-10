@@ -1,9 +1,8 @@
-"use client"
-
 import Image from "next/image"
 import Link from "next/link"
-import { useLanguage } from "@/lib/language-context"
-import { getThemeBySlug, getThemes } from "@/lib/themes"
+import { headers } from "next/headers"
+import { getThemeBySlug, getThemes, getAllThemeSlugs } from "@/lib/themes"
+import type { Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { SectionCard } from "@/components/public/ui/SectionCard"
@@ -11,8 +10,37 @@ import { HeroSplit } from "@/components/public/blocks/HeroSplit"
 import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 import { notFound } from "next/navigation"
 
-export default function ThemeDetailPage({ params }: { params: { slug: string } }) {
-  const { language } = useLanguage()
+function detectLanguage(): Language {
+  const h = headers()
+  const al = h.get("accept-language") || ""
+  return al.toLowerCase().startsWith("en") ? "en" : "fr"
+}
+
+export async function generateStaticParams() {
+  return getAllThemeSlugs().map((slug) => ({ slug }))
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const language = detectLanguage()
+  const theme = getThemeBySlug(params.slug, language)
+  if (!theme) return {}
+  const title = `${theme.title} | FLAASH`
+  const description = theme.short
+  return {
+    title,
+    description,
+    alternates: { canonical: `/themes/${theme.slug}` },
+    openGraph: {
+      title,
+      description,
+      images: theme.coverImage ? [{ url: theme.coverImage }] : undefined,
+      type: "article",
+    },
+  }
+}
+
+export default async function ThemeDetailPage({ params }: { params: { slug: string } }) {
+  const language = detectLanguage()
   const theme = getThemeBySlug(params.slug, language)
   if (!theme) return notFound()
 

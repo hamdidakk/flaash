@@ -1,15 +1,35 @@
-"use client"
-
 import Link from "next/link"
-import { useLanguage } from "@/lib/language-context"
+import { headers } from "next/headers"
 import { getThemes } from "@/lib/themes"
+import { getTranslation, type Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 
-export default function ThemesPage() {
-  const { t, language } = useLanguage()
+function detectLanguage(): Language {
+  const h = headers()
+  const al = h.get("accept-language") || ""
+  return al.toLowerCase().startsWith("en") ? "en" : "fr"
+}
+
+export async function generateMetadata() {
+  const lang = detectLanguage()
+  const title = lang === "fr" ? "Thématiques | FLAASH" : "Themes | FLAASH"
+  const description =
+    lang === "fr"
+      ? "Rubriques principales et pistes d’exploration éditoriale de FLAASH."
+      : "FLAASH’s main categories and editorial explorations."
+  return {
+    title,
+    description,
+    alternates: { canonical: "/themes" },
+  }
+}
+
+export default async function ThemesPage() {
+  const language = detectLanguage()
+  const t = (key: string) => getTranslation(language, key)
   const themes = getThemes(language)
 
   const firstExample = themes.flatMap((th) => th.examples).find(Boolean) || ""
@@ -65,5 +85,4 @@ export default function ThemesPage() {
     </main>
   )
 }
-
 
