@@ -1,11 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useLanguage } from "@/lib/language-context"
 import { TrackedLink } from "@/components/public/TrackedLink"
 import { PageView } from "@/components/public/PageView"
-import { useState } from "react"
 import { ButtonCTA } from "@/components/public/ui/ButtonCTA"
 import { SectionCard } from "@/components/public/ui/SectionCard"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
@@ -17,40 +15,46 @@ import { HeroSplit } from "@/components/public/blocks/HeroSplit"
 import { SecondaryCTA } from "@/components/public/ui/SecondaryCTA"
 import { PageSection } from "@/components/public/ui/PageSection"
 
-export function HomeClient({ coverUrl }: { coverUrl: string }) {
+export function HomeClient({ coverUrl: _coverUrl }: { coverUrl: string }) {
   const { t } = useLanguage()
   return (
     <>
       <PageView page="home" />
 
       <HeroSplit
-        className="bg-gradient-to-b from-white to-gray-50 hero-future"
+        className="hero-future"
         heading={t("public.hero.title")}
         subtitle={t("public.hero.subtitle")}
         primaryCta={
-          <ButtonCTA href="/chat" className="group" icon={<span>💬</span>}>{t("public.hero.ctaChat")}</ButtonCTA>
+          <ButtonCTA href="/chat" icon={<span>💬</span>}>
+            {t("public.hero.ctaChat")}
+          </ButtonCTA>
         }
-        secondaryCta={<SecondaryCTA href="https://boutique.flaash.fr" external event="cta_boutique_hero" icon={<span>📰</span>}>{t("public.hero.ctaShop")}</SecondaryCTA>}
+        secondaryCta={
+          <SecondaryCTA href="https://boutique.flaash.fr" external event="cta_boutique_hero" icon={<span>📰</span>}>
+            {t("public.hero.ctaShop")}
+          </SecondaryCTA>
+        }
         right={
-          <SectionCard className="transition-transform hover:translate-y-1 bg-[#0b1120] text-white border-transparent md:-mt-2">
+          <SectionCard className="public-hero__panel" hover={false}>
             <TalkToIAIcon caption={t("public.hero.greeting")} ctaLabel={t("public.hero.ctaChat")} />
           </SectionCard>
         }
       >
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 opacity-[.06] [background:radial-gradient(circle_at_30%_20%,#141A2A_0%,#0A0C14_70%)]" />
+        <div aria-hidden className="public-hero__background" />
       </HeroSplit>
 
       <PageSection py="8">
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+        <div className="public-feature-grid">
           {[
             { icon: "💡", text: t("public.why.one") },
             { icon: "🔎", text: t("public.why.two") },
             { icon: "🧠", text: t("public.why.three") },
             { icon: "🌍", text: t("public.why.four") },
           ].map((it) => (
-            <SectionCard key={it.text} className="fade-in-up p-4">
-              <div className="text-sm font-medium text-gray-800">
-                <span className="mr-2 select-none">{it.icon}</span>
+            <SectionCard key={it.text} hover={false} className="public-feature-card">
+              <div className="public-feature-card__text">
+                <span className="public-feature-card__icon">{it.icon}</span>
                 {it.text}
               </div>
             </SectionCard>
@@ -69,19 +73,19 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
       />
 
       <PageSection py="10">
-        <div className="card-future rounded-xl border border-gray-200 bg-white p-6 md:p-8">
-          <h2 className="text-xl font-semibold tracking-tight">{t("public.hero.title")}</h2>
-          <p className="mt-2 text-gray-600">{t("public.hero.subtitle")}</p>
-          <div className="mt-4">
-            <TrackedLink href="/chat" event="cta_chat_agent_block" className="cta-futuriste rounded-md px-4 py-2 text-sm font-semibold">
+        <div className="public-hero__card card-future">
+          <h2 className="public-hero__card-heading">{t("public.hero.title")}</h2>
+          <p className="public-hero__card-subtitle">{t("public.hero.subtitle")}</p>
+          <div className="public-hero__card-footer">
+            <TrackedLink href="/chat" event="cta_chat_agent_block" className="public-cta-futuriste cta-futuriste">
               {t("public.hero.ctaExplore")}
             </TrackedLink>
           </div>
         </div>
       </PageSection>
 
-      <section className="mx-auto max-w-6xl px-4 pb-12">
-        <SectionHeader as="h3" title={t("public.themes.title")} icon={<span>🌐</span>} className="text-sm" />
+      <PageSection className="public-home__themes">
+        <SectionHeader as="h3" title={t("public.themes.title")} icon={<span>🌐</span>} className="public-section-heading" />
         <ThemeGrid
           themes={[
             { icon: "👁️", title: t("public.themes.surveillance.title"), prompts: [t("public.themes.surveillance.example")] },
@@ -92,16 +96,18 @@ export function HomeClient({ coverUrl }: { coverUrl: string }) {
             { icon: "🌿", title: t("public.themes.environment.title"), prompts: [t("public.themes.environment.example")] },
           ]}
         />
-        <div className="mt-4">
-          <Link href="/chat" className="text-sm font-medium text-gray-700 hover:underline">Voir tous les thèmes →</Link>
+        <div className="public-home__themes-footer">
+          <Link href="/chat" className="public-home__themes-link">
+            Voir tous les thèmes →
+          </Link>
         </div>
-      </section>
+      </PageSection>
 
-      <PageSection className="pb-16">
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <div className="text-sm font-semibold tracking-tight">{t("public.agent.title")}</div>
+      <PageSection className="public-agent-section">
+        <SectionCard hover={false} className="public-agent-card">
+          <div className="public-agent__title">{t("public.agent.title")}</div>
           <QuickAsk defaultValue={t("public.themes.ai.example")} placeholder={t("public.chat.placeholder")} ctaLabel={t("public.agent.ctaChat")} />
-        </div>
+        </SectionCard>
       </PageSection>
     </>
   )
