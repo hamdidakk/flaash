@@ -1,5 +1,4 @@
 "use client"
-import { usePathname } from "next/navigation"
 import {
   Home,
   FileText,
@@ -28,7 +27,6 @@ import { SidebarNavSection } from "@/components/sidebar/sidebar-nav-section"
 import { SidebarUserInfo } from "@/components/sidebar/sidebar-user-info"
 
 export function DashboardSidebar() {
-  const pathname = usePathname()
   const { user } = useAuth()
   const { t } = useLanguage()
 
@@ -64,11 +62,11 @@ export function DashboardSidebar() {
 
       <ScrollArea className="flex-1 px-3 py-4">
         <div className="space-y-6">
-          <SidebarNavSection title={t("nav.main")} items={navigation} pathname={pathname} />
+          <SidebarNavSection title={t("nav.main")} items={navigation} />
           <Separator className="bg-border/50" />
-          <SidebarNavSection title={t("nav.management")} items={management} pathname={pathname} />
+          <SidebarNavSection title={t("nav.management")} items={management} />
           <Separator className="bg-border/50" />
-          <SidebarNavSection title={t("nav.system")} items={system} pathname={pathname} />
+          <SidebarNavSection title={t("nav.system")} items={system} />
         </div>
       </ScrollArea>
 

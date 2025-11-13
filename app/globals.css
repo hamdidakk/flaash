@@ -200,6 +200,10 @@
     @apply mr-1;
   }
 
+  .public-section-header__subtitle {
+    @apply mt-2 block text-sm text-gray-600;
+  }
+
   .public-page-section {
     @apply mx-auto max-w-6xl px-4;
   }

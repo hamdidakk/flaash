@@ -241,8 +241,21 @@ export async function getDocumentChunks(documentId: string) {
   })
 }
 
+export interface DakkomRetrievedDocument {
+  chunk_id?: string
+  source_file?: string
+  document?: string
+  probability?: number
+  [key: string]: unknown
+}
+
+type RagGenerationResult = {
+  generated_response: DakkomRagResponse
+  retrieved_documents?: DakkomRetrievedDocument[]
+}
+
 export async function ragGeneration(payload: Record<string, unknown>) {
-  return dakkomFetch<{ generated_response: DakkomRagResponse }>("/api/v1/rag-generation/", {
+  return dakkomFetch<RagGenerationResult>("/api/v1/rag-generation/", {
     method: "POST",
     body: JSON.stringify(payload),
   })
@@ -250,7 +263,7 @@ export async function ragGeneration(payload: Record<string, unknown>) {
 
 // Public variant: allow calls without requiring X-API-Key (handled by proxy if present)
 export async function ragGenerationPublic(payload: Record<string, unknown>) {
-  return dakkomFetch<{ generated_response: DakkomRagResponse }>("/api/v1/rag-generation/", {
+  return dakkomFetch<RagGenerationResult>("/api/v1/rag-generation/", {
     method: "POST",
     body: JSON.stringify(payload),
     skipAuthCheck: true,

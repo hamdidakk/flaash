@@ -20,7 +20,7 @@ export default function UsersPage() {
       <PageHeader
         title={t("users.title")}
         description={t("users.description")}
-        action={
+        actions={
           <Button>
             <UserPlus className="mr-2 h-4 w-4" />
             {t("users.invite")}

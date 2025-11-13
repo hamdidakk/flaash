@@ -21,7 +21,7 @@ export default function AlertsPage() {
       <PageHeader
         title={t("alerts.title")}
         description={t("alerts.description")}
-        action={
+        actions={
           <Button>
             <Plus className="mr-2 h-4 w-4" />
             {t("alerts.create")}

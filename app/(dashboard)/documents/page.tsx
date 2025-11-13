@@ -175,13 +175,27 @@ export default function DocumentsPage() {
         onClearFilters={handleClearFilters}
       />
 
-        {isLoading ? (
-          <div className="text-center text-sm text-muted-foreground py-8">{t("common.loading")}</div>
-        ) : tableRows.length === 0 ? (
-          <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />
-        ) : (
-          <DocumentsTable documents={tableRows} onViewChunks={handleViewChunks} onDelete={handleDelete} />
-        )}
+      {isLoading ? (
+        <div className="py-8 text-center text-sm text-muted-foreground">{t("common.loading")}</div>
+      ) : tableRows.length === 0 ? (
+        <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />
+      ) : (
+        <DocumentsTable
+          documents={tableRows}
+          onViewChunks={(row) => {
+            const original = documents.find((doc) => doc.id === row.id)
+            if (original) {
+              void handleViewChunks(original)
+            }
+          }}
+          onDelete={(row) => {
+            const original = documents.find((doc) => doc.id === row.id)
+            if (original) {
+              handleDelete(original)
+            }
+          }}
+        />
+      )}
 
         <ChunksDialog
           open={showChunks}

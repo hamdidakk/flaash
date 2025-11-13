@@ -26,7 +26,7 @@ export default function WebhooksPage() {
       <PageHeader
         title={t("webhooks.title")}
         description={t("webhooks.description")}
-        action={
+        actions={
           <Button>
             <Plus className="mr-2 h-4 w-4" />
             {t("webhooks.create")}

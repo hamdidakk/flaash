@@ -46,63 +46,63 @@ export default function ProjectsPage() {
 
   return (
     <div className="space-y-6">
-        <PageHeader
-          title={t("projects.title")}
-          description={t("projects.description")}
-          action={
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              {t("projects.create")}
-            </Button>
-          }
-        />
+      <PageHeader
+        title={t("projects.title")}
+        description={t("projects.description")}
+        actions={
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            {t("projects.create")}
+          </Button>
+        }
+      />
 
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">{t("projects.organization")}</p>
-              <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
-                <SelectTrigger className="w-full sm:w-64">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {organizationsMock.map((org) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      <div className="flex flex-col">
-                        <span className="font-medium">{org.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {org.plan} • {org.projects} projects • {org.members} members
-                        </span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {activeOrganization && (
-              <Badge variant="outline" className="w-fit">
-                <ShieldCheck className="mr-1 h-3.5 w-3.5" />
-                {t("projects.tenantIsolation")}
-              </Badge>
-            )}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">{t("projects.organization")}</p>
+            <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
+              <SelectTrigger className="w-full sm:w-64">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {organizationsMock.map((org) => (
+                  <SelectItem key={org.id} value={org.id}>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{org.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {org.plan} • {org.projects} projects • {org.members} members
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+          {activeOrganization && (
+            <Badge variant="outline" className="w-fit">
+              <ShieldCheck className="mr-1 h-3.5 w-3.5" />
+              {t("projects.tenantIsolation")}
+            </Badge>
+          )}
+        </div>
 
-          <div className="grid gap-4">
-            {filteredProjects.length === 0 ? (
-              <Card className="p-6 text-sm text-muted-foreground">No projects found.</Card>
-            ) : (
+        <div className="grid gap-4">
+          {filteredProjects.length === 0 ? (
+            <Card className="p-6 text-sm text-muted-foreground">No projects found.</Card>
+          ) : (
             filteredProjects.map((project) => {
               const maskedKey = `sk-****-****-${project.apiKeyLastFour}`
 
               return (
                 <Card key={project.id} className="p-6">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="mb-4 flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                         <FolderOpen className="h-6 w-6 text-primary" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-lg">{project.name}</h3>
+                        <h3 className="text-lg font-semibold">{project.name}</h3>
                         <p className="text-sm text-muted-foreground">
                           {activeOrganization?.name} • {t("projects.created")} {formatDisplayDateShort(project.createdAt)}
                         </p>
@@ -111,7 +111,7 @@ export default function ProjectsPage() {
                     <Badge variant={project.status === "active" ? "default" : "secondary"}>{project.status}</Badge>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
                     <div className="flex items-center gap-2">
                       <FileText className="h-4 w-4 text-muted-foreground" />
                       <div>
@@ -130,7 +130,7 @@ export default function ProjectsPage() {
                       <KeyRound className="h-4 w-4 text-muted-foreground" />
                       <div>
                         <p className="text-sm text-muted-foreground">{t("projects.apiKey")}</p>
-                        <p className="text-xs font-mono bg-muted px-2 py-1 rounded">{maskedKey}</p>
+                        <p className="rounded bg-muted px-2 py-1 font-mono text-xs">{maskedKey}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -143,22 +143,22 @@ export default function ProjectsPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-                      <div className="text-xs text-muted-foreground">{t("projects.keyIsolation")}</div>
+                    <div className="text-xs text-muted-foreground">{t("projects.keyIsolation")}</div>
                     <div className="flex items-center gap-2">
                       <Button variant="outline" size="sm" className="gap-2" asChild>
                         <a href="/settings">
                           <ShieldCheck className="h-4 w-4" />
-                            {t("projects.manageKeys")}
+                          {t("projects.manageKeys")}
                         </a>
                       </Button>
                     </div>
                   </div>
                 </Card>
               )
-            }))
-            }
-          </div>
+            })
+          )}
         </div>
+      </div>
     </div>
   )
 }

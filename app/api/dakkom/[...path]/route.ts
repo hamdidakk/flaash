@@ -18,9 +18,12 @@ const getApiKey = () => {
   )
 }
 
+type DakkomParams = { path?: string[] }
+type DakkomParamsPromise = Promise<DakkomParams>
+
 async function forward(
   request: NextRequest,
-  paramsInput: { path?: string[] } | Promise<{ path?: string[] }>,
+  paramsPromise: DakkomParamsPromise,
 ) {
   const baseUrl = getBaseUrl()
   if (!baseUrl) {
@@ -29,7 +32,7 @@ async function forward(
 
   const apiKey = getApiKey()
   const url = new URL(request.url)
-  const resolved = (await paramsInput) || {}
+  const resolved = (await paramsPromise) || {}
   let path = Array.isArray(resolved.path) ? resolved.path.join("/") : ""
   if (!path) {
     // Fallback: derive from pathname if dynamic param missing
@@ -89,19 +92,19 @@ async function forward(
   return new NextResponse(buf, { status: resp.status, headers: respHeaders })
 }
 
-export async function GET(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> | { path?: string[] } }) {
+export async function GET(req: NextRequest, ctx: { params: DakkomParamsPromise }) {
   return forward(req, ctx.params)
 }
-export async function POST(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> | { path?: string[] } }) {
+export async function POST(req: NextRequest, ctx: { params: DakkomParamsPromise }) {
   return forward(req, ctx.params)
 }
-export async function PUT(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> | { path?: string[] } }) {
+export async function PUT(req: NextRequest, ctx: { params: DakkomParamsPromise }) {
   return forward(req, ctx.params)
 }
-export async function PATCH(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> | { path?: string[] } }) {
+export async function PATCH(req: NextRequest, ctx: { params: DakkomParamsPromise }) {
   return forward(req, ctx.params)
 }
-export async function DELETE(req: NextRequest, ctx: { params: Promise<{ path?: string[] }> | { path?: string[] } }) {
+export async function DELETE(req: NextRequest, ctx: { params: DakkomParamsPromise }) {
   return forward(req, ctx.params)
 }
 export async function OPTIONS() {

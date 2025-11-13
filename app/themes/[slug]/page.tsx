@@ -95,9 +95,11 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
         <div className="mt-8">
           <SectionHeader
             title={language === "fr" ? "À la une" : "Featured"}
-            subtitle={language === "fr" ? "Sélection d’articles de la thématique" : "Selection of articles in this theme"}
             icon="⭐"
           />
+          <p className="public-section-header__subtitle">
+            {language === "fr" ? "Sélection d’articles de la thématique" : "Selection of articles in this theme"}
+          </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {theme.posts.map((p) => (
               <SectionCard key={p.id} className="flex flex-col justify-between overflow-hidden">
@@ -127,9 +129,11 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
         <div className="mt-10">
           <SectionHeader
             title={language === "fr" ? "Posez une question" : "Ask a question"}
-            subtitle={language === "fr" ? "Interrogez l’Agent IA sur cette thématique" : "Ask the AI Agent about this theme"}
             icon="🤖"
           />
+          <p className="public-section-header__subtitle">
+            {language === "fr" ? "Interrogez l’Agent IA sur cette thématique" : "Ask the AI Agent about this theme"}
+          </p>
           <QuickAsk
             defaultValue={theme.examples[0] || ""}
             placeholder={
@@ -144,9 +148,11 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
         <div className="mt-10">
           <SectionHeader
             title={language === "fr" ? "Thématiques liées" : "Related themes"}
-            subtitle={language === "fr" ? "Explorez d’autres rubriques proches" : "Explore adjacent categories"}
             icon="🧭"
           />
+          <p className="public-section-header__subtitle">
+            {language === "fr" ? "Explorez d’autres rubriques proches" : "Explore adjacent categories"}
+          </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {related.map((r) => (
               <SectionCard key={r.id}>

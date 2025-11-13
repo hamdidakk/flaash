@@ -10,9 +10,10 @@ interface StatCardProps {
     isPositive: boolean
   }
   description?: string
+  change?: string
 }
 
-export function StatCard({ title, value, icon: Icon, trend, description }: StatCardProps) {
+export function StatCard({ title, value, icon: Icon, trend, description, change }: StatCardProps) {
   return (
     <Card className="transition-all duration-200 hover:shadow-md border-border/50">
       <CardContent className="p-6">
@@ -30,6 +31,7 @@ export function StatCard({ title, value, icon: Icon, trend, description }: StatC
                 <span className="text-xs text-muted-foreground">vs last month</span>
               </div>
             )}
+            {change && <p className="text-xs text-muted-foreground mt-2">{change}</p>}
             {description && <p className="text-xs text-muted-foreground mt-2">{description}</p>}
           </div>
           <div className="ml-4">
