@@ -7,6 +7,9 @@ import { SectionCard } from "@/components/public/ui/SectionCard"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
 import { FAQAccordion } from "@/components/public/blocks/FAQAccordion"
 import { HeroSplit } from "@/components/public/blocks/HeroSplit"
+import { ButtonCTA } from "@/components/public/ui/ButtonCTA"
+import { SecondaryCTA } from "@/components/public/ui/SecondaryCTA"
+import { PageSection } from "@/components/public/ui/PageSection"
 
 type GuideContent = {
   title: string
@@ -134,92 +137,159 @@ export function GuideClient() {
   const { language } = useLanguage()
   const c = DEFAULTS[language]
   return (
-    <section className="mx-auto max-w-6xl px-4 py-12">
+    <PageSection className="public-guide" py="12">
       <HeroSplit
-        containerClassName="px-0 py-0"
+        className="public-guide__hero"
+        containerClassName="public-guide__hero-container"
         heading={<span>{c.title}</span>}
-        subtitle={<span className="max-w-3xl inline-block">{c.intro}</span>}
-        right={<SectionCard variant="surface" className="text-4xl flex items-center justify-center min-h-[140px]">📘</SectionCard>}
-        className="max-w-6xl mx-auto"
+        subtitle={<span className="public-guide__hero-subtitle">{c.intro}</span>}
+        right={
+          <SectionCard variant="surface" className="public-guide__hero-card" hover={false}>
+            📘
+          </SectionCard>
+        }
       />
 
       <AnchorNav
         ariaLabel="Sommaire"
         items={[
-          { href: "#citations", label: "D’où viennent les citations ?" },
-          { href: "#limites", label: "Limites de l’édition publique" },
-          { href: "#confidentialite", label: "Confidentialité & respect" },
+          { href: "#citations", label: language === "fr" ? "D’où viennent les citations ?" : "Where do citations come from?" },
+          { href: "#limites", label: language === "fr" ? "Limites de l’édition publique" : "Public edition limits" },
+          { href: "#confidentialite", label: language === "fr" ? "Confidentialité & respect" : "Privacy & respect" },
         ]}
       />
 
-      <div className="mt-8 grid gap-6 max-w-4xl">
+      <div className="public-guide__sections">
         <SectionCard className="fade-in-up">
-          <SectionHeader title={c.whatIs.title} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
-          <p className="mt-2 text-gray-600 leading-relaxed">{c.whatIs.p1}</p>
+          <SectionHeader
+            title={c.whatIs.title}
+            className="public-guide__section-header public-guide__section-header--indigo"
+          />
+          <p className="public-guide__paragraph">{c.whatIs.p1}</p>
         </SectionCard>
 
         <SectionCard className="fade-in-up">
-          <SectionHeader title={c.howTo.title} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
-          <ol className="mt-2 space-y-2 text-gray-700 leading-relaxed">
+          <SectionHeader
+            title={c.howTo.title}
+            className="public-guide__section-header public-guide__section-header--indigo"
+          />
+          <ol className="public-guide__list">
             {c.howTo.steps.map((s) => (
-              <li key={s} className="flex items-start gap-2">
-                <span className="mt-1 select-none">✅</span>
-                <span>{s.replace("/chat", "")}<Link href="/chat" className="underline">/chat</Link>{s.endsWith(".") ? "" : ""}</span>
+              <li key={s} className="public-guide__list-item">
+                <span className="public-guide__list-icon">✅</span>
+                <span>
+                  {s.replace("/chat", "")}
+                  <Link href="/chat" className="public-guide__inline-link">
+                    /chat
+                  </Link>
+                </span>
               </li>
             ))}
           </ol>
         </SectionCard>
 
         <SectionCard id="citations" className="fade-in-up">
-          <SectionHeader title={c.citations.title.replace("3)", "💬")} className="!bg-transparent !px-0 !py-0 text-blue-600" />
-          <p className="mt-2 text-gray-600 leading-relaxed">Chez FLAASH, chaque réponse est fondée sur des sources vérifiées. Voici comment nous citons les contenus.</p>
-          <p className="mt-2 text-gray-700 leading-relaxed">{c.citations.p1} <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">boutique</a>.</p>
+          <SectionHeader
+            title={c.citations.title.replace("3)", "💬")}
+            className="public-guide__section-header public-guide__section-header--blue"
+          />
+          <p className="public-guide__paragraph">
+            {language === "fr"
+              ? "Chez FLAASH, chaque réponse est fondée sur des sources vérifiées. Voici comment nous citons les contenus."
+              : "At FLAASH every answer is grounded in vetted sources. Here is how we cite content."}
+          </p>
+          <p className="public-guide__paragraph">
+            {c.citations.p1}{" "}
+            <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="public-guide__inline-link">
+              boutique
+            </a>
+            .
+          </p>
         </SectionCard>
 
         <SectionCard id="limites" className="fade-in-up">
-          <SectionHeader title={c.limits.title.replace("4)", "⚠")} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
-          <p className="mt-2 text-gray-600 leading-relaxed">Nous voulons que chacun puisse tester librement : voici les limites de l’édition publique.</p>
-          <ul className="mt-2 space-y-2 text-gray-700 leading-relaxed">
+          <SectionHeader
+            title={c.limits.title.replace("4)", "⚠")}
+            className="public-guide__section-header public-guide__section-header--indigo"
+          />
+          <p className="public-guide__paragraph">
+            {language === "fr"
+              ? "Nous voulons que chacun puisse tester librement : voici les limites de l’édition publique."
+              : "We want everyone to experiment freely; here are the limits of the public edition."}
+          </p>
+          <ul className="public-guide__list">
             {c.limits.items.map((it) => (
-              <li key={it} className="flex items-start gap-2"><span className="mt-1 select-none">🔒</span><span>{it}</span></li>
+              <li key={it} className="public-guide__list-item">
+                <span className="public-guide__list-icon">🔒</span>
+                <span>{it}</span>
+              </li>
             ))}
           </ul>
         </SectionCard>
 
         <SectionCard id="conseils" className="fade-in-up">
-          <SectionHeader title={c.tips.title.replace("5)", "💡")} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
-          <ul className="mt-2 space-y-2 text-gray-700 leading-relaxed">
+          <SectionHeader
+            title={c.tips.title.replace("5)", "💡")}
+            className="public-guide__section-header public-guide__section-header--indigo"
+          />
+          <ul className="public-guide__list">
             {c.tips.items.map((it) => (
-              <li key={it} className="flex items-start gap-2"><span className="mt-1 select-none">✨</span><span>{it}</span></li>
+              <li key={it} className="public-guide__list-item">
+                <span className="public-guide__list-icon">✨</span>
+                <span>{it}</span>
+              </li>
             ))}
           </ul>
         </SectionCard>
 
         <SectionCard id="confidentialite" className="fade-in-up">
-          <SectionHeader title={c.privacy.title.replace("6)", "🔒 Notre engagement : confidentialité et respect")} className="!bg-transparent !px-0 !py-0 text-blue-600" />
-          <p className="mt-2 text-gray-600 leading-relaxed">{c.privacy.p1}</p>
+          <SectionHeader
+            title={c.privacy.title.replace("6)", language === "fr" ? "🔒 Notre engagement : confidentialité et respect" : "🔒 Our commitment: privacy & respect")}
+            className="public-guide__section-header public-guide__section-header--blue"
+          />
+          <p className="public-guide__paragraph">{c.privacy.p1}</p>
         </SectionCard>
 
         <SectionCard id="boutique" className="fade-in-up">
-          <SectionHeader title={c.shop.title.replace("7)", "🛍 Acheter la revue")} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
-          <p className="mt-2 text-gray-700 leading-relaxed">{c.shop.p1} <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">boutique</a>.</p>
-          <p className="mt-2 text-gray-700 leading-relaxed">👉 Découvrez nos éditions complètes dans la boutique FLAASH.</p>
+          <SectionHeader
+            title={c.shop.title.replace("7)", language === "fr" ? "🛍 Acheter la revue" : "🛍 Buy the magazine")}
+            className="public-guide__section-header public-guide__section-header--indigo"
+          />
+          <p className="public-guide__paragraph">
+            {c.shop.p1}{" "}
+            <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="public-guide__inline-link">
+              boutique
+            </a>
+            .
+          </p>
+          <p className="public-guide__paragraph">
+            {language === "fr" ? "👉 Découvrez nos éditions complètes dans la boutique FLAASH." : "👉 Discover the full editions in the FLAASH shop."}
+          </p>
         </SectionCard>
 
         <SectionCard id="faq" className="fade-in-up">
-          <SectionHeader title={c.faq.title} className="!bg-transparent !px-0 !py-0 text-indigo-600" />
+          <SectionHeader
+            title={c.faq.title}
+            className="public-guide__section-header public-guide__section-header--indigo"
+          />
           <FAQAccordion items={c.faq.items} footerText="Vous avez une autre question ? Contactez-nous via le chat ou par mail 💌." />
         </SectionCard>
 
-        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:w-fit">
-          <Link href="/chat" className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 px-5 py-2 text-sm font-medium text-white transition-transform hover:scale-105">
-            🤖 <span className="ml-2">{c.ctas.chat}</span>
-          </Link>
-          <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="inline-flex items-center justify-center rounded-2xl border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-900 transition-transform hover:scale-105">
-            🛒 <span className="ml-2">{c.ctas.shop}</span>
-          </a>
+        <div className="public-guide__cta-group">
+          <ButtonCTA href="/chat" icon={<span aria-hidden className="public-guide__cta-icon">🤖</span>} className="public-guide__cta-primary">
+            {c.ctas.chat}
+          </ButtonCTA>
+          <SecondaryCTA
+            href="https://boutique.flaash.fr"
+            external
+            event="guide_shop_cta"
+            icon={<span aria-hidden className="public-guide__cta-icon">🛒</span>}
+            className="public-guide__cta-secondary"
+          >
+            {c.ctas.shop}
+          </SecondaryCTA>
         </div>
       </div>
-    </section>
+    </PageSection>
   )
 }

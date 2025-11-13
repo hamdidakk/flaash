@@ -24,28 +24,30 @@ export function BubbleGrid({
 }) {
   const toneClasses =
     tone === "blue"
-      ? "border-blue-200 bg-blue-50 text-blue-800 hover:bg-blue-100"
-      : "border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100"
+      ? "public-bubble-grid__item--blue"
+      : "public-bubble-grid__item--gray"
 
   return (
-    <SectionCard>
+    <SectionCard className="public-bubble-grid">
       <SectionHeader title={title} />
-      {intro ? <p className="mt-2 text-sm text-gray-600">{intro}</p> : null}
-      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {intro ? <p className="public-bubble-grid__intro">{intro}</p> : null}
+      <div className="public-bubble-grid__items">
         {items.map((it) => (
           <Link
             key={it.href}
             href={it.href}
             title={it.tooltip}
-            className={`group relative mx-auto flex min-h-[76px] w-full max-w-full cursor-pointer items-center justify-center rounded-full border px-4 py-3 text-center text-sm leading-tight transition ${toneClasses} whitespace-normal`}
+            className={`public-bubble-grid__item group ${toneClasses}`}
           >
-            <span className="flex flex-col items-center justify-center gap-0.5">
-              {it.icon ? <span aria-hidden className="select-none">{it.icon}</span> : null}
-              <span className="block max-w-full break-words">{it.label}</span>
+            <span className="public-bubble-grid__item-content">
+              {it.icon ? (
+                <span aria-hidden className="public-bubble-grid__item-icon">{it.icon}</span>
+              ) : null}
+              <span className="public-bubble-grid__item-label">{it.label}</span>
             </span>
             {it.tooltip ? (
               <span
-                className="pointer-events-none absolute left-[calc(100%+1.5rem)] z-10 inline-block max-w-[240px] rounded-md border border-gray-200 bg-white/95 px-3 py-2 text-left text-xs text-gray-800 opacity-0 shadow-md ring-1 ring-black/5 transition duration-150 ease-out origin-left scale-0 group-hover:opacity-100 group-hover:scale-100 group-focus-visible:opacity-100 group-focus-visible:scale-100"
+                className="public-bubble-grid__tooltip"
               >
                 {it.tooltip}
               </span>
@@ -54,8 +56,8 @@ export function BubbleGrid({
         ))}
       </div>
       {cta ? (
-        <div className="mt-3">
-          <Link href={cta.href} className="text-sm font-medium text-gray-700 underline underline-offset-4">
+        <div className="public-bubble-grid__cta">
+          <Link href={cta.href} className="public-bubble-grid__cta-link">
             {cta.label}
           </Link>
         </div>

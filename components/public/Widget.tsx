@@ -212,33 +212,33 @@ export function PublicWidget() {
   }
 
   return (
-    <div className="mx-auto w-full p-0">
-      <Card className="flex w-full flex-col rounded-2xl border border-gray-100 bg-white p-0 shadow-md">
+    <div className="public-widget">
+      <Card className="public-widget__card">
         <WidgetHeader title={TEXT.title} subtitle="explorateur du futur — formé sur les publications et analyses de la revue" />
         {showUpsell && (
-          <div className="mb-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <div className="public-widget__upsell">
             <div className="font-medium">{TEXT.upsellTitle}</div>
             <p className="mt-1">{TEXT.upsellBody(REQUEST_LIMIT)}</p>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <Link href="/admin" className="underline">{TEXT.login}</Link>
-              <span className="opacity-60">·</span>
-              <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="underline">{TEXT.subscribe}</a>
-              <span className="opacity-60">·</span>
-              <Link href="/guide" className="underline">{TEXT.more}</Link>
+            <div className="public-widget__upsell-actions">
+              <Link href="/admin" className="public-widget__upsell-link">{TEXT.login}</Link>
+              <span className="public-widget__upsell-separator">·</span>
+              <a href="https://boutique.flaash.fr" target="_blank" rel="noreferrer noopener" className="public-widget__upsell-link">{TEXT.subscribe}</a>
+              <span className="public-widget__upsell-separator">·</span>
+              <Link href="/guide" className="public-widget__upsell-link">{TEXT.more}</Link>
             </div>
           </div>
         )}
         {messages.length <= 1 && (
-          <div className="px-6 text-center text-sm text-gray-600">
+          <div className="public-widget__welcome">
             <p>Bienvenue 👋</p>
             <p>Posez vos questions sur les articles, les thèmes et les futurs possibles explorés par FLAASH.</p>
           </div>
         )}
-        <div className="flex min-h-[60vh] max-h-[calc(100dvh-220px)] flex-col">
+        <div className="public-widget__body">
           <ChatMessagesList messages={messages} isLoading={isLoading} onCitationClick={handleCitationClick} />
           <ChatInput value={input} onChange={setInput} onSend={() => handleSend()} disabled={isLoading || showUpsell || cooldownLeftMs > 0} />
           {cooldownLeftMs > 0 && (
-            <p className="text-center text-xs text-muted-foreground">{TEXT.cooldown(Math.ceil(cooldownLeftMs / 1000))}</p>
+            <p className="public-widget__cooldown">{TEXT.cooldown(Math.ceil(cooldownLeftMs / 1000))}</p>
           )}
           <PromptsChips prompts={TEXT.prompts} disabled={isLoading || showUpsell || cooldownLeftMs > 0} onPick={(q) => handleSend(q)} />
         </div>

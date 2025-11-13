@@ -7,10 +7,13 @@ type SectionCardProps = HTMLAttributes<HTMLDivElement> & {
 }
 
 export function SectionCard({ children, className, hover = true, variant = "default", ...rest }: SectionCardProps) {
-  const base = "rounded-xl border border-gray-200 bg-white p-5 md:p-6 shadow-md"
-  const hoverCls = hover ? " transition hover:shadow-lg" : ""
-  const variantCls = variant === "future" ? " card-future" : variant === "surface" ? " bg-gray-50" : ""
-  const cls = className ? `${base}${hoverCls}${variantCls} ${className}` : `${base}${hoverCls}${variantCls}`
+  const classes = ["public-card"]
+  if (hover) classes.push("public-card--hover")
+  if (!hover) classes.push("public-card--no-hover")
+  if (variant === "future") classes.push("card-future")
+  if (variant === "surface") classes.push("public-card--surface")
+  const base = classes.join(" ")
+  const cls = className ? `${base} ${className}` : base
   return <div className={cls} {...rest}>{children}</div>
 }
 

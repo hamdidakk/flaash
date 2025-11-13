@@ -41,54 +41,48 @@ export function SubscriptionClient() {
   return (
     <>
       <PageView page="abonnement" />
-      <section className="mx-auto max-w-6xl px-4 py-12">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">{t("public.subscription.title")}</h1>
-          <p className="mt-3 text-gray-600">{t("public.subscription.subtitle")}</p>
-          <p className="mt-4 text-sm text-gray-700">💡 Choisissez le mode d’accès qui correspond à votre usage de l’IA Flaash.</p>
+      <section className="public-subscription">
+        <div className="public-subscription__intro">
+          <h1 className="public-subscription__title">{t("public.subscription.title")}</h1>
+          <p className="public-subscription__subtitle">{t("public.subscription.subtitle")}</p>
+          <p className="public-subscription__note">💡 Choisissez le mode d’accès qui correspond à votre usage de l’IA Flaash.</p>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <div className="public-subscription__plans">
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`fade-in-up card-future rounded-xl border p-5 transition-transform duration-200 hover:-translate-y-0.5 ${
-                p.highlighted
-                  ? "bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 shadow-lg shadow-blue-100"
-                  : "border-gray-200"
+              className={`public-subscription__card fade-in-up ${
+                p.highlighted ? "public-subscription__card--featured" : "public-subscription__card--default"
               }`}
             >
-              <div className="flex items-baseline justify-between">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-semibold">{p.name}</h2>
-                  {p.highlighted && (
-                    <span className="inline-flex items-center rounded-full bg-blue-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">Le plus populaire</span>
-                  )}
+              <div className="public-subscription__card-header">
+                <div className="public-subscription__card-heading">
+                  <h2 className="public-subscription__card-title">{p.name}</h2>
+                  {p.highlighted ? (
+                    <span className="public-subscription__badge">Le plus populaire</span>
+                  ) : null}
                 </div>
-                <div className="text-sm font-semibold text-primary">{p.price}</div>
+                <div className="public-subscription__price">{p.price}</div>
               </div>
-              <p className="mt-2 text-gray-700">{p.description}</p>
-              <ul className="mt-5 space-y-2 text-sm text-gray-800">
+              <p className="public-subscription__description">{p.description}</p>
+              <ul className="public-subscription__features">
                 {p.features.map((f) => (
-                  <li key={f.text} className="flex items-start gap-2">
-                    <span className="mt-0.5 select-none">{f.icon}</span>
+                  <li key={f.text} className="public-subscription__feature">
+                    <span className="public-subscription__feature-icon">{f.icon}</span>
                     <span>{f.text}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="public-subscription__cta-group">
                 <TrackedLink
                   href={p.ctaHref}
                   event={p.ctaEvent}
                   external={p.ctaHref.startsWith("http")}
-                  className={`inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold transition-transform will-change-transform ${
-                    p.highlighted
-                      ? "cta-futuriste btn-pulse hover:scale-105 text-white"
-                      : "border border-gray-300 hover:bg-gray-50 hover:scale-105"
-                  }`}
+                  className={`public-subscription__cta ${p.highlighted ? "public-subscription__cta--featured" : "public-subscription__cta--default"}`}
                 >
                   {p.highlighted ? <span aria-hidden>💎</span> : <span aria-hidden>🤖</span>}
-                  <span className="ml-2">{p.ctaLabel}</span>
+                  <span className="public-subscription__cta-label">{p.ctaLabel}</span>
                 </TrackedLink>
 
                 {p.highlighted && (
@@ -96,14 +90,14 @@ export function SubscriptionClient() {
                     href={p.ctaHref}
                     event="pricing_view_plans"
                     external
-                    className="inline-flex items-center rounded-md border border-blue-200 bg-white px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-50"
+                    className="public-subscription__secondary-cta"
                   >
                     Voir les formules
                   </TrackedLink>
                 )}
               </div>
               {p.highlighted && (
-                <p className="mt-2 text-xs text-gray-600">Annulable à tout moment, sans engagement.</p>
+                <p className="public-subscription__fineprint">Annulable à tout moment, sans engagement.</p>
               )}
             </div>
           ))}

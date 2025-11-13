@@ -116,13 +116,13 @@ export function PrivacyClient() {
   }
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <div>
-        <h1 className="flex items-center gap-2 text-3xl font-bold text-gray-900">🔒 {T.title}</h1>
-        <p className="mt-1 text-gray-600">{T.subtitle}</p>
-        <div className="mt-2 inline-flex items-center gap-2 text-xs text-gray-500">
+    <section className="public-privacy">
+      <div className="public-privacy__header">
+        <h1 className="public-privacy__title">🔒 {T.title}</h1>
+        <p className="public-privacy__subtitle">{T.subtitle}</p>
+        <div className="public-privacy__meta">
           <BadgePill color="green">{language === "fr" ? "Conforme RGPD" : "GDPR compliant"}</BadgePill>
-          <span>•</span>
+          <span className="public-privacy__meta-separator">•</span>
           <span>{T.updated}: {lastUpdate}</span>
         </div>
       </div>
@@ -156,24 +156,29 @@ export function PrivacyClient() {
         tone="blue"
       />
 
-      <div className="mt-8 space-y-6 text-gray-700">
+      <div className="public-privacy__sections">
         {T.sections.map((s, idx) => (
-          <SectionCard key={s.title}>
+          <SectionCard key={s.title} className="public-privacy__section">
             <section id={`s${idx + 1}`}>
               <SectionHeader title={s.title} icon={<span>{icons[idx] ?? ""}</span>} />
               {s.items && (
-                <ul className="mt-3 space-y-2 text-sm">
+                <ul className="public-privacy__list">
                   {s.items.map((it: string) => (
-                    <li key={it} className="flex items-start gap-2"><span className="mt-0.5 select-none">•</span><span>{renderWithStrong(it)}</span></li>
+                    <li key={it} className="public-privacy__list-item">
+                      <span className="public-privacy__list-dot">•</span>
+                      <span>{renderWithStrong(it)}</span>
+                    </li>
                   ))}
                 </ul>
               )}
               {s.p && (
-                <p className="mt-3 text-sm leading-relaxed">
+                <p className="public-privacy__paragraph">
                   {renderWithStrong(s.p)} {s.title.includes("Droits") || s.title.includes("Rights") ? (
                     <>
-                      <span className="ml-1">{language === "fr" ? "Contact :" : "Contact:"}</span>
-                      <span className="ml-1"><ContactBadge email={companyEmail} /></span>.
+                      <span className="public-privacy__contact">
+                        <span className="public-privacy__contact-label">{language === "fr" ? "Contact :" : "Contact:"}</span>
+                        <span className="public-privacy__contact-badge"><ContactBadge email={companyEmail} /></span>.
+                      </span>
                     </>
                   ) : null}
                 </p>
@@ -183,7 +188,11 @@ export function PrivacyClient() {
         ))}
       </div>
 
-      <p className="mt-6 text-sm text-gray-600">{language === "fr" ? "Notre engagement : aucune donnée n’est vendue, partagée ni utilisée à des fins publicitaires." : "Our commitment: no data is sold, shared, or used for advertising purposes."}</p>
+      <p className="public-privacy__final-note">
+        {language === "fr"
+          ? "Notre engagement : aucune donnée n’est vendue, partagée ni utilisée à des fins publicitaires."
+          : "Our commitment: no data is sold, shared, or used for advertising purposes."}
+      </p>
     </section>
   )
 }

@@ -7,8 +7,6 @@ import { useRouter } from "next/navigation"
 
 type Flag = "fr" | "gb"
 
-const flagBaseClass = "mr-1 h-4 w-6 flex-shrink-0"
-
 function FlagIcon({ country }: { country: Flag }) {
   const clipPathId = useId()
 
@@ -16,7 +14,7 @@ function FlagIcon({ country }: { country: Flag }) {
     return (
       <svg
         viewBox="0 0 3 2"
-        className={flagBaseClass}
+        className="public-lang-switcher__flag"
         aria-hidden
         focusable="false"
         role="img"
@@ -31,7 +29,7 @@ function FlagIcon({ country }: { country: Flag }) {
   return (
     <svg
       viewBox="0 0 60 30"
-      className={flagBaseClass}
+      className="public-lang-switcher__flag"
       aria-hidden
       focusable="false"
       role="img"
@@ -61,13 +59,11 @@ export function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-2" aria-label="Language selector">
+    <div className="public-lang-switcher" aria-label="Language selector">
       <button
         type="button"
         onClick={() => handleSwitch("fr")}
-        className={`inline-flex items-center rounded px-2.5 py-1.5 text-[15px] ${
-          language === "fr" ? "bg-gray-200" : "hover:bg-gray-100"
-        }`}
+        className={`public-lang-switcher__button ${language === "fr" ? "public-lang-switcher__button--active" : ""}`}
         aria-pressed={language === "fr"}
       >
         <FlagIcon country="fr" />
@@ -76,9 +72,7 @@ export function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => handleSwitch("en")}
-        className={`inline-flex items-center rounded px-2.5 py-1.5 text-[15px] ${
-          language === "en" ? "bg-gray-200" : "hover:bg-gray-100"
-        }`}
+        className={`public-lang-switcher__button ${language === "en" ? "public-lang-switcher__button--active" : ""}`}
         aria-pressed={language === "en"}
       >
         <FlagIcon country="gb" />

@@ -13,6 +13,7 @@ import { AnchorNav } from "@/components/public/ui/AnchorNav"
 import { Timeline } from "@/components/public/blocks/Timeline"
 import { HeroSplit } from "@/components/public/blocks/HeroSplit"
 import { SecondaryCTA } from "@/components/public/ui/SecondaryCTA"
+import { PageSection } from "@/components/public/ui/PageSection"
 
 export default function AboutPage() {
   const { t, language } = useLanguage()
@@ -29,14 +30,18 @@ export default function AboutPage() {
     <main>
       <PublicHeader />
       <HeroSplit
+        className="public-about__hero"
         containerClassName="py-16"
-        heading={<span className="text-slate-900">{t("public.about.title")}</span>}
-        subtitle={<span className="max-w-3xl inline-block">{t("public.about.p1")}</span>}
-        right={<SectionCard variant="surface" className="text-4xl flex items-center justify-center min-h-[160px]">🧭</SectionCard>}
-        className="px-4"
+        heading={<span className="public-about__title">{t("public.about.title")}</span>}
+        subtitle={<span className="public-about__subtitle">{t("public.about.p1")}</span>}
+        right={
+          <SectionCard variant="surface" className="public-guide__hero-card" hover={false}>
+            🧭
+          </SectionCard>
+        }
       />
 
-      <section className="mx-auto max-w-6xl px-4">
+      <PageSection className="public-about">
         <AnchorNav
           ariaLabel={language === "fr" ? "Sommaire" : "Table of contents"}
           items={[
@@ -49,22 +54,22 @@ export default function AboutPage() {
           ]}
         />
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="public-about__grid">
           <SectionCard className="fade-in-up md:col-span-2">
             <SectionHeader title={t("public.about.mission.title")} icon={<span>🧭</span>} />
-            <p className="mt-3 text-sm text-gray-700">{t("public.about.mission.p")}</p>
+            <p className="public-about__card-text">{t("public.about.mission.p")}</p>
           </SectionCard>
           <SectionCard className="fade-in-up">
             <SectionHeader title={t("public.about.approach.title")} icon={<span>🧠</span>} />
-            <p className="mt-3 text-sm text-gray-700">{t("public.about.approach.p")}</p>
+            <p className="public-about__card-text">{t("public.about.approach.p")}</p>
           </SectionCard>
           <SectionCard className="fade-in-up md:col-span-2">
             <SectionHeader title={t("public.about.agent.title")} icon={<span>🤖</span>} />
-            <p className="mt-3 text-sm text-gray-700">{t("public.about.agent.p")}</p>
+            <p className="public-about__card-text">{t("public.about.agent.p")}</p>
           </SectionCard>
           <SectionCard className="fade-in-up">
             <SectionHeader title={t("public.about.what.title")} icon={<span>✍️</span>} />
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-gray-800">
+            <ul className="public-about__list">
               {items.map((it) => (
                 <li key={it}>{it}</li>
               ))}
@@ -72,24 +77,22 @@ export default function AboutPage() {
           </SectionCard>
           <SectionCard className="fade-in-up">
             <SectionHeader title={t("public.about.team.title")} icon={<span>👥</span>} />
-            <p className="mt-3 text-sm text-gray-700">{t("public.about.team.p")}</p>
+            <p className="public-about__card-text">{t("public.about.team.p")}</p>
           </SectionCard>
         </div>
 
-        <SectionCard className="mt-12">
-          <section id="histoire" className="fade-in-up">
-            <SectionHeader as="h3" title={t("public.about.history.title")} icon={<span>⏳</span>} />
-            <Timeline
-              items={[
-                { label: `${t("public.about.history.a.y")}`, description: t("public.about.history.a.p"), icon: <span>🧪</span> },
-                { label: `${t("public.about.history.b.y")}`, description: t("public.about.history.b.p"), icon: <span>📚</span> },
-                { label: `${t("public.about.history.c.y")}`, description: t("public.about.history.c.p"), icon: <span>🚀</span> },
-              ]}
-            />
-          </section>
+        <SectionCard className="mt-12 fade-in-up" id="histoire">
+          <SectionHeader as="h3" title={t("public.about.history.title")} icon={<span>⏳</span>} />
+          <Timeline
+            items={[
+              { label: `${t("public.about.history.a.y")}`, description: t("public.about.history.a.p"), icon: <span>🧪</span> },
+              { label: `${t("public.about.history.b.y")}`, description: t("public.about.history.b.p"), icon: <span>📚</span> },
+              { label: `${t("public.about.history.c.y")}`, description: t("public.about.history.c.p"), icon: <span>🚀</span> },
+            ]}
+          />
         </SectionCard>
 
-        <div className="mt-12 mb-12 flex flex-wrap items-center justify-center gap-3">
+        <div className="public-about__cta-group">
           <ButtonCTA href="/chat" icon={<span>🤖</span>}>
             {t("public.about.ctas.chat")}
           </ButtonCTA>
@@ -106,12 +109,12 @@ export default function AboutPage() {
             type="button"
             aria-label="Revenir en haut"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-6 right-4 inline-flex items-center justify-center rounded-full bg-white p-2 text-slate-700 shadow-md ring-1 ring-gray-200 hover:shadow-lg"
+            className="public-about__back-to-top"
           >
             ↑
           </button>
         )}
-      </section>
+      </PageSection>
       <PublicFooter />
     </main>
   )

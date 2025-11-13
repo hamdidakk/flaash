@@ -50,9 +50,11 @@ export default async function ThemesPage() {
       <PageSection py="12">
         <SectionHeader
           title={t("public.themes.title")}
-          subtitle={language === "fr" ? "Rubriques principales de FLAASH" : "FLAASH’s main categories"}
           icon="🌐"
         />
+        <p className="mt-2 text-sm text-gray-600">
+          {language === "fr" ? "Rubriques principales de FLAASH" : "FLAASH’s main categories"}
+        </p>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {themes.map((th) => (
@@ -79,13 +81,13 @@ export default async function ThemesPage() {
         <div className="mt-8">
           <SectionHeader
             title={language === "fr" ? "Posez une question" : "Ask a question"}
-            subtitle={
-              language === "fr"
-                ? "Interrogez l’Agent IA sur une thématique"
-                : "Ask the AI Agent about a theme"
-            }
             icon="🤖"
           />
+          <p className="mt-2 text-sm text-gray-600">
+            {language === "fr"
+              ? "Interrogez l’Agent IA sur une thématique"
+              : "Ask the AI Agent about a theme"}
+          </p>
           <QuickAsk
             defaultValue={firstExample}
             placeholder={language === "fr" ? "Ex. : Quelles technologies vont changer nos villes ?" : "Ex.: Which technologies will reshape our cities?"}

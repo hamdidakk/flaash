@@ -74,30 +74,30 @@ export function ThemeVisual({ slug, icon, title, subtitle, tag, variant = "card"
 
   if (variant === "hero") {
     return (
-      <div className={`relative overflow-hidden rounded-2xl border ${palette.border} bg-white`}>
-        <div className={`absolute inset-0 bg-gradient-to-br ${palette.gradientHero}`} aria-hidden />
-        <div className={`absolute -left-16 top-6 h-32 w-32 rounded-full ${palette.bubble} blur-3xl`} aria-hidden />
-        <div className={`absolute -right-12 bottom-0 h-28 w-28 rounded-full ${palette.bubbleAlt} blur-3xl`} aria-hidden />
-        <div className="relative flex flex-col items-center px-6 py-10 text-center">
-          <span className="text-6xl drop-shadow-sm">{icon}</span>
-          <h3 className="mt-4 text-lg font-semibold text-gray-900">{title}</h3>
-          {subtitle ? <p className="mt-2 max-w-sm text-sm text-gray-600">{subtitle}</p> : null}
+      <div className={`public-theme-visual ${palette.border}`}>
+        <div className={`public-theme-visual__gradient ${palette.gradientHero}`} aria-hidden />
+        <div className={`public-theme-visual__bubble -left-16 top-6 h-32 w-32 ${palette.bubble}`} aria-hidden />
+        <div className={`public-theme-visual__bubble -right-12 bottom-0 h-28 w-28 ${palette.bubbleAlt}`} aria-hidden />
+        <div className="public-theme-visual__body">
+          <span className="public-theme-visual__icon">{icon}</span>
+          <h3 className="public-theme-visual__title">{title}</h3>
+          {subtitle ? <p className="public-theme-visual__subtitle">{subtitle}</p> : null}
         </div>
       </div>
     )
   }
 
   return (
-    <div className={`relative mb-3 aspect-[16/9] overflow-hidden rounded-lg border ${palette.border} bg-white/95 shadow-sm`}>
-      <div className={`absolute inset-0 bg-gradient-to-br ${palette.gradientCard}`} aria-hidden />
-      <div className={`absolute -left-10 bottom-0 h-24 w-24 rounded-full ${palette.bubble} blur-3xl`} aria-hidden />
-      <div className={`absolute right-0 top-0 h-20 w-20 rounded-full ${palette.bubbleAlt} blur-3xl`} aria-hidden />
-      <div className="relative flex h-full flex-col justify-between px-4 py-3">
-        <div className="flex items-center justify-between">
-          <span className="text-3xl drop-shadow">{icon}</span>
-          {tag ? <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${palette.tag}`}>{tag}</span> : null}
+    <div className={`public-theme-card ${palette.border}`}>
+      <div className={`public-theme-card__gradient ${palette.gradientCard}`} aria-hidden />
+      <div className={`public-theme-card__bubble -left-10 bottom-0 h-24 w-24 ${palette.bubble}`} aria-hidden />
+      <div className={`public-theme-card__bubble right-0 top-0 h-20 w-20 ${palette.bubbleAlt}`} aria-hidden />
+      <div className="public-theme-card__body">
+        <div className="public-theme-card__header">
+          <span className="public-theme-card__icon">{icon}</span>
+          {tag ? <span className={`public-theme-card__tag ${palette.tag}`}>{tag}</span> : null}
         </div>
-        {subtitle ? <p className="text-xs text-gray-600">{subtitle}</p> : null}
+        {subtitle ? <p className="public-theme-card__subtitle">{subtitle}</p> : null}
       </div>
     </div>
   )

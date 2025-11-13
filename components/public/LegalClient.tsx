@@ -101,11 +101,11 @@ export function LegalClient() {
   }
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="mb-2 flex items-center gap-2 text-3xl font-bold text-gray-900">📜 {T.title}</h1>
-      <p className="text-sm text-gray-500">{T.updated}: {lastUpdate}</p>
-      <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.intro}</p>
-      <p className="mt-2 text-sm text-gray-600"><a className="underline underline-offset-4" href="/privacy">{T.linkPrivacy}</a></p>
+    <section className="public-legal">
+      <h1 className="public-legal__title">📜 {T.title}</h1>
+      <p className="public-legal__meta">{T.updated}: {lastUpdate}</p>
+      <p className="public-legal__intro">{T.intro}</p>
+      <p className="public-legal__privacy"><a className="public-legal__link" href="/privacy">{T.linkPrivacy}</a></p>
 
       {/* Sommaire supprimé au profit des bulles (BubbleGrid) */}
 
@@ -123,58 +123,58 @@ export function LegalClient() {
         tone="gray"
       />
 
-      <div className="mt-6 grid gap-6">
+      <div className="public-legal__sections">
         <SectionCard id="sec_1">
           <SectionHeader title={T.publisher.title} />
-          <ul className="mt-3 space-y-1 text-[15px] leading-relaxed text-gray-700">
-            <li><span className="font-semibold">{T.publisher.name} :</span> {companyName}</li>
-            <li><span className="font-semibold">{T.publisher.form} :</span> {companyForm}</li>
-            <li><span className="font-semibold">{T.publisher.siret} :</span> {companySiret}</li>
-            <li><span className="font-semibold">{T.publisher.address} :</span> {companyAddress}</li>
-            <li><span className="font-semibold">{T.publisher.email} :</span> <ContactBadge email={companyEmail} /></li>
-            <li><span className="font-semibold">{T.publisher.phone} :</span> {companyPhone}</li>
-            <li><span className="font-semibold">{T.publisher.director} :</span> {directorName}</li>
+          <ul className="public-legal__info-list">
+            <li><span className="public-legal__term">{T.publisher.name} :</span> {companyName}</li>
+            <li><span className="public-legal__term">{T.publisher.form} :</span> {companyForm}</li>
+            <li><span className="public-legal__term">{T.publisher.siret} :</span> {companySiret}</li>
+            <li><span className="public-legal__term">{T.publisher.address} :</span> {companyAddress}</li>
+            <li><span className="public-legal__term">{T.publisher.email} :</span> <ContactBadge email={companyEmail} /></li>
+            <li><span className="public-legal__term">{T.publisher.phone} :</span> {companyPhone}</li>
+            <li><span className="public-legal__term">{T.publisher.director} :</span> {directorName}</li>
           </ul>
         </SectionCard>
 
         <SectionCard id="sec_2">
           <SectionHeader title={T.hosting.title} />
-          <ul className="mt-3 space-y-1 text-[15px] leading-relaxed text-gray-700">
-            <li><span className="font-semibold">{T.hosting.host} :</span> {hostName}</li>
-            <li><span className="font-semibold">{T.hosting.address} :</span> {hostAddress}</li>
-            <li><span className="font-semibold">{T.hosting.website} :</span> <a href={hostWebsite} target="_blank" rel="noreferrer noopener" className="underline underline-offset-4">{hostWebsite}</a></li>
+          <ul className="public-legal__info-list">
+            <li><span className="public-legal__term">{T.hosting.host} :</span> {hostName}</li>
+            <li><span className="public-legal__term">{T.hosting.address} :</span> {hostAddress}</li>
+            <li><span className="public-legal__term">{T.hosting.website} :</span> <a href={hostWebsite} target="_blank" rel="noreferrer noopener" className="public-legal__link">{hostWebsite}</a></li>
           </ul>
         </SectionCard>
 
         <SectionCard id="sec_3">
           <SectionHeader title={T.ip.title} />
-          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.ip.p}</p>
+          <p className="public-legal__text">{T.ip.p}</p>
         </SectionCard>
 
         <SectionCard id="sec_4">
           <SectionHeader title={T.terms.title} />
-          <ul className="mt-3 list-disc space-y-2 pl-6 text-[15px] leading-relaxed text-gray-700">
+          <ul className="public-legal__bullets">
             {T.terms.items.map((it) => (<li key={it}>{it}</li>))}
           </ul>
         </SectionCard>
 
         <SectionCard id="sec_5">
           <SectionHeader title={T.liability.title} />
-          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.liability.p}</p>
+          <p className="public-legal__text">{T.liability.p}</p>
         </SectionCard>
 
         <SectionCard id="sec_6">
           <SectionHeader title={T.privacy.title} />
-          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.privacy.p}<ContactBadge email={companyEmail} />.</p>
+          <p className="public-legal__text">{T.privacy.p}<ContactBadge email={companyEmail} />.</p>
         </SectionCard>
 
         <SectionCard id="sec_7">
           <SectionHeader title={T.law.title} />
-          <p className="mt-2 text-[15px] leading-relaxed text-gray-700">{T.law.p}</p>
+          <p className="public-legal__text">{T.law.p}</p>
         </SectionCard>
       </div>
 
-      <p className="mt-4 text-sm text-gray-600">{T.updateNote}</p>
+      <p className="public-legal__note">{T.updateNote}</p>
     </section>
   )
 }

@@ -19,24 +19,24 @@ interface SourceModalProps {
 export function SourceModal({ open, onOpenChange, documentName, links, onViewExcerpts }: SourceModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="public-source-modal">
         <DialogHeader>
           <DialogTitle>Source</DialogTitle>
           <DialogDescription>{documentName}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3 py-2">
+        <div className="public-source-modal__body">
           {links.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Aucun lien disponible pour cette source.</p>
+            <p className="public-source-modal__empty">Aucun lien disponible pour cette source.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="public-source-modal__list">
               {links.map((l) => (
-                <li key={l.href}>
+                <li key={l.href} className="public-source-modal__item">
                   <a
                     href={l.href}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="text-sm text-blue-600 hover:underline"
+                    className="public-source-modal__link"
                   >
                     {l.label}
                   </a>
@@ -47,8 +47,8 @@ export function SourceModal({ open, onOpenChange, documentName, links, onViewExc
         </div>
 
         {onViewExcerpts && (
-          <div className="pt-2">
-            <Button variant="outline" onClick={onViewExcerpts} className="w-full">
+          <div className="public-source-modal__footer">
+            <Button variant="outline" onClick={onViewExcerpts} className="public-source-modal__cta">
               Voir les extraits
             </Button>
           </div>

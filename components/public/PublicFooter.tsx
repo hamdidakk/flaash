@@ -31,60 +31,60 @@ export function PublicFooter() {
     <footer
       ref={ref as any}
       role="contentinfo"
-      className="relative border-t border-zinc-800 bg-zinc-950 text-zinc-200"
+      className="public-footer"
     >
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-6 md:grid-cols-3">
-        <div className="space-y-2">
-          <Link href="/" className="font-semibold tracking-tight text-zinc-100">
+      <div className="public-footer__grid">
+        <div className="public-footer__brand">
+          <Link href="/" className="public-footer__brand-link">
             FLAASH
           </Link>
-          <p className="text-sm text-zinc-400">{t("public.footer.strapline")}</p>
+          <p className="public-footer__strapline">{t("public.footer.strapline")}</p>
         </div>
 
-        <nav aria-label="Ressources éditoriales" className="text-sm">
-          <div className="font-medium text-zinc-100">{t("public.footer.resources")}</div>
-          <ul className="mt-2 space-y-2 text-zinc-300">
+        <nav aria-label="Ressources éditoriales" className="public-footer__nav">
+          <div className="public-footer__nav-title">{t("public.footer.resources")}</div>
+          <ul className="public-footer__nav-list">
             <li>
-              <TrackedLink href="https://boutique.flaash.fr" external event="footer_boutique" className="hover:underline">
+              <TrackedLink href="https://boutique.flaash.fr" external event="footer_boutique" className="public-footer__link">
                 {t("public.footer.shop")}
               </TrackedLink>
             </li>
             <li>
-              <Link href="/about" className="hover:underline">
+              <Link href="/about" className="public-footer__link">
                 {t("public.footer.about")}
               </Link>
             </li>
             <li>
-              <Link href="/guide" className="hover:underline">
+              <Link href="/guide" className="public-footer__link">
                 {t("public.footer.guide")}
               </Link>
             </li>
           </ul>
         </nav>
 
-        <nav aria-label="Légal et technique" className="text-sm">
-          <div className="font-medium text-zinc-100">{t("public.footer.legalTech")}</div>
-          <ul className="mt-2 space-y-2 text-zinc-300">
+        <nav aria-label="Légal et technique" className="public-footer__nav">
+          <div className="public-footer__nav-title">{t("public.footer.legalTech")}</div>
+          <ul className="public-footer__nav-list">
             <li>
-              <Link href="/legal" className="hover:underline">
+              <Link href="/legal" className="public-footer__link">
                 {t("public.footer.legal")}
               </Link>
             </li>
             <li>
-              <Link href="/privacy" className="hover:underline">
+              <Link href="/privacy" className="public-footer__link">
                 {t("public.footer.privacy")}
               </Link>
             </li>
             <li>
-              <a href="https://dakkom.ai" target="_blank" rel="noreferrer noopener" className="hover:underline">
+              <a href="https://dakkom.ai" target="_blank" rel="noreferrer noopener" className="public-footer__link">
                 {t("public.footer.engine")}
               </a>
             </li>
           </ul>
         </nav>
       </div>
-      <div className="border-t border-zinc-800">
-        <div className="mx-auto max-w-6xl px-4 py-3 text-xs text-zinc-400">{t("public.footer.copyright").replace("{year}", String(year))}</div>
+      <div className="public-footer__bottom">
+        <div className="public-footer__copyright">{t("public.footer.copyright").replace("{year}", String(year))}</div>
       </div>
     </footer>
   )

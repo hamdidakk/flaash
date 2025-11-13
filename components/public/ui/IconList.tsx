@@ -2,13 +2,11 @@ import type { ReactNode } from "react"
 
 export function IconItem({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   return (
-    <li className="flex items-start gap-2">
-      <span className="mt-1 select-none" aria-hidden>
+    <li className="public-icon-list__item">
+      <span className="public-icon-list__icon" aria-hidden>
         {icon}
       </span>
       <span>{children}</span>
     </li>
   )
 }
-
-
