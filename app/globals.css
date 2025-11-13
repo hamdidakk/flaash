@@ -260,6 +260,34 @@
   .public-header__mobile-list {
     @apply flex max-h-[60vh] flex-col gap-1 overflow-auto;
   }
+
+  .public-hero {
+    @apply relative bg-gradient-to-b from-white to-gray-50;
+  }
+
+  .public-hero__container {
+    @apply mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-2 md:items-center;
+  }
+
+  .public-hero__left {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: fadeUp 520ms ease forwards;
+  }
+
+  .public-hero__heading {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    @apply text-3xl md:text-4xl;
+  }
+
+  .public-hero__subtitle {
+    @apply mt-3 text-gray-600;
+  }
+
+  .public-hero__actions {
+    @apply mt-6 flex gap-4;
+  }
 }
 
 .theme-futuriste {

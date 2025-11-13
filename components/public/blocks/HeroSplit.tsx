@@ -23,19 +23,19 @@ export function HeroSplit({
   className,
   ...rest
 }: HeroSplitProps) {
-  const root = className ? `relative ${className}` : "relative"
+  const root = className ? `public-hero ${className}` : "public-hero"
   const grid = containerClassName
-    ? `mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-2 md:items-center ${containerClassName}`
-    : "mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-2 md:items-center"
+    ? `public-hero__container ${containerClassName}`
+    : "public-hero__container"
 
   return (
     <section className={root} {...rest}>
       <div className={grid}>
-        <div className={leftClassName ?? "fade-in-up"}>
-          <h1 className="display-title text-3xl tracking-tight md:text-4xl">{heading}</h1>
-          {subtitle ? <p className="mt-3 text-gray-600">{subtitle}</p> : null}
+        <div className={leftClassName ?? "public-hero__left"}>
+          <h1 className="public-hero__heading">{heading}</h1>
+          {subtitle ? <p className="public-hero__subtitle">{subtitle}</p> : null}
           {(primaryCta || secondaryCta) && (
-            <div className="mt-6 flex gap-4">
+            <div className="public-hero__actions">
               {primaryCta}
               {secondaryCta}
             </div>
