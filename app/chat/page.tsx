@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { PublicHeader } from "@/components/public/PublicHeader"
 import { PublicWidget } from "@/components/public/Widget"
 import { PageView } from "@/components/public/PageView"
@@ -20,7 +21,9 @@ export default function PublicChatPage() {
       <PublicHeader />
       <PageView page="chat" />
       <section className="mx-auto w-full max-w-3xl px-4 py-8">
-        <PublicWidget />
+        <Suspense fallback={<div className="text-center text-sm text-gray-500">Chargement…</div>}>
+          <PublicWidget />
+        </Suspense>
       </section>
     </main>
   )
