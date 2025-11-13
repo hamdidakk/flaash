@@ -59,36 +59,32 @@ export function PublicHeader() {
   }, [])
 
   return (
-    <header className={`public-header sticky top-0 z-[2000] isolate w-full border-b border-gray-100 transition-all pointer-events-auto ${
-      isScrolled ? "bg-white/95 shadow-md" : "bg-white/80"
-    }`}>
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded focus:bg-black focus:px-3 focus:py-1 focus:text-white">
+    <header className={`public-header ${isScrolled ? "public-header--scrolled" : "public-header--top"}`}>
+      <a href="#main" className="public-header__skip-link">
         Aller au contenu principal
       </a>
-      <div className="mx-auto flex h-16 md:h-20 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="font-semibold tracking-tight" aria-label="Accueil FLAASH">
+      <div className="public-header__inner">
+        <Link href="/" className="public-header__logo-link" aria-label="Accueil FLAASH">
           <Image
             src="/logo-clair.png"
             alt="FLAASH"
             width={420}
             height={110}
-            className="h-9 w-auto md:h-10"
+            className="public-header__logo-image"
             priority
           />
         </Link>
 
-        <nav className="relative z-[2100] hidden items-center gap-7 md:flex pointer-events-auto" aria-label="Navigation principale">
+        <nav className="public-header__nav" aria-label="Navigation principale">
           {/* 1) Accueil en premier */}
           <NavLinkNeon href="/" label={t("public.nav.home")} active={pathname === "/"} />
           {/* 2) Thématiques en deuxième */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className={
-                  pathname?.startsWith("/themes")
-                    ? "relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-900 after:pointer-events-none after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-gradient-to-r after:from-cyan-400 after:to-violet-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2"
-                    : "relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2"
-                }
+                className={`public-header__themes-trigger ${
+                  pathname?.startsWith("/themes") ? "public-header__themes-trigger--active" : ""
+                }`}
                 aria-label={t("public.nav.themes")}
                 onClick={() => trackEvent("nav_themes_open")}
               >
@@ -119,7 +115,7 @@ export function PublicHeader() {
                 href={item.href}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-600 hover:text-gray-900"
+                className="public-header__nav-external"
                 onClick={() => trackEvent("nav_boutique")}
               >
                 {t(item.labelKey)}
@@ -130,11 +126,11 @@ export function PublicHeader() {
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="public-header__actions">
           <LanguageSwitcher />
           <Link
             href="/chat"
-            className="group cta-chat hidden md:inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white btn-pulse"
+            className="public-header__cta cta-chat btn-pulse group"
             onClick={() => trackEvent("cta_chat_header")}
           >
             <span aria-hidden>🤖</span>
@@ -142,7 +138,7 @@ export function PublicHeader() {
           </Link>
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 md:hidden"
+            className="public-header__menu-toggle"
             aria-label="Ouvrir le menu"
             aria-controls="mobile-menu"
             aria-expanded={mobileOpen}
@@ -157,12 +153,12 @@ export function PublicHeader() {
 
       {mobileOpen && (
         <div className="md:hidden" id="mobile-menu">
-          <div className="fixed right-0 top-16 z-[1100] w-[70vw] max-w-sm border-t border-gray-100 bg-white shadow-lg">
-            <nav className="px-4 pb-4 pt-3" aria-label="Navigation mobile">
-              <div className="mb-2 flex items-center justify-between gap-2">
+          <div className="public-header__mobile">
+            <nav className="public-header__mobile-nav" aria-label="Navigation mobile">
+              <div className="public-header__mobile-header">
                 <Link
                   href="/chat"
-                  className="cta-chat inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white"
+                  className="public-header__mobile-cta cta-chat"
                   onClick={() => {
                     trackEvent("cta_chat_header")
                     setMobileOpen(false)
@@ -173,7 +169,7 @@ export function PublicHeader() {
                 </Link>
                 <button
                   type="button"
-                  className="rounded-md p-2 text-gray-700 hover:bg-gray-100"
+                    className="public-header__mobile-close"
                   aria-label="Fermer le menu"
                   onClick={() => setMobileOpen(false)}
                 >
@@ -186,7 +182,9 @@ export function PublicHeader() {
               <div className="mb-1">
                 <Link
                   href="/"
-                  className={`rounded-md px-2 py-2 text-base hover:bg-gray-50 ${pathname === "/" ? "text-gray-900" : "text-gray-800"}`}
+                  className={`public-header__mobile-link ${
+                    pathname === "/" ? "public-header__mobile-link--active" : ""
+                  }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("public.nav.home")}
@@ -195,7 +193,9 @@ export function PublicHeader() {
               <div className="mb-2 flex flex-col">
                 <Link
                   href="/themes"
-                  className={`rounded-md px-2 py-2 text-base hover:bg-gray-50 ${pathname?.startsWith("/themes") ? "text-gray-900" : "text-gray-800"}`}
+                  className={`public-header__mobile-link ${
+                    pathname?.startsWith("/themes") ? "public-header__mobile-link--active" : ""
+                  }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("public.nav.themes")}
@@ -204,7 +204,7 @@ export function PublicHeader() {
                   <Link
                     key={th.id}
                     href={`/themes/${th.slug}`}
-                    className="rounded-md px-2 py-2 pl-6 text-[15px] text-gray-800 hover:bg-gray-50"
+                    className="public-header__mobile-theme-link"
                     onClick={() => setMobileOpen(false)}
                   >
                     <span className="mr-2 select-none">{th.icon}</span>
@@ -212,7 +212,7 @@ export function PublicHeader() {
                   </Link>
                 ))}
               </div>
-              <div className="flex max-h-[60vh] flex-col gap-1 overflow-auto">
+              <div className="public-header__mobile-list">
                 {remainingNav.map((item) =>
                   item.external ? (
                     <a
@@ -220,7 +220,7 @@ export function PublicHeader() {
                       href={item.href}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="rounded-md px-2 py-2 text-base text-gray-800 hover:bg-gray-50"
+                      className="public-header__mobile-link"
                       onClick={() => {
                         trackEvent("nav_boutique")
                         setMobileOpen(false)
@@ -232,8 +232,8 @@ export function PublicHeader() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`rounded-md px-2 py-2 text-base hover:bg-gray-50 ${
-                        pathname === item.href ? "text-gray-900" : "text-gray-800"
+                      className={`public-header__mobile-link ${
+                        pathname === item.href ? "public-header__mobile-link--active" : ""
                       }`}
                       onClick={() => setMobileOpen(false)}
                     >
