@@ -4,17 +4,17 @@ export type Theme = { icon: string; title: string; prompts: string[] }
 
 export function ThemeGrid({ themes }: { themes: Theme[] }) {
   return (
-    <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div className="public-themes-grid">
       {themes.map((theme) => (
-        <div key={theme.title} className="group rounded-lg border border-gray-200 bg-gray-50 p-4 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md">
-          <div className="text-sm font-semibold tracking-tight">
+        <div key={theme.title} className="public-themes-card">
+          <div className="public-themes-card__title">
             <span className="mr-2 select-none">{theme.icon}</span>
             {theme.title}
           </div>
-          <ul className="mt-2 space-y-1 text-sm text-gray-700">
+          <ul className="public-themes-card__list">
             {theme.prompts.map((ex) => (
               <li key={ex}>
-                <Link href={`/chat?prefill=${encodeURIComponent(ex)}`} className="hover:underline">
+                <Link href={`/chat?prefill=${encodeURIComponent(ex)}`} className="public-themes-card__link">
                   {ex}
                 </Link>
               </li>

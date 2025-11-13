@@ -288,6 +288,26 @@
   .public-hero__actions {
     @apply mt-6 flex gap-4;
   }
+
+  .public-themes-grid {
+    @apply mt-4 grid grid-cols-2 gap-4 md:grid-cols-4;
+  }
+
+  .public-themes-card {
+    @apply rounded-lg border border-gray-200 bg-gray-50 p-4 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md;
+  }
+
+  .public-themes-card__title {
+    @apply text-sm font-semibold tracking-tight;
+  }
+
+  .public-themes-card__list {
+    @apply mt-2 space-y-1 text-sm text-gray-700;
+  }
+
+  .public-themes-card__link {
+    @apply hover:underline;
+  }
 }
 
 .theme-futuriste {
