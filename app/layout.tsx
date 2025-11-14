@@ -1,14 +1,24 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, EB_Garamond } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { AuthProvider } from "@/lib/auth-context"
 import { LanguageProvider } from "@/lib/language-context"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+})
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-eb-garamond",
+})
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://flaash.fr"
 
 export const metadata: Metadata = {
@@ -37,8 +47,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className={`${inter.variable} ${ebGaramond.variable}`}>
+      <body className="font-sans antialiased">
         <AuthProvider>
           <LanguageProvider>
             {children}

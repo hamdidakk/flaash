@@ -38,6 +38,19 @@
   --sidebar-accent-foreground: oklch(0.15 0 0);
   --sidebar-border: oklch(0.85 0 0);
   --sidebar-ring: oklch(0.5 0.24 252);
+  --font-sans-family: var(--font-inter, "Inter"), "Helvetica Neue", Arial, sans-serif;
+  --font-serif-family: var(--font-eb-garamond, "EB Garamond"), "Playfair Display", "Times New Roman", serif;
+  --font-size-12: 12px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-24: 24px;
+  --font-size-32: 32px;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.4;
+  --line-height-relaxed: 1.7;
+  --letter-spacing-caps: 0.08em;
+  --letter-spacing-wide: 0.04em;
 }
 
 .dark {
@@ -77,8 +90,10 @@
 }
 
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback";
-  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --font-sans: var(--font-sans-family);
+  --font-serif: var(--font-serif-family);
+  --font-heading: var(--font-serif-family);
+  --font-mono: ui-monospace, SFMono-Regular, SFMono, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -122,7 +137,57 @@
     @apply border-border outline-ring/50;
   }
   body {
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-relaxed);
     @apply bg-background text-foreground;
+  }
+  p,
+  li {
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-relaxed);
+  }
+  small {
+    font-size: var(--font-size-14);
+    line-height: var(--line-height-snug);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif-family);
+    font-weight: 600;
+    line-height: var(--line-height-snug);
+  }
+  h1 {
+    font-size: var(--font-size-32);
+    line-height: var(--line-height-tight);
+  }
+  h2 {
+    font-size: var(--font-size-24);
+  }
+  h3 {
+    font-size: var(--font-size-18);
+  }
+  h4 {
+    font-size: var(--font-size-16);
+  }
+  h5,
+  h6 {
+    font-size: var(--font-size-14);
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
+  }
+  button,
+  [role="button"],
+  .btn {
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
   }
   html { scroll-behavior: smooth; }
 
@@ -161,7 +226,12 @@
 
 @layer components {
   .public-cta-primary {
-    @apply inline-flex items-center justify-center rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
+    @apply inline-flex items-center justify-center rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-white transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
   }
 
   .public-cta-primary__icon {
@@ -169,7 +239,12 @@
   }
 
   .public-cta-secondary {
-    @apply inline-flex items-center rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-100;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
+    @apply inline-flex items-center rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-gray-800 transition-colors hover:bg-gray-100;
   }
 
   .public-cta-secondary__icon {
@@ -193,7 +268,11 @@
   }
 
   .public-section-header {
-    @apply inline-block rounded bg-gradient-to-r from-purple-50 to-blue-50 px-2 py-1 text-base font-semibold text-slate-800;
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-18);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-wide);
+    @apply inline-block rounded bg-gradient-to-r from-purple-50 to-blue-50 px-2 py-1 text-slate-800;
   }
 
   .public-section-header__icon {
@@ -201,7 +280,10 @@
   }
 
   .public-section-header__subtitle {
-    @apply mt-2 block text-sm text-gray-600;
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-relaxed);
+    @apply mt-2 block text-gray-600;
   }
 
   .public-page-section {
@@ -241,7 +323,13 @@
   }
 
   .public-navlink {
-    @apply relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-2 text-[15px] text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    white-space: nowrap;
+    @apply relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-3 text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
   }
 
   .public-navlink::after {
@@ -732,11 +820,21 @@
   }
 
   .public-contact-badge {
-    @apply rounded bg-blue-50 px-2 py-0.5 font-medium text-blue-700 underline decoration-blue-400 transition hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-12);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    @apply rounded bg-blue-50 px-2 py-0.5 text-blue-700 underline decoration-blue-400 transition hover:bg-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
   }
 
   .public-badge {
-    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-12);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    @apply inline-flex items-center rounded-full px-2 py-0.5;
   }
 
   .public-badge--blue {
@@ -756,7 +854,12 @@
   }
 
   .public-prompts__chip {
-    @apply h-auto rounded-lg bg-gray-100 px-3 py-1 text-xs transition hover:bg-gray-200 disabled:opacity-50;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-12);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    @apply h-auto rounded-lg bg-gray-100 px-3 py-1 transition hover:bg-gray-200 disabled:opacity-50;
   }
 
   .public-typing {
@@ -780,7 +883,11 @@
   }
 
   .public-widget-header__title {
-    @apply mb-1 flex items-center gap-2 text-lg font-semibold text-gray-800;
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-18);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-wide);
+    @apply mb-1 flex items-center gap-2 text-gray-800;
   }
 
   .public-widget-header__icon {
@@ -788,7 +895,10 @@
   }
 
   .public-widget-header__subtitle {
-    @apply mb-4 text-sm text-gray-600;
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-relaxed);
+    @apply mb-4 text-gray-600;
   }
 
   .public-widget {
@@ -800,7 +910,10 @@
   }
 
   .public-widget__upsell {
-    @apply mb-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    line-height: var(--line-height-snug);
+    @apply mb-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-amber-900;
   }
 
   .public-widget__upsell-actions {
@@ -816,7 +929,10 @@
   }
 
   .public-widget__welcome {
-    @apply px-6 text-center text-sm text-gray-600;
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-relaxed);
+    @apply px-6 text-center text-gray-600;
   }
 
   .public-widget__body {
@@ -895,11 +1011,21 @@
   }
 
   .public-header__nav {
-    @apply pointer-events-auto relative z-[2100] hidden items-center gap-7 md:flex;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    @apply pointer-events-auto relative z-[2100] hidden items-center gap-10 md:flex;
   }
 
   .public-header__themes-trigger {
-    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-2 text-[15px] text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
   }
 
   .public-header__themes-trigger::after {
@@ -916,19 +1042,29 @@
   }
 
   .public-header__nav-external {
-    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-2 text-[15px] text-gray-600 transition-colors hover:text-gray-900;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 text-gray-600 transition-colors hover:text-gray-900;
   }
 
   .public-header__actions {
     @apply flex items-center gap-2;
   }
 
-  .public-header__cta {
-    @apply hidden items-center rounded-md px-3 py-2 text-sm font-semibold text-white md:inline-flex;
-  }
-
+  .public-header__cta,
   .public-header__mobile-cta {
-    @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold text-white;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
+    @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-white;
+  }
+  .public-header__cta {
+    @apply hidden md:inline-flex;
   }
 
   .public-header__menu-toggle {
@@ -948,7 +1084,12 @@
   }
 
   .public-header__mobile-link {
-    @apply rounded-md px-2 py-2 text-base text-gray-800 transition-colors hover:bg-gray-50;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    @apply rounded-md px-3 py-2 text-gray-800 transition-colors hover:bg-gray-50;
   }
 
   .public-header__mobile-link--active {
@@ -956,7 +1097,12 @@
   }
 
   .public-header__mobile-theme-link {
-    @apply rounded-md px-2 py-2 pl-6 text-[15px] text-gray-800 transition-colors hover:bg-gray-50;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-16);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    @apply rounded-md px-3 py-2 pl-6 text-gray-800 transition-colors hover:bg-gray-50;
   }
 
   .public-header__mobile-close {
@@ -982,12 +1128,17 @@
   }
 
   .public-hero__heading {
-    font-weight: 700;
+    font-family: var(--font-serif-family);
+    font-size: clamp(var(--font-size-32), 5vw, 48px);
+    font-weight: 600;
+    line-height: 1.2;
     letter-spacing: -0.01em;
-    @apply text-3xl md:text-4xl;
   }
 
   .public-hero__subtitle {
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-relaxed);
     @apply mt-3 text-gray-600;
   }
 
@@ -1022,7 +1173,11 @@
   }
 
   .public-feature-card__text {
-    @apply text-sm font-medium text-gray-800;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    line-height: var(--line-height-snug);
+    @apply text-gray-800;
   }
 
   .public-feature-card__icon {
@@ -1034,10 +1189,17 @@
   }
 
   .public-hero__card-heading {
-    @apply text-xl font-semibold tracking-tight;
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-18);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-wide);
+    @apply tracking-tight;
   }
 
   .public-hero__card-subtitle {
+    font-family: var(--font-serif-family);
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-relaxed);
     @apply mt-2 text-gray-600;
   }
 
@@ -1046,7 +1208,12 @@
   }
 
   .public-cta-futuriste {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold;
+    font-family: var(--font-sans-family);
+    font-size: var(--font-size-14);
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2;
   }
 
   .public-section-heading {
