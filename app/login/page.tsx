@@ -7,17 +7,18 @@ import { useLanguage } from "@/lib/language-context"
 import { AuthLayout } from "@/components/auth/auth-layout"
 import { AuthCard } from "@/components/auth/auth-card"
 import { LoginForm } from "@/components/auth/login-form"
+import { useSessionStore } from "@/store/session-store"
 
 export default function LoginPage() {
   const { t } = useLanguage()
   const router = useRouter()
+  const { status } = useSessionStore()
 
   useEffect(() => {
-    const enable = process.env.NEXT_PUBLIC_ENABLE_LOGIN
-    if (!enable || enable.toLowerCase() !== "true") {
+    if (status === "authenticated") {
       router.replace("/home")
     }
-  }, [router])
+  }, [status, router])
 
   return (
     <AuthLayout>

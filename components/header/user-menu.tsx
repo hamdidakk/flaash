@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/lib/auth-context"
 import { useLanguage } from "@/lib/language-context"
+import { useSessionStore } from "@/store/session-store"
 
 export function UserMenu() {
-  const { user, logout } = useAuth()
+  const user = useSessionStore((state) => state.user)
+  const logout = useSessionStore((state) => state.logout)
   const { t } = useLanguage()
 
   if (!user) return null
@@ -44,7 +45,11 @@ export function UserMenu() {
           {t("common.profile")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem
+          onClick={() => {
+            void logout()
+          }}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           {t("common.logout")}
         </DropdownMenuItem>

@@ -202,6 +202,7 @@ export const translations = {
     auth: {
       login: "Login",
       signup: "Sign Up",
+      username: "Email or username",
       email: "Email",
       password: "Password",
       name: "Name",
@@ -210,6 +211,8 @@ export const translations = {
       hasAccount: "Already have an account?",
       loginDescription: "Enter your email and password to access your account",
       signupDescription: "Create a new account to get started",
+      invalidCredentials: "Incorrect email or password. Please try again.",
+      redirectingToLogin: "Redirecting to login…",
     },
     onboarding: {
       title: "Welcome! Let's get you set up",
@@ -828,6 +831,7 @@ export const translations = {
     auth: {
       login: "Connexion",
       signup: "Inscription",
+      username: "Identifiant ou email",
       email: "Email",
       password: "Mot de passe",
       name: "Nom",
@@ -836,6 +840,8 @@ export const translations = {
       hasAccount: "Déjà un compte?",
       loginDescription: "Entrez votre email et mot de passe pour accéder à votre compte",
       signupDescription: "Créez un nouveau compte pour commencer",
+      invalidCredentials: "Identifiants incorrects. Vérifiez votre email et votre mot de passe.",
+      redirectingToLogin: "Redirection vers la page de connexion…",
     },
     onboarding: {
       title: "Bienvenue! Configurons votre compte",

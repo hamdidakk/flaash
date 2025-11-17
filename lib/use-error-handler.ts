@@ -10,7 +10,6 @@ export function useErrorHandler() {
   const showError = useCallback(
     (error: unknown) => {
       const appError = handleError(error)
-      console.error("[v0] Error handled:", appError)
       router.push(`/error/${appError.code}`)
     },
     [router],

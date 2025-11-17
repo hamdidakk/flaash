@@ -2,26 +2,33 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useAuth } from "@/lib/auth-context"
+import { useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/language-context"
 import { useErrorHandler } from "@/lib/use-error-handler"
 import { Button } from "@/components/ui/button"
 import { FormField } from "./form-field"
+import { useSessionStore } from "@/store/session-store"
 
 export function SignupForm() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { signup } = useAuth()
+  const setUser = useSessionStore((state) => state.setUser)
   const { t } = useLanguage()
   const { showError } = useErrorHandler()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      await signup(email, password, name)
+      setUser({
+        email,
+        name,
+        is_staff: true,
+      })
+      router.push("/onboarding")
     } catch (error) {
       console.error("[v0] Signup error:", error)
       showError(error)

@@ -1,5 +1,6 @@
 import { fetchWithRetry, handleError, AppError } from "@/lib/error-handler"
 import { recordApiCall } from "@/lib/telemetry"
+import { apiFetch } from "@/lib/session-client"
 
 export const API_BASE_URL_STORAGE_KEY = "dakkom:api-base-url"
 export const API_KEY_STORAGE_KEY = "dakkom:api-key"
@@ -135,6 +136,17 @@ async function dakkomFetch<T>(endpoint: string, options: DakkomFetchOptions = {}
   const started = typeof performance !== "undefined" ? performance.now() : Date.now()
   let ok = false
   try {
+    if (useProxy) {
+      const { data } = await apiFetch<T>(url, {
+        ...options,
+        headers,
+      })
+      ok = true
+      const payloadSize = data ? JSON.stringify(data).length : 0
+      recordApiCall(endpoint, (typeof performance !== "undefined" ? performance.now() : Date.now()) - started, payloadSize, ok)
+      return (data ?? {}) as T
+    }
+
     const response = await fetchWithRetry(url, {
       ...options,
       headers,

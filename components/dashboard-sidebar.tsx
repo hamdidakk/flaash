@@ -18,16 +18,16 @@ import {
   FolderOpen,
   Target,
 } from "lucide-react"
-import { useAuth } from "@/lib/auth-context"
 import { useLanguage } from "@/lib/language-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { SidebarLogo } from "@/components/sidebar/sidebar-logo"
 import { SidebarNavSection } from "@/components/sidebar/sidebar-nav-section"
 import { SidebarUserInfo } from "@/components/sidebar/sidebar-user-info"
+import { useSessionStore } from "@/store/session-store"
 
 export function DashboardSidebar() {
-  const { user } = useAuth()
+  const user = useSessionStore((state) => state.user)
   const { t } = useLanguage()
 
   const navigation = [
