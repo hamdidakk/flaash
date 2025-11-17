@@ -1,12 +1,9 @@
 "use client"
 
 import { AppError, isErrorCode } from "@/lib/error-handler"
+import type { User } from "@/lib/user-roles"
 
-type SessionUser = {
-  email: string
-  is_staff: boolean
-  [key: string]: unknown
-}
+type SessionUser = User
 
 type LoginPayload = {
   username: string

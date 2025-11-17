@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/language-context"
 import { ErrorPage } from "@/components/error-page"
 import type { ErrorCode } from "@/lib/error-handler"
 import { useRouter } from "next/navigation"
+import { isDashboardUser } from "@/lib/user-roles"
 
 type DashboardGuardProps = {
   children: ReactNode
@@ -24,8 +25,15 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
   }, [status, loadProfile])
 
   useEffect(() => {
-    if (status === "unauthenticated" && (!errorCode || errorCode === 401)) {
-      router.replace("/login")
+    if (status === "unauthenticated" && (!errorCode || errorCode === 401 || errorCode === 403)) {
+      const params = new URLSearchParams()
+      if (errorCode === 401) {
+        params.set("reason", "session-expired")
+      } else if (errorCode === 403) {
+        params.set("reason", "access-denied")
+      }
+      const target = params.toString() ? `/login?${params.toString()}` : "/login"
+      router.replace(target)
     }
   }, [status, errorCode, router])
 
@@ -40,7 +48,7 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
     )
   }
 
-  if (status === "unauthenticated" && (!errorCode || errorCode === 401)) {
+  if (status === "unauthenticated" && (!errorCode || errorCode === 401 || errorCode === 403)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
@@ -78,6 +86,20 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
 
   if (!user) {
     return null
+  }
+
+  // Vérifier que l'utilisateur a accès au dashboard
+  if (!isDashboardUser(user)) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center px-4">
+        <div className="w-full max-w-lg">
+          <ErrorPage code={403} />
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            {t("auth.accessDenied")}
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return <>{children}</>

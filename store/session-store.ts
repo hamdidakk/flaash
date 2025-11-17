@@ -3,13 +3,9 @@
 import { create } from "zustand"
 import { sessionLogin, sessionLogout, sessionProfile } from "@/lib/session-client"
 import { AppError, type ErrorCode } from "@/lib/error-handler"
+import type { User } from "@/lib/user-roles"
 
-type SessionUser = {
-  email: string
-  is_staff: boolean
-  name?: string
-  [key: string]: unknown
-}
+type SessionUser = User
 
 type SessionState = {
   user: SessionUser | null

@@ -42,6 +42,8 @@ async function forward(
   // Django expects trailing slash (APPEND_SLASH=True). Always include it for upstream paths.
   const upstreamPath = path ? (path.endsWith("/") ? path : `${path}/`) : ""
   const upstream = `${baseUrl.replace(/\/$/, "")}/${upstreamPath}${url.search}`
+  const normalizedPath = upstreamPath.toLowerCase()
+  const isSessionOrPartnerRoute = normalizedPath.startsWith("auth/session") || normalizedPath.startsWith("auth/partner")
 
   const method = request.method
   const incomingContentType = request.headers.get("content-type") || ""
@@ -49,8 +51,8 @@ async function forward(
   let body: BodyInit | undefined
   let headers = new Headers()
 
-  // Always attach API key for backend
-  if (apiKey) {
+  // Attach API key only for non-session routes
+  if (apiKey && !isSessionOrPartnerRoute) {
     headers.set("X-API-Key", apiKey)
   }
 

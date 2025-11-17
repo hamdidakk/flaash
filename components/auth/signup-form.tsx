@@ -23,10 +23,14 @@ export function SignupForm() {
     e.preventDefault()
     setIsLoading(true)
     try {
+      // Le backend assignera le rôle approprié lors de l'inscription
+      // On définit ici une valeur par défaut pour la compatibilité
       setUser({
+        id: 0, // Sera remplacé par le backend
         email,
         name,
-        is_staff: true,
+        is_staff: false,
+        role: "member", // Rôle par défaut pour les nouveaux utilisateurs
       })
       router.push("/onboarding")
     } catch (error) {
