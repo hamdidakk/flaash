@@ -1,15 +1,14 @@
 // Sentry removed
 
-export type ErrorCode = 400 | 401 | 403 | 404 | 500 | 503
+export type ErrorCode = 400 | 401 | 403 | 404 | 500 | 503 | 429
+export const ThrottlingStatus = [429, 403] as const
+export type ThrottlingCode = (typeof ThrottlingStatus)[number]
 
 export class AppError extends Error {
-  constructor(
-    public code: ErrorCode,
-    message?: string,
-    public details?: unknown,
-  ) {
+  constructor(public code: ErrorCode, message?: string, public details?: unknown, public throttled?: boolean) {
     super(message)
     this.name = "AppError"
+    this.throttled = throttled ?? ThrottlingStatus.includes(code as ThrottlingCode)
   }
 }
 
@@ -39,7 +38,7 @@ export function handleError(error: unknown): AppError {
 }
 
 export function isErrorCode(code: number): code is ErrorCode {
-  return [400, 401, 403, 404, 500, 503].includes(code)
+  return [400, 401, 403, 404, 429, 500, 503].includes(code)
 }
 
 export interface RetryConfig {

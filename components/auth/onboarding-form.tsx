@@ -2,24 +2,26 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/lib/auth-context"
 import { useLanguage } from "@/lib/language-context"
 import { Button } from "@/components/ui/button"
 import { FormField } from "./form-field"
 import { Building2, Users, Briefcase } from "lucide-react"
+import { useSessionStore } from "@/store/session-store"
 
 export function OnboardingForm() {
   const [organizationName, setOrganizationName] = useState("")
   const [teamSize, setTeamSize] = useState("")
   const [industry, setIndustry] = useState("")
-  const { updateUser } = useAuth()
+  const updateUser = useSessionStore((state) => state.updateUser)
   const { t } = useLanguage()
   const router = useRouter()
 
   const handleComplete = () => {
-    updateUser({
-      organizationName: organizationName || "My Organization",
-    })
+    if (organizationName) {
+      updateUser({
+        organizationName,
+      })
+    }
     router.push("/home")
   }
 

@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/lib/language-context"
+import { useErrorHandler } from "@/hooks/use-error-handler"
 import { Upload, File, X } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import type { KnowledgeDocument } from "@/lib/types"
 import { uploadDocument, uploadBatch } from "@/lib/dakkom-api"
+import { AppError } from "@/lib/error-handler"
+import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 interface UploadDocumentDialogProps {
   open: boolean
@@ -41,9 +44,11 @@ const formatFileSize = (bytes: number) => {
 
 export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mode = "single" }: UploadDocumentDialogProps) {
   const { t } = useLanguage()
+  const { handleError } = useErrorHandler()
   const { toast } = useToast()
   const [entries, setEntries] = useState<UploadEntry[]>([])
   const [isUploading, setIsUploading] = useState(false)
+  const [throttledReason, setThrottledReason] = useState<string | null>(null)
   const isBatch = mode === "batch"
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +90,7 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
 
   const handleUpload = async () => {
     if (entries.length === 0) return
+    setThrottledReason(null)
 
     setIsUploading(true)
     const snapshot = entries.map((entry) => entry)
@@ -105,11 +111,15 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
       if (isBatch) {
         const form = new FormData()
         snapshot.forEach((entry) => form.append("files", entry.file))
+        // Le backend attend le paramètre source (INTERNAL, WEB_PAGE, OTHER)
+        form.append("source", "INTERNAL")
         await uploadBatch(form)
       } else {
         for (const entry of snapshot) {
           const form = new FormData()
           form.append("file", entry.file)
+          // Le backend attend le paramètre source (INTERNAL, WEB_PAGE, OTHER)
+          form.append("source", "INTERNAL")
           await uploadDocument(form)
         }
       }
@@ -126,18 +136,33 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
     } catch (e) {
       clearInterval(progressInterval)
       setIsUploading(false)
-      let description = t("errors.generic.description")
-      try {
-        const msg = e instanceof Error ? e.message : String(e)
-        // Try to extract { error: "..." } from backend JSON-as-text
-        if (msg && msg.trim().startsWith("{")) {
-          const parsed = JSON.parse(msg)
-          if (parsed?.error) description = String(parsed.error)
-        } else if (msg) {
-          description = msg
-        }
-      } catch {}
-      toast({ title: t("documents.upload"), description, variant: "destructive" })
+      
+      // Gérer les erreurs de throttling
+      if (e instanceof AppError && e.throttled) {
+        setThrottledReason(e.message || t("throttling.description"))
+        return
+      }
+      
+      // Utiliser useErrorHandler pour afficher l'erreur via toast
+      // showToast=false car on veut afficher un message personnalisé dans le dialog
+      handleError(e, { 
+        title: t("documents.uploadFailed") || t("documents.upload"), 
+        showToast: false 
+      })
+      
+      // Afficher un toast personnalisé avec plus de détails
+      let description = t("documents.errors.uploadFailed")
+      if (e instanceof AppError) {
+        description = e.message || description
+      } else if (e instanceof Error) {
+        description = e.message || description
+      }
+      
+      toast({ 
+        title: t("documents.uploadFailed") || t("documents.upload"), 
+        description, 
+        variant: "destructive" 
+      })
     }
   }
 
@@ -149,6 +174,7 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
     if (!nextOpen) {
       setEntries([])
       setIsUploading(false)
+      setThrottledReason(null)
     }
 
     onOpenChange(nextOpen)
@@ -166,6 +192,7 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
         </DialogHeader>
 
         <div className="space-y-4">
+          {throttledReason && <ThrottlingAlert reason={throttledReason} onRetry={() => setThrottledReason(null)} />}
           <div className="space-y-2">
             <Label htmlFor="file-upload">{t("documents.uploadDialog.selectFiles")}</Label>
             <div className="flex items-center gap-2">

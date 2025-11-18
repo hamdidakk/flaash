@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { PageHeader } from "@/components/page-header"
 import { SettingsSection } from "@/components/dashboard/settings-section"
 import { RegenerateKeyDialog } from "@/components/settings/regenerate-key-dialog"
+import { PartnerAuthCard } from "@/components/dashboard/partner-auth-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -299,11 +300,11 @@ export default function SettingsPage() {
         </div>
       </SettingsSection>
 
-      <RegenerateKeyDialog
-        open={showRegenerateDialog}
-        onOpenChange={setShowRegenerateDialog}
-        onConfirm={handleRegenerateKey}
-      />
+      <SettingsSection title={t("partnerAuth.sectionTitle")} icon={Shield}>
+        <PartnerAuthCard />
+      </SettingsSection>
+
+      <RegenerateKeyDialog open={showRegenerateDialog} onOpenChange={setShowRegenerateDialog} onConfirm={handleRegenerateKey} />
     </div>
   )
 }

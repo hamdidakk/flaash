@@ -2,29 +2,38 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useAuth } from "@/lib/auth-context"
 import { useLanguage } from "@/lib/language-context"
 import { useErrorHandler } from "@/lib/use-error-handler"
 import { Button } from "@/components/ui/button"
 import { FormField } from "./form-field"
-import Link from "next/link"
+import { useSessionStore } from "@/store/session-store"
+import { AppError } from "@/lib/error-handler"
+import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 export function LoginForm() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [formError, setFormError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const { loginWithCredentials } = useAuth()
+  const login = useSessionStore((state) => state.login)
+  const throttled = useSessionStore((state) => state.throttled)
+  const storeError = useSessionStore((state) => state.error)
+  const clearSessionError = useSessionStore((state) => state.clearError)
   const { t } = useLanguage()
   const { showError } = useErrorHandler()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setFormError(null)
     try {
-      await loginWithCredentials(username, password)
+      await login({ username, password })
     } catch (error) {
-      console.error("[v0] Login error:", error)
-      showError(error)
+      if (error instanceof AppError && error.code === 401) {
+        setFormError(t("auth.invalidCredentials") || "Identifiants ou mot de passe incorrect.")
+      } else {
+        showError(error)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -50,9 +59,11 @@ export function LoginForm() {
         required
         disabled={isLoading}
       />
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      {throttled && <ThrottlingAlert reason={storeError || t("throttling.description")} onRetry={clearSessionError} />}
+      <Button type="submit" className="w-full" disabled={isLoading || throttled}>
         {isLoading ? t("common.loading") : t("auth.login")}
       </Button>
+      {formError && <p className="text-sm text-destructive">{formError}</p>}
     </form>
   )
 }

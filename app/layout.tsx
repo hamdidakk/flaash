@@ -1,10 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter, EB_Garamond } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import { AuthProvider } from "@/lib/auth-context"
 import { LanguageProvider } from "@/lib/language-context"
 import { Toaster } from "@/components/ui/toaster"
+import { GlobalErrorHandler } from "@/components/error/global-error-handler"
 import "./globals.css"
 
 const inter = Inter({
@@ -47,15 +46,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${ebGaramond.variable}`}>
+    <html lang="en" className={`${inter.variable} ${ebGaramond.variable}`} data-scroll-behavior="smooth">
       <body className="font-sans antialiased">
-        <AuthProvider>
-          <LanguageProvider>
-            {children}
-            <Toaster />
-          </LanguageProvider>
-        </AuthProvider>
-        <Analytics />
+        <LanguageProvider>
+          <GlobalErrorHandler />
+          {children}
+          <Toaster />
+        </LanguageProvider>
       </body>
     </html>
   )
