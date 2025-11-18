@@ -3,6 +3,67 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Fonts publiques - Ogg Text et Neue Machina Inktrap */
+/* Les fichiers de fonts doivent être ajoutés dans public/fonts/ */
+/* Pour éviter les erreurs 404, les @font-face sont commentés jusqu'à ce que les fichiers soient ajoutés */
+/* Une fois les fichiers ajoutés, décommenter les @font-face ci-dessous */
+
+/*
+@font-face {
+  font-family: "Ogg Text";
+  src: url("/fonts/OggText-Regular.woff2") format("woff2"),
+       url("/fonts/OggText-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ogg Text";
+  src: url("/fonts/OggText-Medium.woff2") format("woff2"),
+       url("/fonts/OggText-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ogg Text";
+  src: url("/fonts/OggText-Bold.woff2") format("woff2"),
+       url("/fonts/OggText-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Machina Inktrap";
+  src: url("/fonts/NeueMachinaInktrap-Regular.woff2") format("woff2"),
+       url("/fonts/NeueMachinaInktrap-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Machina Inktrap";
+  src: url("/fonts/NeueMachinaInktrap-Medium.woff2") format("woff2"),
+       url("/fonts/NeueMachinaInktrap-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Machina Inktrap";
+  src: url("/fonts/NeueMachinaInktrap-Bold.woff2") format("woff2"),
+       url("/fonts/NeueMachinaInktrap-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
 :root {
   --background: oklch(0.98 0 0);
   --foreground: oklch(0.15 0 0);
@@ -38,8 +99,14 @@
   --sidebar-accent-foreground: oklch(0.15 0 0);
   --sidebar-border: oklch(0.85 0 0);
   --sidebar-ring: oklch(0.5 0.24 252);
+  /* Fonts pour le dashboard */
   --font-sans-family: var(--font-inter, "Inter"), "Helvetica Neue", Arial, sans-serif;
   --font-serif-family: var(--font-eb-garamond, "EB Garamond"), "Playfair Display", "Times New Roman", serif;
+  
+  /* Fonts pour le site public (alternatives Google Fonts) */
+  /* Next.js charge automatiquement les fonts, on utilise directement les noms */
+  --font-family-serif: "Playfair Display", serif;
+  --font-family-sans: "Space Grotesk", sans-serif;
   --font-size-12: 12px;
   --font-size-14: 14px;
   --font-size-16: 16px;
@@ -323,13 +390,14 @@
   }
 
   .public-navlink {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: none;
     white-space: nowrap;
-    @apply relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-3 text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    color: #000000;
+    @apply relative z-10 inline-flex h-9 items-center cursor-pointer pointer-events-auto rounded px-3 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
   }
 
   .public-navlink::after {
@@ -1011,21 +1079,23 @@
   }
 
   .public-header__nav {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: none;
-    @apply pointer-events-auto relative z-[2100] hidden items-center gap-10 md:flex;
+    color: #000000;
+    @apply pointer-events-auto relative z-[2100] hidden items-center gap-12 md:flex;
   }
 
   .public-header__themes-trigger {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: none;
-    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    color: #000000;
+    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
   }
 
   .public-header__themes-trigger::after {
@@ -1042,21 +1112,32 @@
   }
 
   .public-header__nav-external {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: none;
-    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 text-gray-600 transition-colors hover:text-gray-900;
+    color: #000000;
+    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 transition-colors hover:text-gray-900;
   }
 
   .public-header__actions {
     @apply flex items-center gap-2;
   }
 
+  .public-header__login-link {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-16);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: #000000;
+    @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 transition-colors hover:text-gray-900;
+  }
+
   .public-header__cta,
   .public-header__mobile-cta {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-14);
     font-weight: 600;
     letter-spacing: var(--letter-spacing-caps);
@@ -1084,7 +1165,7 @@
   }
 
   .public-header__mobile-link {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -1097,7 +1178,7 @@
   }
 
   .public-header__mobile-theme-link {
-    font-family: var(--font-sans-family);
+    font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -1559,5 +1640,65 @@ details[open] .chev { transform: rotate(180deg); }
 
 .public-source-modal__cta {
   @apply w-full;
+}
+
+/* Styles pour les pages publiques - Application des fonts Ogg Text et Neue Machina Inktrap */
+.public-site {
+  font-family: var(--font-family-sans);
+}
+
+/* Forcer l'application des fonts publiques sur le header */
+.public-site .public-header,
+.public-site .public-header *,
+.public-site .public-header__nav,
+.public-site .public-header__nav *,
+.public-site .public-header__themes-trigger,
+.public-site .public-header__nav-external,
+.public-site .public-navlink,
+.public-site .public-header__cta,
+.public-site .public-header__mobile-link,
+.public-site .public-header__mobile-theme-link {
+  font-family: var(--font-family-sans) !important;
+}
+
+.public-site h1,
+.public-site h2,
+.public-site h3,
+.public-site h4,
+.public-site h5,
+.public-site h6,
+.public-site .font-serif,
+.public-site [class*="font-serif"] {
+  font-family: var(--font-family-serif);
+}
+
+.public-site body,
+.public-site p,
+.public-site span,
+.public-site div,
+.public-site a,
+.public-site button,
+.public-site input,
+.public-site textarea,
+.public-site select,
+.public-site label {
+  font-family: var(--font-family-sans);
+}
+
+/* Styles pour le dashboard - Surcharge des fonts publiques avec Inter et EB Garamond */
+.dashboard-site,
+.dashboard-site * {
+  font-family: var(--font-sans-family) !important;
+}
+
+.dashboard-site h1,
+.dashboard-site h2,
+.dashboard-site h3,
+.dashboard-site h4,
+.dashboard-site h5,
+.dashboard-site h6,
+.dashboard-site .font-serif,
+.dashboard-site [class*="font-serif"] {
+  font-family: var(--font-serif-family) !important;
 }
 

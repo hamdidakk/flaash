@@ -19,29 +19,37 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
   const router = useRouter()
   const { user, status, error, errorCode, loadProfile, throttled, clearError } = useSessionStore()
 
+  // Charger le profil au démarrage si le statut est "idle" (après un refresh)
   useEffect(() => {
     if (status === "idle") {
       void loadProfile()
     }
   }, [status, loadProfile])
 
+  // Rediriger vers /login seulement si on est vraiment non authentifié (pas en cours de chargement)
   useEffect(() => {
+    // Ne rediriger que si on est vraiment non authentifié ET que le chargement est terminé
     if (status === "unauthenticated" && (!errorCode || errorCode === 401 || errorCode === 403)) {
-      const params = new URLSearchParams()
-      if (errorCode === 401) {
-        params.set("reason", "session-expired")
-      } else if (errorCode === 403) {
-        params.set("reason", "access-denied")
-      }
-      // Stocker l'URL demandée pour redirection après login
-      if (typeof window !== "undefined") {
-        const currentPath = window.location.pathname
-        if (currentPath !== "/login") {
-          params.set("redirect", currentPath)
+      // Attendre un peu pour éviter les redirections trop rapides pendant le chargement
+      const timeoutId = setTimeout(() => {
+        const params = new URLSearchParams()
+        if (errorCode === 401) {
+          params.set("reason", "session-expired")
+        } else if (errorCode === 403) {
+          params.set("reason", "access-denied")
         }
-      }
-      const target = params.toString() ? `/login?${params.toString()}` : "/login"
-      router.replace(target)
+        // Stocker l'URL demandée pour redirection après login
+        if (typeof window !== "undefined") {
+          const currentPath = window.location.pathname
+          if (currentPath !== "/login") {
+            params.set("redirect", currentPath)
+          }
+        }
+        const target = params.toString() ? `/login?${params.toString()}` : "/login"
+        router.replace(target)
+      }, 100) // Petit délai pour éviter les redirections trop rapides
+
+      return () => clearTimeout(timeoutId)
     }
   }, [status, errorCode, router])
 

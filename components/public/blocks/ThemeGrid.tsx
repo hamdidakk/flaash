@@ -1,4 +1,6 @@
-import Link from "next/link"
+"use client"
+
+import { ChatLink } from "@/components/public/ui/ChatLink"
 
 export type Theme = { icon: string; title: string; prompts: string[] }
 
@@ -14,9 +16,9 @@ export function ThemeGrid({ themes }: { themes: Theme[] }) {
           <ul className="public-themes-card__list">
             {theme.prompts.map((ex) => (
               <li key={ex}>
-                <Link href={`/chat?prefill=${encodeURIComponent(ex)}`} className="public-themes-card__link">
+                <ChatLink href={`/chat?prefill=${encodeURIComponent(ex)}`} className="public-themes-card__link">
                   {ex}
-                </Link>
+                </ChatLink>
               </li>
             ))}
           </ul>

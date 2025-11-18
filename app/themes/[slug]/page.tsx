@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { getThemeBySlug, getThemes, getAllThemeSlugs } from "@/lib/themes"
+import { ChatLinkButton } from "@/components/public/ui/ChatLinkButton"
 import type { Language } from "@/lib/i18n"
 import { PageSection } from "@/components/public/ui/PageSection"
 import { SectionHeader } from "@/components/public/ui/SectionHeader"
@@ -117,9 +118,9 @@ export default async function ThemeDetailPage({ params }: { params: Promise<{ sl
                   <p className="mt-2 text-sm text-gray-700">{p.excerpt}</p>
                 </div>
                 <div className="mt-3">
-                  <Link href={`/chat?prefill=${encodeURIComponent(p.title)}`} className="text-sm font-medium text-indigo-600 hover:underline">
-                    {"Interroger l’IA à partir de cet article →"}
-                  </Link>
+                  <ChatLinkButton href={`/chat?prefill=${encodeURIComponent(p.title)}`} className="text-sm font-medium text-indigo-600 hover:underline">
+                    {"Interroger l'IA à partir de cet article →"}
+                  </ChatLinkButton>
                 </div>
               </SectionCard>
             ))}

@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { useLanguage } from "@/lib/language-context"
 import { TrackedLink } from "@/components/public/TrackedLink"
+import { TrackedChatLink } from "@/components/public/ui/TrackedChatLink"
+import { ChatLink } from "@/components/public/ui/ChatLink"
 import { PageView } from "@/components/public/PageView"
 import { ButtonCTA } from "@/components/public/ui/ButtonCTA"
 import { SectionCard } from "@/components/public/ui/SectionCard"
@@ -77,9 +79,9 @@ export function HomeClient({ coverUrl: _coverUrl }: { coverUrl: string }) {
           <h2 className="public-hero__card-heading">{t("public.hero.title")}</h2>
           <p className="public-hero__card-subtitle">{t("public.hero.subtitle")}</p>
           <div className="public-hero__card-footer">
-            <TrackedLink href="/chat" event="cta_chat_agent_block" className="public-cta-futuriste cta-futuriste">
+            <TrackedChatLink href="/chat" event="cta_chat_agent_block" className="public-cta-futuriste cta-futuriste">
               {t("public.hero.ctaExplore")}
-            </TrackedLink>
+            </TrackedChatLink>
           </div>
         </div>
       </PageSection>
@@ -97,9 +99,9 @@ export function HomeClient({ coverUrl: _coverUrl }: { coverUrl: string }) {
           ]}
         />
         <div className="public-home__themes-footer">
-          <Link href="/chat" className="public-home__themes-link">
+          <ChatLink href="/chat" className="public-home__themes-link">
             Voir tous les thèmes →
-          </Link>
+          </ChatLink>
         </div>
       </PageSection>
 

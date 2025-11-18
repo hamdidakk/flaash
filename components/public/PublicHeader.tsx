@@ -3,11 +3,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { trackEvent } from "@/lib/analytics"
-import { usePathname } from "next/navigation"
-import { LanguageSwitcher } from "@/components/public/LanguageSwitcher"
+import { usePathname, useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/language-context"
 import { useEffect, useState } from "react"
 import { NavLinkNeon } from "@/components/public/ui/NavLinkNeon"
+import { LanguageSwitcher } from "@/components/public/LanguageSwitcher"
+import { useSessionStore } from "@/store/session-store"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,9 +32,11 @@ const navItems: NavItem[] = [
 
 export function PublicHeader() {
   const pathname = usePathname()
+  const router = useRouter()
   const { t, language } = useLanguage()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { status } = useSessionStore()
   const themes = getThemes(language)
   const remainingNav = navItems.filter((i) => i.href !== "/")
 
@@ -128,14 +131,21 @@ export function PublicHeader() {
 
         <div className="public-header__actions">
           <LanguageSwitcher />
-          <Link
-            href="/chat"
+          <button
+            type="button"
             className="public-header__cta cta-chat btn-pulse group"
-            onClick={() => trackEvent("cta_chat_header")}
+            onClick={() => {
+              trackEvent("cta_chat_header")
+              if (status === "authenticated") {
+                router.push("/chat")
+              } else {
+                router.push("/login?redirect=/chat")
+              }
+            }}
           >
             <span aria-hidden>🤖</span>
             <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
-          </Link>
+          </button>
           <button
             type="button"
             className="public-header__menu-toggle"
@@ -156,17 +166,22 @@ export function PublicHeader() {
           <div className="public-header__mobile">
             <nav className="public-header__mobile-nav" aria-label="Navigation mobile">
               <div className="public-header__mobile-header">
-                <Link
-                  href="/chat"
+                <button
+                  type="button"
                   className="public-header__mobile-cta cta-chat"
                   onClick={() => {
                     trackEvent("cta_chat_header")
                     setMobileOpen(false)
+                    if (status === "authenticated") {
+                      router.push("/chat")
+                    } else {
+                      router.push("/login?redirect=/chat")
+                    }
                   }}
                 >
                   <span aria-hidden>🤖</span>
                   <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
-                </Link>
+                </button>
                 <button
                   type="button"
                     className="public-header__mobile-close"

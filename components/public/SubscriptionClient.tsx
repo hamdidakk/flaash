@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/lib/language-context"
 import { TrackedLink } from "@/components/public/TrackedLink"
+import { TrackedChatLink } from "@/components/public/ui/TrackedChatLink"
 import { PageView } from "@/components/public/PageView"
 
 export function SubscriptionClient() {
@@ -75,15 +76,26 @@ export function SubscriptionClient() {
                 ))}
               </ul>
               <div className="public-subscription__cta-group">
-                <TrackedLink
-                  href={p.ctaHref}
-                  event={p.ctaEvent}
-                  external={p.ctaHref.startsWith("http")}
-                  className={`public-subscription__cta ${p.highlighted ? "public-subscription__cta--featured" : "public-subscription__cta--default"}`}
-                >
-                  {p.highlighted ? <span aria-hidden>💎</span> : <span aria-hidden>🤖</span>}
-                  <span className="public-subscription__cta-label">{p.ctaLabel}</span>
-                </TrackedLink>
+                {p.ctaHref === "/chat" || p.ctaHref.startsWith("/chat?") ? (
+                  <TrackedChatLink
+                    href={p.ctaHref}
+                    event={p.ctaEvent}
+                    className={`public-subscription__cta ${p.highlighted ? "public-subscription__cta--featured" : "public-subscription__cta--default"}`}
+                  >
+                    {p.highlighted ? <span aria-hidden>💎</span> : <span aria-hidden>🤖</span>}
+                    <span className="public-subscription__cta-label">{p.ctaLabel}</span>
+                  </TrackedChatLink>
+                ) : (
+                  <TrackedLink
+                    href={p.ctaHref}
+                    event={p.ctaEvent}
+                    external={p.ctaHref.startsWith("http")}
+                    className={`public-subscription__cta ${p.highlighted ? "public-subscription__cta--featured" : "public-subscription__cta--default"}`}
+                  >
+                    {p.highlighted ? <span aria-hidden>💎</span> : <span aria-hidden>🤖</span>}
+                    <span className="public-subscription__cta-label">{p.ctaLabel}</span>
+                  </TrackedLink>
+                )}
 
                 {p.highlighted && (
                   <TrackedLink

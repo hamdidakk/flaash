@@ -71,6 +71,17 @@ const forward = async (request: NextRequest, paramsPromise: SessionParamsPromise
     redirect: "manual",
   })
 
+  // Logger les erreurs serveur pour le débogage
+  if (upstreamResponse.status >= 500) {
+    const errorBody = await upstreamResponse.clone().text().catch(() => "Unable to read error body")
+    console.error(`[session-proxy] Server error ${upstreamResponse.status} from ${upstream}:`, {
+      method,
+      status: upstreamResponse.status,
+      statusText: upstreamResponse.statusText,
+      errorBody: errorBody.substring(0, 500), // Limiter la taille du log
+    })
+  }
+
   const respHeaders = new Headers(upstreamResponse.headers)
 
   const setCookies =

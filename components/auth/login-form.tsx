@@ -29,9 +29,25 @@ export function LoginForm() {
     try {
       await login({ username, password })
     } catch (error) {
-      if (error instanceof AppError && error.code === 401) {
-        setFormError(t("auth.invalidCredentials") || "Identifiants ou mot de passe incorrect.")
+      if (error instanceof AppError) {
+        if (error.code === 401) {
+          setFormError(t("auth.invalidCredentials") || "Identifiants ou mot de passe incorrect.")
+        } else if (error.code >= 500) {
+          // Erreur serveur (500, 503, etc.)
+          setFormError(
+            t("errors.500.description") || 
+            "Une erreur serveur s'est produite. Veuillez réessayer dans quelques instants. Si le problème persiste, contactez le support."
+          )
+          // Afficher aussi un toast pour plus de détails
+          showError(error)
+        } else {
+          // Autres erreurs (400, 403, etc.)
+          setFormError(error.message || t("common.error") || "Une erreur s'est produite.")
+          showError(error)
+        }
       } else {
+        // Erreur inconnue
+        setFormError(t("common.error") || "Une erreur inattendue s'est produite.")
         showError(error)
       }
     } finally {

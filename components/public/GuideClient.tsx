@@ -10,6 +10,7 @@ import { HeroSplit } from "@/components/public/blocks/HeroSplit"
 import { ButtonCTA } from "@/components/public/ui/ButtonCTA"
 import { SecondaryCTA } from "@/components/public/ui/SecondaryCTA"
 import { PageSection } from "@/components/public/ui/PageSection"
+import { ChatLink } from "@/components/public/ui/ChatLink"
 
 type GuideContent = {
   title: string
@@ -179,9 +180,9 @@ export function GuideClient() {
                 <span className="public-guide__list-icon">✅</span>
                 <span>
                   {s.replace("/chat", "")}
-                  <Link href="/chat" className="public-guide__inline-link">
+                  <ChatLink href="/chat" className="public-guide__inline-link">
                     /chat
-                  </Link>
+                  </ChatLink>
                 </span>
               </li>
             ))}

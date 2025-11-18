@@ -9,13 +9,16 @@ interface AuthCardProps {
 }
 
 export function AuthCard({ title, description, children, footer }: AuthCardProps) {
+  const hasHeader = title || description
   return (
     <Card className="w-full max-w-md">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
+      {hasHeader && (
+        <CardHeader className="space-y-1">
+          {title && <CardTitle className="text-2xl font-bold">{title}</CardTitle>}
+          {description && <CardDescription>{description}</CardDescription>}
+        </CardHeader>
+      )}
+      <CardContent className={hasHeader ? "" : "pt-6"}>
         {children}
         {footer && <div className="mt-4 text-center text-sm">{footer}</div>}
       </CardContent>
