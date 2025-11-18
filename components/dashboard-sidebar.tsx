@@ -17,6 +17,8 @@ import {
   FileSearch,
   FolderOpen,
   Target,
+  KeyRound,
+  ShieldCheck,
 } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -52,6 +54,8 @@ export function DashboardSidebar() {
     { name: t("nav.jobs"), href: "/jobs", icon: Briefcase },
     { name: t("nav.webhooks"), href: "/webhooks", icon: Webhook },
     { name: t("nav.auditLogs"), href: "/audit-logs", icon: FileSearch },
+    { name: t("nav.partnerAuth"), href: "/settings#partner-auth", icon: ShieldCheck },
+    { name: t("nav.apiKeys"), href: "/security", icon: KeyRound },
     { name: t("nav.privacy"), href: "/privacy", icon: Shield },
     { name: t("nav.settings"), href: "/settings", icon: Settings },
   ]
@@ -60,7 +64,7 @@ export function DashboardSidebar() {
     <div className="flex h-full w-64 flex-col border-r bg-card shadow-sm">
       <SidebarLogo />
 
-      <ScrollArea className="flex-1 px-3 py-4">
+      <ScrollArea className="flex-1 overflow-y-auto px-3 py-4">
         <div className="space-y-6">
           <SidebarNavSection title={t("nav.main")} items={navigation} />
           <Separator className="bg-border/50" />

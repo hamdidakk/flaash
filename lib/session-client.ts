@@ -68,12 +68,58 @@ async function sessionFetch<T>(input: RequestInfo | URL, init?: RequestInit & { 
     }
 
     if (!response.ok) {
-      const raw = await response.text().catch(() => "")
+      const contentType = response.headers.get("Content-Type") ?? ""
+      const isJson = contentType.includes("application/json")
+      
+      let errorMessage = response.statusText || "Session request failed"
+      
+      try {
+        // Lire le body une seule fois
+        const raw = await response.text().catch(() => "")
+        
+        if (raw) {
+          if (isJson) {
+            // Essayer de parser comme JSON
+            try {
+              const json = JSON.parse(raw)
+              // Extraire le message d'erreur depuis différents formats possibles
+              errorMessage = 
+                json.detail || 
+                json.error || 
+                json.message || 
+                (typeof json === "string" ? json : JSON.stringify(json)) ||
+                errorMessage
+            } catch {
+              // Si le JSON est invalide, utiliser le texte brut
+              errorMessage = raw
+            }
+          } else {
+            // Essayer de parser comme JSON même si Content-Type n'est pas JSON
+            // (certains backends retournent du JSON sans le bon Content-Type)
+            try {
+              const parsed = JSON.parse(raw)
+              errorMessage = parsed.detail || parsed.error || parsed.message || raw
+            } catch {
+              // Si ce n'est pas du JSON, utiliser le texte brut
+              errorMessage = raw
+            }
+          }
+        }
+      } catch (parseError) {
+        // Si le parsing échoue, utiliser le message par défaut
+        console.warn("[session-client] Failed to parse error response:", parseError)
+      }
+      
       const code = isErrorCode(response.status) ? response.status : 500
-      throw new AppError(code, raw || response.statusText || "Session request failed", {
-        url: typeof input === "string" ? input : input.toString(),
-        status: response.status,
-      })
+      throw new AppError(
+        code,
+        errorMessage,
+        {
+          url: typeof input === "string" ? input : input.toString(),
+          status: response.status,
+        },
+        response.status === 429,
+      )
     }
 
     if (response.status === 204) {
@@ -117,6 +163,14 @@ export async function sessionLogout() {
 }
 
 export async function apiFetch<T>(input: RequestInfo | URL, init?: RequestInit) {
-  return sessionFetch<T>(input, init)
+  // Pour les appels API non-session, on permet les redirections normales
+  // et on ne les traite pas comme des erreurs de session
+  const url = typeof input === "string" ? input : input.toString()
+  const isSessionEndpoint = url.includes("/api/session/")
+  
+  return sessionFetch<T>(input, {
+    ...init,
+    redirect: isSessionEndpoint ? (init?.redirect ?? "manual") : "follow",
+  })
 }
 

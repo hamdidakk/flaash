@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { LanguageProvider } from "@/lib/language-context"
 import { Toaster } from "@/components/ui/toaster"
+import { GlobalErrorHandler } from "@/components/error/global-error-handler"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -38,6 +39,7 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`font-sans antialiased`}>
         <LanguageProvider>
+          <GlobalErrorHandler />
           {children}
           <Toaster />
         </LanguageProvider>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { FormField } from "./form-field"
 import { useSessionStore } from "@/store/session-store"
 import { AppError } from "@/lib/error-handler"
+import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 export function LoginForm() {
   const [username, setUsername] = useState("")
@@ -15,6 +16,9 @@ export function LoginForm() {
   const [formError, setFormError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const login = useSessionStore((state) => state.login)
+  const throttled = useSessionStore((state) => state.throttled)
+  const storeError = useSessionStore((state) => state.error)
+  const clearSessionError = useSessionStore((state) => state.clearError)
   const { t } = useLanguage()
   const { showError } = useErrorHandler()
 
@@ -55,7 +59,8 @@ export function LoginForm() {
         required
         disabled={isLoading}
       />
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      {throttled && <ThrottlingAlert reason={storeError || t("throttling.description")} onRetry={clearSessionError} />}
+      <Button type="submit" className="w-full" disabled={isLoading || throttled}>
         {isLoading ? t("common.loading") : t("auth.login")}
       </Button>
       {formError && <p className="text-sm text-destructive">{formError}</p>}

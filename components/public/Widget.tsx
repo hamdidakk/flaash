@@ -16,6 +16,8 @@ import { SourceModal } from "@/components/public/SourceModal"
 import { useLanguage } from "@/lib/language-context"
 import { Button } from "@/components/ui/button"
 import { trackEvent } from "@/lib/analytics"
+import { AppError } from "@/lib/error-handler"
+import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 export function PublicWidget() {
   const { t, language } = useLanguage()
@@ -80,6 +82,7 @@ export function PublicWidget() {
   const MIN_INTERVAL_MS = 2000
   const [lastRequestAt, setLastRequestAt] = useState(0)
   const [cooldownLeftMs, setCooldownLeftMs] = useState(0)
+  const [throttledReason, setThrottledReason] = useState<string | null>(null)
 
   // Ensure welcome message reflects current language
   useEffect(() => {
@@ -116,6 +119,9 @@ export function PublicWidget() {
   }, [])
 
   const handleSend = async (overrideText?: string) => {
+    if (throttledReason) {
+      return
+    }
     if (showUpsell || requestCount >= REQUEST_LIMIT) {
       setShowUpsell(true)
       return
@@ -176,11 +182,16 @@ export function PublicWidget() {
       } catch {
         // ignore
       }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { id: `assistant_err_${Date.now()}`, role: "assistant", content: t("errors.generic.description"), citations: [] },
-      ])
+      setThrottledReason(null)
+    } catch (error) {
+      if (error instanceof AppError && error.throttled) {
+        setThrottledReason(error.message || t("throttling.description"))
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { id: `assistant_err_${Date.now()}`, role: "assistant", content: t("errors.generic.description"), citations: [] },
+        ])
+      }
     } finally {
       setIsLoading(false)
     }
@@ -228,6 +239,7 @@ export function PublicWidget() {
             </div>
           </div>
         )}
+        {throttledReason && <ThrottlingAlert reason={throttledReason} onRetry={() => setThrottledReason(null)} />}
         {messages.length <= 1 && (
           <div className="public-widget__welcome">
             <p>Bienvenue 👋</p>
@@ -236,11 +248,20 @@ export function PublicWidget() {
         )}
         <div className="public-widget__body">
           <ChatMessagesList messages={messages} isLoading={isLoading} onCitationClick={handleCitationClick} />
-          <ChatInput value={input} onChange={setInput} onSend={() => handleSend()} disabled={isLoading || showUpsell || cooldownLeftMs > 0} />
+          <ChatInput
+            value={input}
+            onChange={setInput}
+            onSend={() => handleSend()}
+            disabled={isLoading || showUpsell || cooldownLeftMs > 0 || Boolean(throttledReason)}
+          />
           {cooldownLeftMs > 0 && (
             <p className="public-widget__cooldown">{TEXT.cooldown(Math.ceil(cooldownLeftMs / 1000))}</p>
           )}
-          <PromptsChips prompts={TEXT.prompts} disabled={isLoading || showUpsell || cooldownLeftMs > 0} onPick={(q) => handleSend(q)} />
+          <PromptsChips
+            prompts={TEXT.prompts}
+            disabled={isLoading || showUpsell || cooldownLeftMs > 0 || Boolean(throttledReason)}
+            onPick={(q) => handleSend(q)}
+          />
         </div>
       </Card>
 

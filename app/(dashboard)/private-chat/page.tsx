@@ -10,6 +10,8 @@ import { ChatInput } from "@/components/chat/chat-input"
 import { ChunksDialog } from "@/components/documents/chunks-dialog"
 import { type RagMessage, type CitationLink, type ChunkRecord } from "@/lib/types"
 import { ragGeneration, getDocumentChunksByName } from "@/lib/dakkom-api"
+import { AppError } from "@/lib/error-handler"
+import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 const DEFAULT_CHAT_SETTINGS: ChatSettings = {
   model: "gpt-4o",
@@ -39,6 +41,7 @@ export default function ChatPage() {
   const [chunkDialogDocument, setChunkDialogDocument] = useState<string | undefined>()
   const [chunkDialogContent, setChunkDialogContent] = useState<ChunkRecord[]>([])
   const [isHydrated, setIsHydrated] = useState(false)
+  const [throttledReason, setThrottledReason] = useState<string | null>(null)
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -87,6 +90,7 @@ export default function ChatPage() {
   }, [])
 
   const handleSend = async () => {
+    if (throttledReason) return
     if (!input.trim()) return
 
     const userMessage: RagMessage = {
@@ -146,7 +150,12 @@ export default function ChatPage() {
         timestamp: new Date().toLocaleTimeString(),
       }
       setMessages((prev) => [...prev, assistantMessage])
+      setThrottledReason(null)
     } catch (e) {
+      if (e instanceof AppError && e.throttled) {
+        setThrottledReason(e.message || t("throttling.description"))
+        return
+      }
       setMessages((prev) => [
         ...prev,
         {
@@ -179,11 +188,12 @@ export default function ChatPage() {
         <PageHeader title={t("chat.title")} description={t("chat.description")} />
         <ChatSettingsPanel settings={settings} onSettingsChange={handleSettingsChange} />
       </div>
+      {throttledReason && <ThrottlingAlert reason={throttledReason} onRetry={() => setThrottledReason(null)} />}
 
       <Card className="flex-1 overflow-hidden">
         <div className="flex h-full flex-col">
           <ChatMessagesList messages={messages} isLoading={isLoading} onCitationClick={handleCitationClick} />
-          <ChatInput value={input} onChange={setInput} onSend={handleSend} disabled={isLoading} />
+          <ChatInput value={input} onChange={setInput} onSend={handleSend} disabled={isLoading || Boolean(throttledReason)} />
         </div>
       </Card>
 

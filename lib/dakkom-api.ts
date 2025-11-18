@@ -121,7 +121,11 @@ async function dakkomFetch<T>(endpoint: string, options: DakkomFetchOptions = {}
 
   // Use local proxy on the browser to avoid CORS; server can call upstream directly
   const useProxy = isBrowser
-  const url = useProxy ? `/api/dakkom${endpoint}` : `${baseUrl.replace(/\/$/, "")}${endpoint}`
+  // When using proxy, endpoint should be like "/api/v1/document/list/"
+  // Proxy will extract "api/v1/document/list/" and construct: baseUrl + "/" + "api/v1/document/list/"
+  const url = useProxy 
+    ? `/api/dakkom${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}` 
+    : `${baseUrl.replace(/\/$/, "")}${endpoint}`
 
   const isFormDataBody = typeof FormData !== "undefined" && options.body instanceof FormData
 
@@ -129,7 +133,10 @@ async function dakkomFetch<T>(endpoint: string, options: DakkomFetchOptions = {}
     ...((!isFormDataBody ? { "Content-Type": "application/json" } : {}) as HeadersInit),
     ...(options.headers || {}),
     // Attach API key only for direct upstream calls (server-side). The proxy adds it otherwise.
-    ...(!useProxy && apiKey && !options.skipAuthCheck ? ({ "X-API-Key": apiKey } as HeadersInit) : {}),
+    // According to backend requirements: don't send empty, null, or undefined API keys
+    ...(!useProxy && apiKey && apiKey.trim() !== "" && !options.skipAuthCheck
+      ? ({ "X-API-Key": apiKey } as HeadersInit)
+      : {}),
     ...(getStoredAccessToken() ? ({ Authorization: `Bearer ${getStoredAccessToken()}` } as HeadersInit) : {}),
   }
 

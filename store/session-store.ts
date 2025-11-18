@@ -12,11 +12,13 @@ type SessionState = {
   status: "idle" | "loading" | "authenticated" | "unauthenticated"
   error?: string
   errorCode?: ErrorCode
+  throttled: boolean
   login: (payload: { username: string; password: string }) => Promise<void>
   logout: () => Promise<void>
   loadProfile: () => Promise<void>
   setUser: (user: SessionUser | null) => void
   updateUser: (updates: Partial<SessionUser>) => void
+  clearError: () => void
 }
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -24,17 +26,25 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   status: "idle",
   error: undefined,
   errorCode: undefined,
+  throttled: false,
   async login(payload) {
-    set({ status: "loading", error: undefined, errorCode: undefined })
+    set({ status: "loading", error: undefined, errorCode: undefined, throttled: false })
     try {
       const { data } = await sessionLogin(payload)
-      set({ user: data ?? null, status: data ? "authenticated" : "unauthenticated", error: undefined, errorCode: undefined })
+      set({
+        user: data ?? null,
+        status: data ? "authenticated" : "unauthenticated",
+        error: undefined,
+        errorCode: undefined,
+        throttled: false,
+      })
     } catch (error) {
       const appError = error instanceof AppError ? error : new AppError(401, "Impossible de se connecter.", error)
       set({
         error: appError.message,
         errorCode: appError.code,
         status: "unauthenticated",
+        throttled: appError.throttled ?? false,
       })
       throw appError
     }
@@ -43,17 +53,17 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     try {
       await sessionLogout()
     } finally {
-      set({ user: null, status: "unauthenticated", error: undefined, errorCode: undefined })
+      set({ user: null, status: "unauthenticated", error: undefined, errorCode: undefined, throttled: false })
     }
   },
   async loadProfile() {
-    set({ status: "loading", error: undefined, errorCode: undefined })
+    set({ status: "loading", error: undefined, errorCode: undefined, throttled: false })
     try {
       const profile = await sessionProfile()
       if (profile) {
-        set({ user: profile, status: "authenticated", error: undefined, errorCode: undefined })
+        set({ user: profile, status: "authenticated", error: undefined, errorCode: undefined, throttled: false })
       } else {
-        set({ user: null, status: "unauthenticated", error: undefined, errorCode: 401 })
+        set({ user: null, status: "unauthenticated", error: undefined, errorCode: 401, throttled: false })
       }
     } catch (error) {
       const appError = error instanceof AppError ? error : new AppError(500, "Erreur lors du chargement de la session.", error)
@@ -62,11 +72,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         status: "unauthenticated",
         error: appError.message,
         errorCode: appError.code,
+        throttled: appError.throttled ?? false,
       })
     }
   },
   setUser(user) {
-    set({ user, status: user ? "authenticated" : "unauthenticated", error: undefined, errorCode: undefined })
+    set({ user, status: user ? "authenticated" : "unauthenticated", error: undefined, errorCode: undefined, throttled: false })
   },
   updateUser(updates) {
     set((state) => {
@@ -78,8 +89,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         status: "authenticated",
         error: undefined,
         errorCode: undefined,
+        throttled: false,
       }
     })
+  },
+  clearError() {
+    set({ error: undefined, errorCode: undefined, throttled: false })
   },
 }))
 

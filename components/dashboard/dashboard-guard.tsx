@@ -8,6 +8,7 @@ import { ErrorPage } from "@/components/error-page"
 import type { ErrorCode } from "@/lib/error-handler"
 import { useRouter } from "next/navigation"
 import { isDashboardUser } from "@/lib/user-roles"
+import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 type DashboardGuardProps = {
   children: ReactNode
@@ -16,7 +17,7 @@ type DashboardGuardProps = {
 export function DashboardGuard({ children }: DashboardGuardProps) {
   const { t } = useLanguage()
   const router = useRouter()
-  const { user, status, error, errorCode, loadProfile } = useSessionStore()
+  const { user, status, error, errorCode, loadProfile, throttled, clearError } = useSessionStore()
 
   useEffect(() => {
     if (status === "idle") {
@@ -32,10 +33,33 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
       } else if (errorCode === 403) {
         params.set("reason", "access-denied")
       }
+      // Stocker l'URL demandée pour redirection après login
+      if (typeof window !== "undefined") {
+        const currentPath = window.location.pathname
+        if (currentPath !== "/login") {
+          params.set("redirect", currentPath)
+        }
+      }
       const target = params.toString() ? `/login?${params.toString()}` : "/login"
       router.replace(target)
     }
   }, [status, errorCode, router])
+
+  if (throttled) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center px-4">
+        <div className="w-full max-w-lg">
+          <ThrottlingAlert
+            reason={error}
+            onRetry={() => {
+              clearError()
+              loadProfile().catch(() => undefined)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
 
   if (status === "idle" || status === "loading") {
     return (

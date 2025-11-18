@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
+import { useErrorHandler } from "@/hooks/use-error-handler"
 import { EmptyState } from "@/components/empty-state"
 import { DocumentsSearch } from "@/components/documents/documents-search"
 import { DocumentsFilters } from "@/components/documents/documents-filters"
@@ -23,6 +24,7 @@ import { listDocumentNames, getDocumentChunksByName, removeDocumentByName } from
 
 export default function DocumentsPage() {
   const { t } = useLanguage()
+  const { handleError } = useErrorHandler()
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFrom, setDateFrom] = useState("")
@@ -36,11 +38,18 @@ export default function DocumentsPage() {
   const [showDelete, setShowDelete] = useState(false)
   const [documentToDelete, setDocumentToDelete] = useState<KnowledgeDocument | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const isLoadingRef = useRef(false)
 
   const formatDisplayDate = (value: string) => new Date(value).toLocaleString()
 
   const reloadDocuments = async () => {
+    // Éviter les appels doubles (React StrictMode en développement exécute les effets deux fois)
+    if (isLoadingRef.current) {
+      return
+    }
+    
     try {
+      isLoadingRef.current = true
       setIsLoading(true)
       const res = await listDocumentNames()
       const nowIso = new Date().toISOString()
@@ -56,7 +65,12 @@ export default function DocumentsPage() {
         owner: "",
       }))
       setDocuments(mapped)
+    } catch (err) {
+      handleError(err, { title: t("documents.title") || "Documents" })
+      // En cas d'erreur, garder la liste vide plutôt que de planter
+      setDocuments([])
     } finally {
+      isLoadingRef.current = false
       setIsLoading(false)
     }
   }
@@ -104,7 +118,8 @@ export default function DocumentsPage() {
         metadata: { document: doc.name, documentId: doc.id, source: c.source, isValidated: c.is_validated },
       }))
       setSelectedChunks(chunks)
-    } catch {
+    } catch (err) {
+      handleError(err, { title: t("documents.title") || "Documents" })
       setSelectedChunks([])
     }
     setShowChunks(true)
@@ -129,6 +144,8 @@ export default function DocumentsPage() {
     try {
       await removeDocumentByName(documentToDelete.name)
       await reloadDocuments()
+    } catch (err) {
+      handleError(err, { title: t("documents.title") || "Documents" })
     } finally {
       setShowDelete(false)
       setDocumentToDelete(null)

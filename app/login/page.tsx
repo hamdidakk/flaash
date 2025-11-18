@@ -19,18 +19,41 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (status === "authenticated" && user) {
-      // Router selon le rôle après login
-      if (isDashboardUser(user)) {
-        router.replace("/home")
-      } else if (isChatUser(user)) {
-        // Rediriger vers le chatbot ou la page d'accueil publique
-        router.replace("/chat")
+      // Vérifier s'il y a une URL de redirection demandée
+      const redirectUrl = searchParams.get("redirect")
+      
+      if (redirectUrl) {
+        // Vérifier que l'utilisateur a accès à cette URL
+        const isDashboardRoute = redirectUrl.startsWith("/home") || 
+                                 redirectUrl.startsWith("/security") || 
+                                 redirectUrl.startsWith("/settings") ||
+                                 redirectUrl.startsWith("/documents") ||
+                                 redirectUrl.startsWith("/users") ||
+                                 redirectUrl.startsWith("/analytics")
+        
+        if (isDashboardRoute && !isDashboardUser(user)) {
+          // L'utilisateur n'a pas accès, rediriger selon son rôle
+          if (isChatUser(user)) {
+            router.replace("/chat")
+          } else {
+            router.replace("/")
+          }
+        } else {
+          // Rediriger vers l'URL demandée
+          router.replace(redirectUrl)
+        }
       } else {
-        // Utilisateur sans rôle valide, rediriger vers la page d'accueil
-        router.replace("/")
+        // Pas d'URL de redirection, router selon le rôle
+        if (isDashboardUser(user)) {
+          router.replace("/home")
+        } else if (isChatUser(user)) {
+          router.replace("/chat")
+        } else {
+          router.replace("/")
+        }
       }
     }
-  }, [status, user, router])
+  }, [status, user, router, searchParams])
 
   return (
     <AuthLayout>
