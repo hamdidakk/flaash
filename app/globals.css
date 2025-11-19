@@ -430,9 +430,9 @@
 
   .public-navlink {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     white-space: nowrap;
     color: #000000;
@@ -1127,9 +1127,9 @@
 
   .public-header__nav {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     color: #000000;
     @apply pointer-events-auto relative z-[2100] hidden items-center gap-12 md:flex;
@@ -1137,9 +1137,9 @@
 
   .public-header__themes-trigger {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     color: #000000;
     @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
@@ -1160,9 +1160,9 @@
 
   .public-header__nav-external {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     color: #000000;
     @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 transition-colors hover:text-gray-900;
@@ -1174,9 +1174,9 @@
 
   .public-header__login-link {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     color: #000000;
     @apply pointer-events-auto relative z-10 inline-flex h-9 items-center cursor-pointer rounded px-3 transition-colors hover:text-gray-900;
@@ -1220,9 +1220,9 @@
 
   .public-header__mobile-link {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     @apply rounded-md px-3 py-2 text-gray-800 transition-colors hover:bg-gray-50;
   }
@@ -1233,9 +1233,9 @@
 
   .public-header__mobile-theme-link {
     font-family: var(--font-family-sans);
-    font-size: var(--font-size-16);
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     text-transform: none;
     @apply rounded-md px-3 py-2 pl-6 text-gray-800 transition-colors hover:bg-gray-50;
   }
