@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { PublicHeader } from "@/components/public/PublicHeader"
 import { PublicWidget } from "@/components/public/Widget"
 import { PageView } from "@/components/public/PageView"
+import { AdvancedTools } from "@/components/public/AdvancedTools"
 export const metadata = {
   title: "Chat FLAASH — Agent IA public",
   description:
@@ -23,6 +24,7 @@ export default function PublicChatPage() {
       <section className="mx-auto w-full max-w-3xl px-4 py-8">
         <Suspense fallback={<div className="text-center text-sm text-gray-500">Chargement…</div>}>
           <PublicWidget />
+          <AdvancedTools />
         </Suspense>
       </section>
     </main>

@@ -1416,6 +1416,20 @@
   .public-quickask__button:hover {
     background: var(--color-flaash-green-hover);
   }
+
+.slider-green [data-slot="slider-track"] {
+  background-color: color-mix(in oklch, var(--color-flaash-green) 30%, white 70%) !important;
+}
+
+.slider-green [data-slot="slider-range"] {
+  background-color: var(--color-flaash-green) !important;
+}
+
+.slider-green [data-slot="slider-thumb"] {
+  border-color: var(--color-flaash-green) !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 2px var(--color-flaash-green) inset !important;
+}
 }
 
 .theme-futuriste {
