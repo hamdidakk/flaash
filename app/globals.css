@@ -81,6 +81,11 @@
   --accent-foreground: oklch(0.15 0 0);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(1 0 0);
+  /* Palette FLAASH */
+  --color-flaash-green: #00AC8E;
+  --color-flaash-green-oklch: oklch(0.72 0.16 172);
+  --color-flaash-green-hover: #008f75;
+
   /* Improved border and input colors for better visibility */
   --border: oklch(0.85 0 0);
   --input: oklch(0.88 0 0);
@@ -102,11 +107,10 @@
   /* Fonts pour le dashboard */
   --font-sans-family: var(--font-inter, "Inter"), "Helvetica Neue", Arial, sans-serif;
   --font-serif-family: var(--font-eb-garamond, "EB Garamond"), "Playfair Display", "Times New Roman", serif;
-  
+
   /* Fonts pour le site public (alternatives Google Fonts) */
-  /* Next.js charge automatiquement les fonts, on utilise directement les noms */
-  --font-family-serif: "Playfair Display", serif;
-  --font-family-sans: "Space Grotesk", sans-serif;
+  --font-family-serif: var(--font-playfair, "Playfair Display"), serif;
+  --font-family-sans: var(--font-space-grotesk, "Space Grotesk"), sans-serif;
   --font-size-12: 12px;
   --font-size-14: 14px;
   --font-size-16: 16px;
@@ -203,21 +207,39 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  ::selection {
+    background: var(--color-flaash-green);
+    color: #ffffff;
+  }
+
+  a {
+    transition: color 120ms ease;
+  }
+
+  a:hover,
+  a:focus-visible {
+    color: var(--color-flaash-green);
+  }
+
   body {
     font-family: var(--font-sans-family);
     font-size: var(--font-size-16);
     line-height: var(--line-height-relaxed);
     @apply bg-background text-foreground;
   }
+
   p,
   li {
     font-size: var(--font-size-16);
     line-height: var(--line-height-relaxed);
   }
+
   small {
     font-size: var(--font-size-14);
     line-height: var(--line-height-snug);
   }
+
   h1,
   h2,
   h3,
@@ -228,25 +250,31 @@
     font-weight: 600;
     line-height: var(--line-height-snug);
   }
+
   h1 {
     font-size: var(--font-size-32);
     line-height: var(--line-height-tight);
   }
+
   h2 {
     font-size: var(--font-size-24);
   }
+
   h3 {
     font-size: var(--font-size-18);
   }
+
   h4 {
     font-size: var(--font-size-16);
   }
+
   h5,
   h6 {
     font-size: var(--font-size-14);
     letter-spacing: var(--letter-spacing-caps);
     text-transform: uppercase;
   }
+
   button,
   [role="button"],
   .btn {
@@ -256,7 +284,10 @@
     letter-spacing: var(--letter-spacing-caps);
     text-transform: uppercase;
   }
-  html { scroll-behavior: smooth; }
+
+  html {
+    scroll-behavior: smooth;
+  }
 
   /* TailAdmin-style scrollbar */
   ::-webkit-scrollbar {
@@ -279,16 +310,18 @@
 /* Futuristic theme (optional, enabled by adding .theme-futuriste on <body>) */
 .cta-futuriste,
 .cta-chat {
-  background: linear-gradient(90deg, #00e0ff, #8a2eff);
+  background: var(--color-flaash-green);
   color: #ffffff;
   border: 0;
-  box-shadow: 0 0 0 rgba(0, 224, 255, 0);
+  box-shadow: 0 0 0 rgba(0, 172, 142, 0);
   transition: box-shadow 200ms ease, transform 120ms ease;
 }
+
 .cta-futuriste:hover,
 .cta-chat:hover {
-  box-shadow: 0 0 18px rgba(0, 224, 255, 0.3);
+  box-shadow: 0 0 18px rgba(0, 172, 142, 0.35);
   transform: translateY(-1px);
+  background: var(--color-flaash-green-hover);
 }
 
 @layer components {
@@ -298,7 +331,13 @@
     font-weight: 600;
     letter-spacing: var(--letter-spacing-caps);
     text-transform: uppercase;
-    @apply inline-flex items-center justify-center rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-white transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+    background: var(--color-flaash-green);
+    color: #ffffff;
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-white transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2;
+  }
+
+  .public-cta-primary:hover {
+    background: var(--color-flaash-green-hover);
   }
 
   .public-cta-primary__icon {
@@ -402,15 +441,15 @@
 
   .public-navlink::after {
     content: "";
-    @apply pointer-events-none absolute left-0 bottom-0 h-0.5 w-full opacity-0 transition-opacity;
+    @apply pointer-events-none absolute left-0 bottom-0 h-0.5 w-full;
+    background: var(--color-flaash-green);
+    opacity: 0;
   }
 
-  .public-navlink--active {
-    @apply text-gray-900;
-  }
-
+  .public-navlink:hover::after,
+  .public-navlink:focus-visible::after,
   .public-navlink--active::after {
-    @apply bg-gradient-to-r from-cyan-400 to-violet-500 opacity-100;
+    opacity: 1;
   }
 
   .public-ticker {
@@ -715,7 +754,14 @@
   }
 
   .public-ai-card__cta {
-    @apply relative z-10 mt-4 inline-block rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:from-blue-400 hover:to-purple-400;
+    background: var(--color-flaash-green);
+    color: #ffffff;
+    @apply relative z-10 mt-4 inline-block rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition-all;
+  }
+
+  .public-ai-card__cta:hover {
+    background: var(--color-flaash-green-hover);
+    box-shadow: 0 0 18px rgba(0, 172, 142, 0.35);
   }
 
   .public-timeline {
@@ -1050,6 +1096,7 @@
   .public-about__back-to-top {
     @apply fixed bottom-6 right-4 inline-flex items-center justify-center rounded-full bg-white p-2 text-slate-700 shadow-md ring-1 ring-gray-200 transition hover:shadow-lg;
   }
+
   .public-header {
     @apply sticky top-0 z-[2000] isolate w-full border-b border-gray-100 transition-all pointer-events-auto;
   }
@@ -1100,15 +1147,15 @@
 
   .public-header__themes-trigger::after {
     content: "";
-    @apply pointer-events-none absolute left-0 bottom-0 h-0.5 w-full opacity-0 transition-opacity;
+    @apply pointer-events-none absolute left-0 bottom-0 h-0.5 w-full;
+    background: var(--color-flaash-green);
+    opacity: 0;
   }
 
-  .public-header__themes-trigger--active {
-    @apply text-gray-900;
-  }
-
+  .public-header__themes-trigger:hover::after,
+  .public-header__themes-trigger:focus-visible::after,
   .public-header__themes-trigger--active::after {
-    @apply bg-gradient-to-r from-cyan-400 to-violet-500 opacity-100;
+    opacity: 1;
   }
 
   .public-header__nav-external {
@@ -1142,10 +1189,17 @@
     font-weight: 600;
     letter-spacing: var(--letter-spacing-caps);
     text-transform: uppercase;
-    @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-white;
+    background: var(--color-flaash-green);
+    @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-white transition;
   }
+
   .public-header__cta {
     @apply hidden md:inline-flex;
+  }
+
+  .public-header__cta:hover,
+  .public-header__mobile-cta:hover {
+    background: var(--color-flaash-green-hover);
   }
 
   .public-header__menu-toggle {
@@ -1355,20 +1409,29 @@
   }
 
   .public-quickask__button {
-    @apply inline-flex items-center justify-center rounded-md bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105;
+    background: var(--color-flaash-green);
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105;
+  }
+
+  .public-quickask__button:hover {
+    background: var(--color-flaash-green-hover);
   }
 }
 
 .theme-futuriste {
-  --background: #0e0e12; /* noir bleuté */
+  --background: #0e0e12;
+  /* noir bleuté */
   --foreground: #eaeaea;
-  --card: #161a20; /* léger glow */
+  --card: #161a20;
+  /* léger glow */
   --card-foreground: #eaeaea;
   --popover: #161a20;
   --popover-foreground: #eaeaea;
-  --primary: #00e0ff; /* cyan néon */
+  --primary: #00e0ff;
+  /* cyan néon */
   --primary-foreground: #0e0e12;
-  --secondary: #ff007a; /* magenta vibrant */
+  --secondary: #ff007a;
+  /* magenta vibrant */
   --secondary-foreground: #ffffff;
   --muted: #12151a;
   --muted-foreground: #9ca3af;
@@ -1380,8 +1443,8 @@
 
   /* profondeur subtile du fond */
   background-image:
-    radial-gradient(1200px 800px at 0% 0%, rgba(255,255,255,0.03), transparent 60%),
-    radial-gradient(900px 700px at 100% 100%, rgba(0,224,255,0.06), transparent 60%);
+    radial-gradient(1200px 800px at 0% 0%, rgba(255, 255, 255, 0.03), transparent 60%),
+    radial-gradient(900px 700px at 100% 100%, rgba(0, 224, 255, 0.06), transparent 60%);
   background-blend-mode: screen;
 }
 
@@ -1397,6 +1460,7 @@
   transition: box-shadow 200ms ease, transform 120ms ease;
   position: relative;
 }
+
 .theme-futuriste .cta-futuriste:hover,
 .theme-futuriste .cta-chat:hover {
   box-shadow: 0 0 24px rgba(0, 224, 255, 0.35);
@@ -1406,15 +1470,24 @@
 .theme-futuriste .btn-pulse {
   animation: pulseGlow 4s ease-in-out infinite;
 }
+
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 rgba(0, 224, 255, 0); }
-  50% { box-shadow: 0 0 22px rgba(0, 224, 255, 0.28); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(0, 224, 255, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 22px rgba(0, 224, 255, 0.28);
+  }
 }
 
 .theme-futuriste .card-future {
   background: #161a20;
   border-color: #242a36;
 }
+
 .theme-futuriste .card-future:hover {
   box-shadow: 0 0 0 1px #00e0ff inset, 0 0 18px rgba(0, 224, 255, 0.18);
   transform: translateY(-2px);
@@ -1442,12 +1515,14 @@
   transform: translateY(6px);
   animation: fadeUp 480ms ease forwards;
 }
+
 /* Generic fade-in-up (unscoped) */
 .fade-in-up {
   opacity: 0;
   transform: translateY(6px);
   animation: fadeUp 520ms ease forwards;
 }
+
 @keyframes fadeUp {
   to {
     opacity: 1;
@@ -1460,24 +1535,56 @@
   animation: ticker 30s linear infinite;
   will-change: transform;
 }
+
 @keyframes ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* FAQ chevron rotation */
-details[open] .chev { transform: rotate(180deg); }
+details[open] .chev {
+  transform: rotate(180deg);
+}
 
 /* Subtle neon pulses for IA icon */
-.ia-halo { animation: iaNeon 3s ease-in-out infinite; }
-.ia-outer-ring, .ia-base-ring { animation: iaRing 4s ease-in-out infinite; }
-@keyframes iaNeon {
-  0%, 100% { filter: blur(16px) brightness(1); opacity: .55; }
-  50% { filter: blur(20px) brightness(1.08); opacity: .8; }
+.ia-halo {
+  animation: iaNeon 3s ease-in-out infinite;
 }
+
+.ia-outer-ring,
+.ia-base-ring {
+  animation: iaRing 4s ease-in-out infinite;
+}
+
+@keyframes iaNeon {
+
+  0%,
+  100% {
+    filter: blur(16px) brightness(1);
+    opacity: .55;
+  }
+
+  50% {
+    filter: blur(20px) brightness(1.08);
+    opacity: .8;
+  }
+}
+
 @keyframes iaRing {
-  0%, 100% { box-shadow: 0 0 12px rgba(59,130,246,.3); }
-  50% { box-shadow: 0 0 16px rgba(59,130,246,.5); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgba(59, 130, 246, .3);
+  }
+
+  50% {
+    box-shadow: 0 0 16px rgba(59, 130, 246, .5);
+  }
 }
 
 .public-subscription {
@@ -1565,20 +1672,23 @@ details[open] .chev { transform: rotate(180deg); }
 
 .public-subscription__cta--featured {
   color: #ffffff;
-  background: linear-gradient(90deg, #00e0ff, #8a2eff);
+  background: var(--color-flaash-green);
   border: 0;
-  box-shadow: 0 0 0 rgba(0, 224, 255, 0);
+  box-shadow: 0 0 0 rgba(0, 172, 142, 0);
   transition: box-shadow 200ms ease, transform 120ms ease;
   animation: pulseGlow 4s ease-in-out infinite;
 }
 
 .public-subscription__cta--featured:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 18px rgba(0, 224, 255, 0.3);
+  box-shadow: 0 0 18px rgba(0, 172, 142, 0.3);
+  background: var(--color-flaash-green-hover);
 }
 
 .public-subscription__cta--default {
-  @apply border border-gray-300 hover:bg-gray-50 hover:scale-105;
+  border-color: rgba(0, 172, 142, 0.4);
+  color: var(--color-flaash-green);
+  @apply border hover:bg-gray-50 hover:scale-105;
 }
 
 .public-subscription__cta-label {
@@ -1701,4 +1811,3 @@ details[open] .chev { transform: rotate(180deg); }
 .dashboard-site [class*="font-serif"] {
   font-family: var(--font-serif-family) !important;
 }
-

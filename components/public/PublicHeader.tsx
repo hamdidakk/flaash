@@ -67,15 +67,10 @@ export function PublicHeader() {
         Aller au contenu principal
       </a>
       <div className="public-header__inner">
-        <Link href="/" className="public-header__logo-link" aria-label="Accueil FLAASH">
-          <Image
-            src="/logo-clair.png"
-            alt="FLAASH"
-            width={420}
-            height={110}
-            className="public-header__logo-image"
-            priority
-          />
+        <Link href="/" className="public-header__logo-link mr-12" aria-label="Accueil FLAASH">
+          <span className="font-sans text-5xl font-semibold tracking-[0.15em] uppercase select-none text-foreground inline-flex items-center">
+            FLA<span className="inline-block rotate-180 -ml-8 mr-1">A</span>SH
+          </span>
         </Link>
 
         <nav className="public-header__nav" aria-label="Navigation principale">
@@ -85,9 +80,8 @@ export function PublicHeader() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className={`public-header__themes-trigger ${
-                  pathname?.startsWith("/themes") ? "public-header__themes-trigger--active" : ""
-                }`}
+                className={`public-header__themes-trigger ${pathname?.startsWith("/themes") ? "public-header__themes-trigger--active" : ""
+                  }`}
                 aria-label={t("public.nav.themes")}
                 onClick={() => trackEvent("nav_themes_open")}
               >
@@ -184,7 +178,7 @@ export function PublicHeader() {
                 </button>
                 <button
                   type="button"
-                    className="public-header__mobile-close"
+                  className="public-header__mobile-close"
                   aria-label="Fermer le menu"
                   onClick={() => setMobileOpen(false)}
                 >
@@ -197,9 +191,8 @@ export function PublicHeader() {
               <div className="mb-1">
                 <Link
                   href="/"
-                  className={`public-header__mobile-link ${
-                    pathname === "/" ? "public-header__mobile-link--active" : ""
-                  }`}
+                  className={`public-header__mobile-link ${pathname === "/" ? "public-header__mobile-link--active" : ""
+                    }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("public.nav.home")}
@@ -208,9 +201,8 @@ export function PublicHeader() {
               <div className="mb-2 flex flex-col">
                 <Link
                   href="/themes"
-                  className={`public-header__mobile-link ${
-                    pathname?.startsWith("/themes") ? "public-header__mobile-link--active" : ""
-                  }`}
+                  className={`public-header__mobile-link ${pathname?.startsWith("/themes") ? "public-header__mobile-link--active" : ""
+                    }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("public.nav.themes")}
@@ -247,9 +239,8 @@ export function PublicHeader() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`public-header__mobile-link ${
-                        pathname === item.href ? "public-header__mobile-link--active" : ""
-                      }`}
+                      className={`public-header__mobile-link ${pathname === item.href ? "public-header__mobile-link--active" : ""
+                        }`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {t(item.labelKey)}

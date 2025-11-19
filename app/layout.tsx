@@ -31,7 +31,7 @@ const playfairDisplay = Playfair_Display({
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-space-grotesk",
 })
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://flaash.fr"
