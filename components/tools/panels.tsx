@@ -232,7 +232,7 @@ export function SearchPanel({
                 <p className="mt-2 text-sm">{String(result.snippet ?? result.document ?? "Aucun extrait")}</p>
                 {result.metadata && (
                   <pre className="mt-2 rounded bg-muted p-2 text-[11px]">
-                    {JSON.stringify(result.metadata, null, 2)}
+                    {JSON.stringify(result.metadata as Record<string, unknown>, null, 2)}
                   </pre>
                 )}
               </div>

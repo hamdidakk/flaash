@@ -20,6 +20,7 @@ const navItems: NavItem[] = [
   { href: "/", labelKey: "public.nav.home" },
   { href: "/about", labelKey: "public.nav.about" },
   { href: "/guide", labelKey: "public.nav.guide" },
+  { href: "/themes", labelKey: "public.nav.themes" },
   { href: "/abonnement", labelKey: "public.nav.subscription" },
 ]
 

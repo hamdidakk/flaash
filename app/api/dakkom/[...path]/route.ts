@@ -123,7 +123,7 @@ async function forward(
 
   // For ReadableStream bodies (FormData uploads), duplex option is required
   // This is a requirement in Node.js/Next.js when using streaming bodies
-  const fetchOptions: RequestInit = {
+  const fetchOptions: RequestInit & { duplex?: "half" } = {
     method,
     headers,
     body,

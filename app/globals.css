@@ -368,7 +368,8 @@
     @apply bg-gray-50;
   }
 
-  .public-section-header {
+  .public-section-header > h2,
+  .public-section-header > h3 {
     font-family: var(--font-serif-family);
     font-size: var(--font-size-18);
     font-weight: 600;
@@ -380,7 +381,8 @@
     @apply mr-1;
   }
 
-  .public-section-header__subtitle {
+  .public-section-header__subtitle,
+  .public-section-header__description {
     font-family: var(--font-serif-family);
     font-size: var(--font-size-18);
     line-height: var(--line-height-relaxed);
@@ -1397,6 +1399,94 @@
     @apply hover:underline;
   }
 
+  .public-themes-hero {
+    @apply mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pb-10 pt-16 md:flex-row md:items-center;
+  }
+
+  .public-themes-hero__text {
+    @apply flex-1;
+  }
+
+  .public-themes-hero__eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.3em] text-gray-500;
+  }
+
+  .public-themes-hero__text h1 {
+    @apply mt-2 text-4xl font-bold tracking-tight text-gray-900;
+  }
+
+  .public-themes-hero__subtitle {
+    @apply mt-4 max-w-xl text-base text-gray-600;
+  }
+
+  .public-themes-hero__cta {
+    @apply mt-6 flex flex-wrap gap-3;
+  }
+
+  .public-themes-page {
+    @apply mx-auto max-w-6xl px-6 pb-16;
+  }
+
+  .public-themes-cards {
+    @apply mt-6 grid gap-6 md:grid-cols-2;
+  }
+
+  .public-theme-card-link {
+    @apply block rounded-2xl border border-gray-200 bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .public-theme-card-link__body {
+    @apply mt-4 space-y-4 text-sm text-gray-600;
+  }
+
+  .public-theme-stats {
+    @apply grid grid-cols-3 gap-4 text-center text-xs uppercase tracking-wide text-gray-500;
+  }
+
+  .public-theme-stats span {
+    @apply block text-xl font-semibold text-gray-900;
+  }
+
+  .public-theme-detail__hero {
+    @apply mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 pb-12 pt-16 md:flex-row md:items-center;
+  }
+
+  .public-theme-detail__intro {
+    @apply flex-1 rounded-2xl border border-gray-200 bg-white/95 p-6 shadow-sm;
+  }
+
+  .public-theme-detail__intro p {
+    @apply text-base text-gray-700;
+  }
+
+  .public-theme-detail__stats {
+    @apply mt-4 grid grid-cols-3 gap-4 text-center text-xs uppercase tracking-wide text-gray-500;
+  }
+
+  .public-theme-detail__stats span {
+    @apply block text-2xl font-semibold text-gray-900;
+  }
+
+  .public-theme-detail__cta {
+    @apply mt-6 flex flex-wrap gap-3;
+  }
+
+  .public-theme-detail {
+    @apply mx-auto max-w-5xl px-6 pb-16;
+  }
+
+  .public-theme-detail__prompts {
+    @apply mt-6 grid gap-4 md:grid-cols-3;
+  }
+
+  .public-theme-detail__prompt-column {
+    @apply space-y-3;
+  }
+
+  .public-theme-detail__prompt {
+    @apply block rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-[var(--color-flaash-green)] hover:bg-white hover:text-gray-900;
+  }
+
   .public-quickask {
     @apply mt-3 flex flex-col gap-3 sm:flex-row;
   }
@@ -1832,4 +1922,374 @@ details[open] .chev {
 .dashboard-site .font-serif,
 .dashboard-site [class*="font-serif"] {
   font-family: var(--font-serif-family) !important;
+}
+
+.rag-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #050b0a, #0a1412);
+  color: #f4f7f7;
+}
+
+.rag-shell--collapsed {
+  grid-template-columns: 92px 1fr;
+}
+
+.rag-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: rgba(6, 13, 12, 0.85);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 18px;
+  gap: 24px;
+}
+
+.rag-shell--collapsed .rag-sidebar__top span,
+.rag-shell--collapsed .rag-sidebar__nav ul span,
+.rag-shell--collapsed .rag-sidebar__section,
+.rag-shell--collapsed .rag-sidebar__footer {
+  display: none;
+}
+
+.rag-sidebar__logo {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #f1fff9;
+}
+
+.rag-sidebar__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rag-sidebar__toggle {
+  color: #c7f5ef;
+}
+
+.rag-sidebar__nav ul {
+  display: grid;
+  gap: 6px;
+}
+
+.rag-sidebar__section {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.rag-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: background 0.2s, color 0.2s;
+}
+
+.rag-sidebar__link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rag-sidebar__link--active {
+  background: rgba(0, 172, 142, 0.2);
+  color: #ffffff;
+}
+
+.rag-sidebar__footer {
+  margin-top: auto;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.rag-shell--collapsed .rag-sidebar {
+  padding: 24px 12px;
+  align-items: center;
+}
+
+.rag-main {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rag-main__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  background: rgba(5, 12, 11, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.rag-main__header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.rag-main__header p {
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 540px;
+}
+
+.rag-main__eyebrow {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(0, 172, 142, 0.9);
+  margin-bottom: 0.4rem;
+}
+
+.rag-main__cta-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Style spécifique pour les boutons outline dans le header RAG */
+.rag-main__cta-group button,
+.rag-main__cta-group a {
+  color: inherit;
+}
+
+/* Cibler les boutons avec variant outline dans le header RAG */
+.rag-main__cta-group button:not([class*="bg-[var(--color-flaash-green)]"]),
+.rag-main__cta-group a:not([class*="bg-[var(--color-flaash-green)]"]) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f4f7f7 !important;
+}
+
+.rag-main__cta-group button:not([class*="bg-[var(--color-flaash-green)]"]):hover,
+.rag-main__cta-group a:not([class*="bg-[var(--color-flaash-green)]"]):hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.rag-main__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rag-home {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rag-home__card {
+  background: rgba(2, 8, 7, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #fdfdfd;
+}
+
+.rag-home__card--hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  background: radial-gradient(circle at top left, rgba(0, 172, 142, 0.2), rgba(0, 0, 0, 0.6));
+}
+
+.rag-home__eyebrow {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0, 172, 142, 0.8);
+  margin-bottom: 12px;
+}
+
+.rag-home__quick-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.rag-home__panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.rag-home__panel-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.rag-home__panel-header h3 {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rag-home__panel-header p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.rag-home__card .btn {
+  width: 100%;
+}
+
+.rag-home__chat {
+  display: grid;
+}
+
+.rag-placeholder {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+  background: rgba(5, 12, 11, 0.7);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.rag-placeholder h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.rag-placeholder p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.rag-upload__dropzone {
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.rag-upload__dropzone--active {
+  border-color: var(--color-flaash-green);
+  background: rgba(0, 172, 142, 0.15);
+}
+
+/* Styles pour les composants UI dans l'app RAG (fond sombre) */
+.rag-shell button[data-variant="outline"],
+.rag-shell .btn[data-variant="outline"],
+.rag-shell button[class*="variant-outline"],
+.rag-shell button[class*="outline"],
+.rag-shell .rag-main__cta-group button[class*="outline"],
+.rag-shell .rag-main__cta-group a[class*="outline"] {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f4f7f7 !important;
+}
+
+.rag-shell button[data-variant="outline"]:hover,
+.rag-shell .btn[data-variant="outline"]:hover,
+.rag-shell button[class*="variant-outline"]:hover,
+.rag-shell button[class*="outline"]:hover,
+.rag-shell .rag-main__cta-group button[class*="outline"]:hover,
+.rag-shell .rag-main__cta-group a[class*="outline"]:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.rag-shell input[type="text"],
+.rag-shell input[type="email"],
+.rag-shell input[type="password"],
+.rag-shell input[type="url"],
+.rag-shell textarea,
+.rag-shell select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f4f7f7 !important;
+}
+
+.rag-shell input[type="text"]::placeholder,
+.rag-shell input[type="email"]::placeholder,
+.rag-shell input[type="password"]::placeholder,
+.rag-shell input[type="url"]::placeholder,
+.rag-shell textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.rag-shell input[type="text"]:focus,
+.rag-shell input[type="email"]:focus,
+.rag-shell input[type="password"]:focus,
+.rag-shell input[type="url"]:focus,
+.rag-shell textarea:focus,
+.rag-shell select:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--color-flaash-green) !important;
+  color: #ffffff !important;
+  outline-color: var(--color-flaash-green) !important;
+}
+
+/* Select trigger dans l'app RAG */
+.rag-shell [role="combobox"],
+.rag-shell [data-radix-select-trigger] {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f4f7f7 !important;
+}
+
+.rag-shell [role="combobox"]:hover,
+.rag-shell [data-radix-select-trigger]:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.rag-shell [role="combobox"]:focus,
+.rag-shell [data-radix-select-trigger]:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--color-flaash-green) !important;
+  outline-color: var(--color-flaash-green) !important;
+}
+
+/* Labels dans l'app RAG */
+.rag-shell label {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Textarea dans l'app RAG */
+.rag-shell textarea {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f4f7f7 !important;
+}
+
+.rag-shell textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.rag-shell textarea:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--color-flaash-green) !important;
+  color: #ffffff !important;
+  outline-color: var(--color-flaash-green) !important;
+}
+
+@media (max-width: 1024px) {
+  .rag-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .rag-sidebar {
+    position: relative;
+    height: auto;
+    grid-row: 2;
+  }
 }

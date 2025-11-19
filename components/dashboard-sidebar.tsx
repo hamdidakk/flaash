@@ -19,6 +19,7 @@ import {
   Target,
   KeyRound,
   ShieldCheck,
+  Layers,
 } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -47,6 +48,7 @@ export function DashboardSidebar() {
     { name: t("nav.users"), href: "/users", icon: Users },
     { name: t("nav.billing"), href: "/billing", icon: CreditCard },
     { name: t("nav.quotas"), href: "/quotas", icon: Gauge },
+    { name: t("nav.themes"), href: "/admin/themes", icon: Layers },
   ]
 
   const system = [

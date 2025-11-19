@@ -50,6 +50,15 @@ export const translations = {
         health: { title: "Health", example: "AI‑assisted diagnosis" },
         environment: { title: "Environment", example: "Data centers footprint" },
       },
+      themesPage: {
+        title: "Themes & prompts",
+        intro:
+          "A curated editorial walk through our reference dossiers, their main angles and ready‑to‑ask questions for the public AI Agent.",
+        cardsTitle: "Explore the magazine focus areas",
+        promptsTitle: "Try these prompts directly in the chat",
+        ctaDetail: "Open the theme",
+        ctaChat: "Open the chat",
+      },
       footer: {
         strapline: "Magazine & Public AI Agent",
         resources: "Resources",
@@ -134,6 +143,7 @@ export const translations = {
       documents: "Documents",
       chat: "Chat",
       search: "Search",
+        themes: "Themes",
       analytics: "Analytics",
       settings: "Settings",
       organizations: "Organizations",
@@ -824,6 +834,15 @@ export const translations = {
         health: { title: "Santé", example: "Diagnostic assisté par IA" },
         environment: { title: "Environnement", example: "Empreinte des data centers" },
       },
+      themesPage: {
+        title: "Thématiques & prompts",
+        intro:
+          "Nos dossiers de référence, leurs angles majeurs et une sélection de questions prêtes à l’emploi pour l’Agent IA public.",
+        cardsTitle: "Explorez les terrains d’enquête de la revue",
+        promptsTitle: "Essayez ces questions dans le chat",
+        ctaDetail: "Découvrir la thématique",
+        ctaChat: "Lancer le chat",
+      },
       footer: {
         strapline: "Revue & Agent IA public",
         resources: "Ressources",
@@ -908,6 +927,7 @@ export const translations = {
       documents: "Documents",
       chat: "Chat",
       search: "Recherche",
+        themes: "Thématiques",
       analytics: "Analytiques",
       settings: "Paramètres",
       organizations: "Organisations",

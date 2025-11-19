@@ -132,7 +132,7 @@ export function PartnerAuthCard() {
 
   const statusBadge = useMemo(() => {
     if (status === "authenticated" && token?.accessToken) {
-      return <Badge variant="success">{t("partnerAuth.status.connected")}</Badge>
+      return <Badge variant="default">{t("partnerAuth.status.connected")}</Badge>
     }
     if (status === "loading") {
       return <Badge variant="outline">{t("common.loading")}</Badge>
