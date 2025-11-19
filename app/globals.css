@@ -8,11 +8,17 @@
 /* Pour éviter les erreurs 404, les @font-face sont commentés jusqu'à ce que les fichiers soient ajoutés */
 /* Une fois les fichiers ajoutés, décommenter les @font-face ci-dessous */
 
-/*
 @font-face {
   font-family: "Ogg Text";
-  src: url("/fonts/OggText-Regular.woff2") format("woff2"),
-       url("/fonts/OggText-Regular.woff") format("woff");
+  src: url("/fonts/OggText-Light.woff2") format("woff2"), url("/fonts/OggText-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ogg Text";
+  src: url("/fonts/OggText-Book.woff2") format("woff2"), url("/fonts/OggText-Book.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -20,26 +26,16 @@
 
 @font-face {
   font-family: "Ogg Text";
-  src: url("/fonts/OggText-Medium.woff2") format("woff2"),
-       url("/fonts/OggText-Medium.woff") format("woff");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Ogg Text";
-  src: url("/fonts/OggText-Bold.woff2") format("woff2"),
-       url("/fonts/OggText-Bold.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
+  src: url("/fonts/OggText-BookItalic.woff2") format("woff2"), url("/fonts/OggText-BookItalic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Neue Machina Inktrap";
-  src: url("/fonts/NeueMachinaInktrap-Regular.woff2") format("woff2"),
-       url("/fonts/NeueMachinaInktrap-Regular.woff") format("woff");
+  src: url("/fonts/PPNeueMachina-InktrapRegular.woff2") format("woff2"),
+       url("/fonts/PPNeueMachina-InktrapRegular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -47,22 +43,21 @@
 
 @font-face {
   font-family: "Neue Machina Inktrap";
-  src: url("/fonts/NeueMachinaInktrap-Medium.woff2") format("woff2"),
-       url("/fonts/NeueMachinaInktrap-Medium.woff") format("woff");
-  font-weight: 500;
+  src: url("/fonts/PPNeueMachina-InktrapSemibold.woff2") format("woff2"),
+       url("/fonts/PPNeueMachina-InktrapSemibold.woff") format("woff");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Neue Machina Inktrap";
-  src: url("/fonts/NeueMachinaInktrap-Bold.woff2") format("woff2"),
-       url("/fonts/NeueMachinaInktrap-Bold.woff") format("woff");
-  font-weight: 700;
+  font-family: "Neue Machina Plain";
+  src: url("/fonts/PPNeueMachina-PlainRegular.woff2") format("woff2"),
+       url("/fonts/PPNeueMachina-PlainRegular.woff") format("woff");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
-*/
 
 :root {
   --background: oklch(0.98 0 0);
@@ -108,9 +103,9 @@
   --font-sans-family: var(--font-inter, "Inter"), "Helvetica Neue", Arial, sans-serif;
   --font-serif-family: var(--font-eb-garamond, "EB Garamond"), "Playfair Display", "Times New Roman", serif;
 
-  /* Fonts pour le site public (alternatives Google Fonts) */
-  --font-family-serif: var(--font-playfair, "Playfair Display"), serif;
-  --font-family-sans: var(--font-space-grotesk, "Space Grotesk"), sans-serif;
+  /* Fonts pour le site public (Ogg Text + Neue Machina Inktrap) */
+  --font-family-serif: "Ogg Text", "Playfair Display", serif;
+  --font-family-sans: "Neue Machina Inktrap", "Space Grotesk", sans-serif;
   --font-size-12: 12px;
   --font-size-14: 14px;
   --font-size-16: 16px;
@@ -717,17 +712,14 @@
 
   .public-ai-card {
     @apply relative flex flex-col items-center justify-center rounded-2xl p-12 text-white shadow-lg;
-    background-color: #0c0f1a;
-  }
-
-  @screen md {
-    .public-ai-card {
-      background-image: linear-gradient(to bottom right, #0d101b, #111729);
-    }
+    background-color: #031815;
+    background-image:
+      radial-gradient(circle at 30% 20%, rgba(0, 172, 142, 0.18), transparent 60%),
+      radial-gradient(circle at 70% 80%, rgba(0, 92, 77, 0.35), transparent 55%);
   }
 
   .public-ai-card__halo {
-    @apply pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/10 to-purple-600/10 blur-xl opacity-50;
+    @apply pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500/15 to-emerald-800/20 blur-xl opacity-60;
   }
 
   .public-ai-card__content {
@@ -735,17 +727,21 @@
   }
 
   .public-ai-card__outer-ring {
-    @apply flex h-32 w-32 items-center justify-center rounded-full border-4 border-blue-400/70 md:h-48 md:w-48;
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+    @apply flex h-32 w-32 items-center justify-center rounded-full border-4 md:h-48 md:w-48;
+    border-color: rgba(0, 172, 142, 0.7);
+    box-shadow: 0 0 18px rgba(0, 172, 142, 0.45);
   }
 
   .public-ai-card__inner-ring {
-    @apply h-16 w-16 rounded-full border-2 border-blue-300/70 md:h-24 md:w-24;
+    @apply h-16 w-16 rounded-full border-2 md:h-24 md:w-24;
+    border-color: rgba(0, 172, 142, 0.6);
+    box-shadow: inset 0 0 8px rgba(0, 172, 142, 0.6);
   }
 
   .public-ai-card__base-ring {
-    @apply mt-6 h-12 w-24 rounded-full border-4 border-blue-400/70 md:h-16 md:w-32;
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+    @apply mt-6 h-12 w-24 rounded-full border-4 md:h-16 md:w-32;
+    border-color: rgba(0, 172, 142, 0.7);
+    box-shadow: 0 0 18px rgba(0, 172, 142, 0.35);
   }
 
   .public-ai-card__caption {
@@ -1005,14 +1001,15 @@
   }
 
   .public-widget-header__icon {
-    @apply text-base;
+    @apply text-base text-[var(--color-flaash-green)];
   }
 
   .public-widget-header__subtitle {
     font-family: var(--font-serif-family);
     font-size: var(--font-size-16);
     line-height: var(--line-height-relaxed);
-    @apply mb-4 text-gray-600;
+    color: var(--color-flaash-green);
+    @apply mb-4;
   }
 
   .public-widget {
@@ -1405,16 +1402,19 @@
   }
 
   .public-quickask__input {
-    @apply w-full flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none;
+    @apply w-full flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-[var(--color-flaash-green)] focus:outline-none;
   }
 
   .public-quickask__button {
     background: var(--color-flaash-green);
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105;
+    border: 1px solid var(--color-flaash-green);
+    box-shadow: 0 0 0 0 rgba(0, 172, 142, 0.2);
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold text-white transition-all hover:scale-105;
   }
 
   .public-quickask__button:hover {
     background: var(--color-flaash-green-hover);
+    box-shadow: 0 8px 16px rgba(0, 172, 142, 0.3);
   }
 
 .slider-green [data-slot="slider-track"] {
@@ -1718,20 +1718,28 @@ details[open] .chev {
 }
 
 .public-lang-switcher {
-  @apply flex items-center gap-2;
+  @apply flex items-center;
 }
 
-.public-lang-switcher__button {
-  @apply inline-flex items-center rounded px-2.5 py-1.5 text-[15px] text-gray-700 transition-colors hover:bg-gray-100;
+.public-lang-switcher--menu {
+  @apply h-8;
 }
 
-.public-lang-switcher__button--active {
-  @apply bg-gray-200 font-semibold;
+.public-lang-switcher__select {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  width: 72px;
+  @apply rounded-md border border-gray-300 bg-white px-2 py-1 text-gray-700 shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2;
 }
 
-.public-lang-switcher__flag {
-  @apply mr-1 h-4 w-6 flex-shrink-0 select-none;
+.public-lang-switcher__trigger {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  @apply inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-2 py-1 text-gray-700 shadow-sm transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2;
 }
+
 
 .public-source-modal {
   @apply max-w-lg;

@@ -9,13 +9,6 @@ import { useEffect, useState } from "react"
 import { NavLinkNeon } from "@/components/public/ui/NavLinkNeon"
 import { LanguageSwitcher } from "@/components/public/LanguageSwitcher"
 import { useSessionStore } from "@/store/session-store"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { getThemes } from "@/lib/themes"
 
 type NavItem = {
   href: string
@@ -37,9 +30,6 @@ export function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { status } = useSessionStore()
-  const themes = getThemes(language)
-  const remainingNav = navItems.filter((i) => i.href !== "/")
-
   useEffect(() => {
     setMobileOpen(false)
   }, [pathname])
@@ -74,38 +64,7 @@ export function PublicHeader() {
         </Link>
 
         <nav className="public-header__nav" aria-label="Navigation principale">
-          {/* 1) Accueil en premier */}
-          <NavLinkNeon href="/" label={t("public.nav.home")} active={pathname === "/"} />
-          {/* 2) Thématiques en deuxième */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className={`public-header__themes-trigger ${pathname?.startsWith("/themes") ? "public-header__themes-trigger--active" : ""
-                  }`}
-                aria-label={t("public.nav.themes")}
-                onClick={() => trackEvent("nav_themes_open")}
-              >
-                {t("public.nav.themes")}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="z-[3000]">
-              <DropdownMenuItem asChild>
-                <Link href="/themes" onClick={() => trackEvent("nav_theme_select", { slug: "all" } as any)}>
-                  {language === "fr" ? "Toutes les thématiques" : "All themes"}
-                </Link>
-              </DropdownMenuItem>
-              {themes.map((th) => (
-                <DropdownMenuItem key={th.id} asChild>
-                  <Link href={`/themes/${th.slug}`} onClick={() => trackEvent("nav_theme_select", { slug: th.slug } as any)}>
-                    <span className="mr-2 select-none">{th.icon}</span>
-                    {th.title}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {/* 3) Le reste des entrées */}
-          {remainingNav.map((item) =>
+          {navItems.map((item) =>
             item.external ? (
               <a
                 key={item.href}
@@ -124,7 +83,6 @@ export function PublicHeader() {
         </nav>
 
         <div className="public-header__actions">
-          <LanguageSwitcher />
           <button
             type="button"
             className="public-header__cta cta-chat btn-pulse group"
@@ -140,6 +98,7 @@ export function PublicHeader() {
             <span aria-hidden>🤖</span>
             <span className="ml-2">{t("public.navExtra.exploreAI")}</span>
           </button>
+          <LanguageSwitcher variant="menu" />
           <button
             type="button"
             className="public-header__menu-toggle"
@@ -187,40 +146,8 @@ export function PublicHeader() {
                   </svg>
                 </button>
               </div>
-              {/* 1) Accueil en premier */}
-              <div className="mb-1">
-                <Link
-                  href="/"
-                  className={`public-header__mobile-link ${pathname === "/" ? "public-header__mobile-link--active" : ""
-                    }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {t("public.nav.home")}
-                </Link>
-              </div>
-              <div className="mb-2 flex flex-col">
-                <Link
-                  href="/themes"
-                  className={`public-header__mobile-link ${pathname?.startsWith("/themes") ? "public-header__mobile-link--active" : ""
-                    }`}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {t("public.nav.themes")}
-                </Link>
-                {themes.map((th) => (
-                  <Link
-                    key={th.id}
-                    href={`/themes/${th.slug}`}
-                    className="public-header__mobile-theme-link"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <span className="mr-2 select-none">{th.icon}</span>
-                    {th.title}
-                  </Link>
-                ))}
-              </div>
               <div className="public-header__mobile-list">
-                {remainingNav.map((item) =>
+                {navItems.map((item) =>
                   item.external ? (
                     <a
                       key={item.href}
@@ -247,6 +174,9 @@ export function PublicHeader() {
                     </Link>
                   ),
                 )}
+              </div>
+              <div className="mt-4 flex justify-end">
+                <LanguageSwitcher />
               </div>
             </nav>
           </div>
