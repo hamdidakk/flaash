@@ -1,15 +1,13 @@
 "use client"
 
 import Link from "next/link"
+import { FlaashWordmark } from "@/components/public/FlaashWordmark"
 
 export function SidebarLogo() {
   return (
     <div className="sidebar-logo">
-      <Link href="/home" className="sidebar-logo__link">
-        <div className="sidebar-logo__icon">
-          <span className="sidebar-logo__text">R</span>
-        </div>
-        <span className="sidebar-logo__text">RAG SaaS</span>
+      <Link href="/" className="sidebar-logo__link" aria-label="Accueil FLAASH">
+        <FlaashWordmark className="sidebar-logo__mark" />
       </Link>
     </div>
   )

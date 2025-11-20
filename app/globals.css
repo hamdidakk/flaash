@@ -1111,6 +1111,21 @@
     @apply text-lg font-bold;
   }
 
+  .sidebar-logo__mark {
+    @apply h-9 w-auto text-foreground;
+  }
+
+  .flaash-wordmark {
+    font-family: var(--font-family-sans, "Space Grotesk"), sans-serif;
+    @apply inline-flex select-none items-center font-semibold uppercase tracking-[0.15em];
+  }
+
+  .flaash-wordmark__double-a {
+    @apply inline-block rotate-180;
+    margin-left: -0.65em;
+    margin-right: 0.2em;
+  }
+
   .sidebar-user {
     @apply border-t bg-muted/30 p-4;
   }

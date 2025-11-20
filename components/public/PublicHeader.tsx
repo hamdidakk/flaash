@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { NavLinkNeon } from "@/components/public/ui/NavLinkNeon"
 import { LanguageSwitcher } from "@/components/public/LanguageSwitcher"
 import { useSessionStore } from "@/store/session-store"
+import { FlaashWordmark } from "@/components/public/FlaashWordmark"
 
 type NavItem = {
   href: string
@@ -59,9 +60,7 @@ export function PublicHeader() {
       </a>
       <div className="public-header__inner">
         <Link href="/" className="public-header__logo-link mr-12" aria-label="Accueil FLAASH">
-          <span className="font-sans text-5xl font-semibold tracking-[0.15em] uppercase select-none text-foreground inline-flex items-center">
-            FLA<span className="inline-block rotate-180 -ml-8 mr-1">A</span>SH
-          </span>
+          <FlaashWordmark className="text-5xl" />
         </Link>
 
         <nav className="public-header__nav" aria-label="Navigation principale">

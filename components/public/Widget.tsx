@@ -323,8 +323,8 @@ export function PublicWidget() {
       />
 
       {/* Modal de connexion après 3 questions */}
-      <Dialog 
-        open={showLoginModal} 
+      <Dialog
+        open={showLoginModal}
         onOpenChange={(open) => {
           // Empêcher la fermeture manuelle du modal (il doit rester ouvert jusqu'à connexion ou 24h)
           // Seule la connexion réussie peut fermer le modal
@@ -333,8 +333,8 @@ export function PublicWidget() {
           }
         }}
       >
-        <DialogContent 
-          showCloseButton={false} 
+        <DialogContent
+          showCloseButton={false}
           className="max-w-md"
           onInteractOutside={(e) => {
             // Empêcher la fermeture en cliquant en dehors
@@ -348,7 +348,7 @@ export function PublicWidget() {
           <DialogHeader>
             <DialogTitle>{t("auth.login")}</DialogTitle>
             <DialogDescription>
-              {language === "fr" 
+              {language === "fr"
                 ? "Vous avez atteint la limite de 3 questions gratuites. Connectez-vous pour continuer à utiliser le chat."
                 : "You've reached the limit of 3 free questions. Sign in to continue using the chat."}
             </DialogDescription>
