@@ -31,8 +31,8 @@ export function ChunksDialog({ open, onOpenChange, documentName, chunks, onInspe
           </DialogTitle>
         </DialogHeader>
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="dashboard-dialog__search">
+          <Search className="dashboard-dialog__search-icon" />
           <Input
             placeholder={t("documents.chunks.search")}
             value={searchQuery}
@@ -41,9 +41,9 @@ export function ChunksDialog({ open, onOpenChange, documentName, chunks, onInspe
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+        <div className="dashboard-dialog__body">
           {filteredChunks.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="dashboard-dialog__placeholder">
               {searchQuery ? t("documents.chunks.noResults") : t("documents.empty.description")}
             </div>
           ) : (

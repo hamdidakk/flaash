@@ -6,11 +6,11 @@ import { Key } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useLanguage } from "@/lib/language-context"
 import type { CreateApiKeyPayload } from "@/lib/api-keys"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 type FormState = {
   owner: string
@@ -108,33 +108,35 @@ export function ApiKeyCreateDialog({ open, onOpenChange, onSubmit, isSubmitting 
           </DialogTitle>
           <DialogDescription>{t("apiKeys.form.description")}</DialogDescription>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
-            <Label htmlFor="api-key-owner">{t("apiKeys.form.ownerLabel")}</Label>
-            <Input
-              id="api-key-owner"
-              value={form.owner}
-              onChange={(event) => setForm((prev) => ({ ...prev, owner: event.target.value }))}
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <DashboardFormSection columns={1}>
+            <DashboardFormField label={t("apiKeys.form.ownerLabel")} htmlFor="api-key-owner" required>
+              <Input
+                id="api-key-owner"
+                value={form.owner}
+                onChange={(event) => setForm((prev) => ({ ...prev, owner: event.target.value }))}
+                required
+                placeholder="Acme Corp"
+              />
+            </DashboardFormField>
+            <DashboardFormField
+              label={t("apiKeys.form.scopeLabel")}
+              description={t("apiKeys.form.scopeHint")}
+              htmlFor="api-key-scope"
               required
-              placeholder="Acme Corp"
-            />
-          </div>
+            >
+              <Input
+                id="api-key-scope"
+                value={form.scope}
+                onChange={(event) => setForm((prev) => ({ ...prev, scope: event.target.value }))}
+                required
+                placeholder="dashboard:read,dashboard:write"
+              />
+            </DashboardFormField>
+          </DashboardFormSection>
 
-          <div className="space-y-2">
-            <Label htmlFor="api-key-scope">{t("apiKeys.form.scopeLabel")}</Label>
-            <Input
-              id="api-key-scope"
-              value={form.scope}
-              onChange={(event) => setForm((prev) => ({ ...prev, scope: event.target.value }))}
-              required
-              placeholder="dashboard:read,dashboard:write"
-            />
-            <p className="text-xs text-muted-foreground">{t("apiKeys.form.scopeHint")}</p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="api-key-rate-limit">{t("apiKeys.form.rateLimitLabel")}</Label>
+          <DashboardFormSection columns={2}>
+            <DashboardFormField label={t("apiKeys.form.rateLimitLabel")} htmlFor="api-key-rate-limit">
               <Input
                 id="api-key-rate-limit"
                 type="number"
@@ -143,28 +145,28 @@ export function ApiKeyCreateDialog({ open, onOpenChange, onSubmit, isSubmitting 
                 value={form.rateLimit}
                 onChange={(event) => setForm((prev) => ({ ...prev, rateLimit: event.target.value }))}
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="api-key-expiration">{t("apiKeys.form.expirationLabel")}</Label>
+            </DashboardFormField>
+            <DashboardFormField label={t("apiKeys.form.expirationLabel")} htmlFor="api-key-expiration">
               <Input
                 id="api-key-expiration"
                 type="date"
                 value={form.expiresAt}
                 onChange={(event) => setForm((prev) => ({ ...prev, expiresAt: event.target.value }))}
               />
-            </div>
-          </div>
+            </DashboardFormField>
+          </DashboardFormSection>
 
-          <div className="space-y-2">
-            <Label htmlFor="api-key-notes">{t("apiKeys.form.notesLabel")}</Label>
-            <Textarea
-              id="api-key-notes"
-              rows={3}
-              value={form.notes}
-              onChange={(event) => setForm((prev) => ({ ...prev, notes: event.target.value }))}
-              placeholder={t("apiKeys.form.notesPlaceholder") ?? ""}
-            />
-          </div>
+          <DashboardFormSection columns={1}>
+            <DashboardFormField label={t("apiKeys.form.notesLabel")} htmlFor="api-key-notes">
+              <Textarea
+                id="api-key-notes"
+                rows={3}
+                value={form.notes}
+                onChange={(event) => setForm((prev) => ({ ...prev, notes: event.target.value }))}
+                placeholder={t("apiKeys.form.notesPlaceholder") ?? ""}
+              />
+            </DashboardFormField>
+          </DashboardFormSection>
 
           {error && (
             <Alert variant={error.includes("404") || error.includes("non disponible") ? "default" : "destructive"} 
@@ -174,12 +176,14 @@ export function ApiKeyCreateDialog({ open, onOpenChange, onSubmit, isSubmitting 
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("common.cancel")}
-            </Button>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
-              {isSubmitting ? t("common.loading") : t("apiKeys.form.submit")}
-            </Button>
+            <DashboardFormActions>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" disabled={!isValid || isSubmitting}>
+                {isSubmitting ? t("common.loading") : t("apiKeys.form.submit")}
+              </Button>
+            </DashboardFormActions>
           </DialogFooter>
         </form>
       </DialogContent>

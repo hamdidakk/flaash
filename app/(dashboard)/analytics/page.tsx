@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { StatsGrid } from "@/components/dashboard/stats-grid"
 import { ChartCard } from "@/components/dashboard/chart-card"
 import { MetricBar } from "@/components/dashboard/metric-bar"
@@ -19,7 +19,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("analytics.title")} description={t("analytics.description")} />
+      <DashboardPageHeader title={t("analytics.title")} description={t("analytics.description")} />
 
       <StatsGrid stats={statsData} />
 
@@ -38,3 +38,4 @@ export default function AnalyticsPage() {
     </div>
   )
 }
+

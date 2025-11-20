@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ActivityItem } from "@/components/activity-item"
+import { DashboardSectionCard } from "@/components/dashboard/DashboardSectionCard"
 
 interface Activity {
   id: string
@@ -26,12 +26,8 @@ export function RecentActivitySection({
   formatTime,
 }: RecentActivitySectionProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <DashboardSectionCard title={title} description={description}>
+      <div className="dashboard-stack">
         {activities.map((activity) => (
           <ActivityItem
             key={activity.id}
@@ -41,7 +37,7 @@ export function RecentActivitySection({
             time={formatTime(activity.timestamp)}
           />
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </DashboardSectionCard>
   )
 }

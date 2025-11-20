@@ -29,7 +29,7 @@ export function RagHome() {
           </div>
           <div className="rag-home__quick-actions">
             {suggestions.map((prompt) => (
-              <Button key={prompt} variant="outline" className="justify-between text-left">
+              <Button key={prompt} variant="outline" className="rag-button--prompt">
                 <span>{prompt}</span>
                 <ArrowRight className="size-4" />
               </Button>
@@ -58,7 +58,7 @@ export function RagHome() {
               <p>Réutilisez vos conversations récentes depuis le dashboard.</p>
             </div>
           </div>
-          <Button asChild variant="ghost" className="justify-start gap-2 px-0 text-sm text-[var(--color-flaash-green)]">
+          <Button asChild variant="ghost" className="rag-link-button px-0">
             <Link href="/rag/documents">
               Voir les documents suivis
               <ArrowRight className="size-4" />

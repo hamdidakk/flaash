@@ -24,21 +24,21 @@ interface UsersTableProps {
 
 export function UsersTable({ users, translations }: UsersTableProps) {
   return (
-    <Card>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="border-b bg-muted/50">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-medium">{translations.user}</th>
-              <th className="px-4 py-3 text-left text-sm font-medium">{translations.role}</th>
-              <th className="px-4 py-3 text-left text-sm font-medium">{translations.status}</th>
-              <th className="px-4 py-3 text-right text-sm font-medium">{translations.actions}</th>
+    <Card className="dashboard-card">
+      <div className="dashboard-table-wrapper">
+        <table className="dashboard-table">
+          <thead>
+            <tr className="dashboard-table__head-row">
+              <th className="dashboard-table__cell--dense">{translations.user}</th>
+              <th className="dashboard-table__cell--dense">{translations.role}</th>
+              <th className="dashboard-table__cell--dense">{translations.status}</th>
+              <th className="dashboard-table__cell--dense dashboard-table__cell--right">{translations.actions}</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="dashboard-table__body">
             {users.map((user) => (
-              <tr key={user.id} className="hover:bg-muted/50">
-                <td className="px-4 py-3">
+              <tr key={user.id} className="dashboard-table__row">
+                <td className="dashboard-table__cell--dense">
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarFallback>
@@ -57,13 +57,13 @@ export function UsersTable({ users, translations }: UsersTableProps) {
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className="dashboard-table__cell--dense">
                   <Badge variant="secondary">{user.role}</Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="dashboard-table__cell--dense">
                   <Badge variant={user.status === "active" ? "default" : "outline"}>{user.status}</Badge>
                 </td>
-                <td className="px-4 py-3">
+                <td className="dashboard-table__cell--dense">
                   <div className="flex justify-end">
                     <Button variant="ghost" size="sm">
                       <MoreVertical className="h-4 w-4" />

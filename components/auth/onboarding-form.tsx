@@ -61,11 +61,13 @@ export function OnboardingForm() {
         />
       </div>
 
-      <div className="flex justify-between pt-4">
+      <div className="form-actions">
         <Button variant="outline" onClick={handleSkip}>
           {t("onboarding.skip")}
         </Button>
-        <Button onClick={handleComplete}>{t("onboarding.complete")}</Button>
+        <Button className="cta-accent" onClick={handleComplete}>
+          {t("onboarding.complete")}
+        </Button>
       </div>
     </div>
   )

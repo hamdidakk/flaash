@@ -44,7 +44,7 @@ export function ChatInput({ value, onChange, onSend, disabled }: ChatInputProps)
           aria-label={t("chat.sendAriaLabel")}
           onClick={onSend}
           disabled={disabled}
-          className="size-11 shrink-0 rounded-full border-0 bg-[var(--color-flaash-green)] p-0 text-white transition hover:scale-105 hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-0"
+          className="cta-round-accent"
         >
           <Send className="h-4 w-4" />
         </Button>

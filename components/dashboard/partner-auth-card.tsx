@@ -4,9 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { ShieldCheck, KeyRound, RefreshCw, Save, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -15,6 +13,8 @@ import { usePartnerAuthStore } from "@/store/partner-auth-store"
 import { useToast } from "@/hooks/use-toast"
 import { normalizeScopes } from "@/lib/partner-auth"
 import { ThrottlingAlert } from "@/components/error/throttling-alert"
+import { DashboardSectionCard } from "@/components/dashboard/DashboardSectionCard"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 const formatExpiration = (timestamp?: number) => {
   if (!timestamp) return "—"
@@ -144,85 +144,82 @@ export function PartnerAuthCard() {
   }, [status, token?.accessToken, t])
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-primary" />
-          {t("partnerAuth.title")}
-        </CardTitle>
-        <CardDescription>{t("partnerAuth.description")}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex flex-wrap items-center gap-3">
+    <DashboardSectionCard
+      title={t("partnerAuth.title")}
+      description={t("partnerAuth.description")}
+      icon={ShieldCheck}
+      meta={
+        <>
           {statusBadge}
-          {token?.expiresAt && (
+          {token?.expiresAt ? (
             <span className="text-sm text-muted-foreground">
               {t("partnerAuth.status.expiresAt")} {formatExpiration(token.expiresAt)}
             </span>
-          )}
-        </div>
+          ) : null}
+        </>
+      }
+    >
+      {error && status === "error" ? (
+        <Alert variant="destructive" className="dashboard-alert dashboard-alert--warning">
+          <AlertTitle>{t("common.error")}</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : null}
 
-        {error && status === "error" && (
-          <Alert variant="destructive">
-            <AlertTitle>{t("common.error")}</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-        {status === "error" && throttled && <ThrottlingAlert reason={error} onRetry={testConnection} />}
+      {status === "error" && throttled ? <ThrottlingAlert reason={error} onRetry={testConnection} /> : null}
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div className="space-y-3">
-            <Label htmlFor="partner-id">{t("partnerAuth.form.partnerId")}</Label>
+      <DashboardFormSection columns={2}>
+        <DashboardFormField label={t("partnerAuth.form.partnerId")} htmlFor="partner-id" required>
+          <Input
+            id="partner-id"
+            value={localConfig.partnerId}
+            onChange={handleInputChange("partnerId")}
+            placeholder="partner_xxx"
+            autoComplete="off"
+          />
+        </DashboardFormField>
+        <DashboardFormField label={t("partnerAuth.form.partnerSecret")} htmlFor="partner-secret" required>
+          <div className="dashboard-form-stack--dense md:flex md:items-start md:gap-2">
             <Input
-              id="partner-id"
-              value={localConfig.partnerId}
-              onChange={handleInputChange("partnerId")}
-              placeholder="partner_xxx"
+              id="partner-secret"
+              type={showSecret ? "text" : "password"}
+              value={localConfig.partnerSecret}
+              onChange={handleInputChange("partnerSecret")}
+              placeholder="••••••••"
               autoComplete="off"
             />
+            <Button variant="outline" onClick={() => setShowSecret((prev) => !prev)}>
+              {showSecret ? t("partnerAuth.form.hideSecret") : t("partnerAuth.form.showSecret")}
+            </Button>
           </div>
+        </DashboardFormField>
+      </DashboardFormSection>
 
-          <div className="space-y-3">
-            <Label htmlFor="partner-secret">{t("partnerAuth.form.partnerSecret")}</Label>
-            <div className="flex gap-2">
-              <Input
-                id="partner-secret"
-                type={showSecret ? "text" : "password"}
-                value={localConfig.partnerSecret}
-                onChange={handleInputChange("partnerSecret")}
-                placeholder="••••••••"
-                autoComplete="off"
-              />
-              <Button variant="outline" onClick={() => setShowSecret((prev) => !prev)}>
-                {showSecret ? t("partnerAuth.form.hideSecret") : t("partnerAuth.form.showSecret")}
-              </Button>
-            </div>
-          </div>
+      <DashboardFormSection columns={1}>
+        <DashboardFormField
+          label={t("partnerAuth.form.scopes")}
+          description={t("partnerAuth.form.scopesHint")}
+          htmlFor="partner-scopes"
+        >
+          <Textarea
+            id="partner-scopes"
+            rows={3}
+            value={localConfig.scopes}
+            onChange={handleInputChange("scopes")}
+            placeholder="dashboard:read dashboard:write"
+          />
+        </DashboardFormField>
+        <DashboardFormField label={t("partnerAuth.form.audience")} htmlFor="partner-audience">
+          <Input
+            id="partner-audience"
+            value={localConfig.audience}
+            onChange={handleInputChange("audience")}
+            placeholder="https://api.partner.com"
+          />
+        </DashboardFormField>
+      </DashboardFormSection>
 
-          <div className="space-y-3">
-            <Label htmlFor="partner-scopes">{t("partnerAuth.form.scopes")}</Label>
-            <Textarea
-              id="partner-scopes"
-              rows={3}
-              value={localConfig.scopes}
-              onChange={handleInputChange("scopes")}
-              placeholder="dashboard:read dashboard:write"
-            />
-            <p className="text-xs text-muted-foreground">{t("partnerAuth.form.scopesHint")}</p>
-          </div>
-
-          <div className="space-y-3">
-            <Label htmlFor="partner-audience">{t("partnerAuth.form.audience")}</Label>
-            <Input
-              id="partner-audience"
-              value={localConfig.audience}
-              onChange={handleInputChange("audience")}
-              placeholder="https://api.partner.com"
-            />
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <DashboardFormActions align="space-between">
         <div className="flex flex-wrap gap-3">
           <Button onClick={persistConfig}>
             <Save className="mr-2 h-4 w-4" />
@@ -241,8 +238,8 @@ export function PartnerAuthCard() {
           <Trash2 className="mr-2 h-4 w-4" />
           {t("partnerAuth.actions.clear")}
         </Button>
-      </CardFooter>
-    </Card>
+      </DashboardFormActions>
+    </DashboardSectionCard>
   )
 }
 

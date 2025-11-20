@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { useLanguage } from "@/lib/language-context"
@@ -18,7 +18,7 @@ export default function QuotasPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("quotas.title")} description={t("quotas.description")} />
+      <DashboardPageHeader title={t("quotas.title")} description={t("quotas.description")} />
 
       <div className="grid gap-4 md:grid-cols-2">
         {quotas.map((quota) => {
@@ -57,3 +57,4 @@ export default function QuotasPage() {
     </div>
   )
 }
+

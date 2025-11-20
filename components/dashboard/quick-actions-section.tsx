@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { QuickActionCard } from "@/components/quick-action-card"
+import { DashboardSectionCard } from "@/components/dashboard/DashboardSectionCard"
 
 interface QuickAction {
   title: string
@@ -17,12 +17,8 @@ interface QuickActionsSectionProps {
 
 export function QuickActionsSection({ title, description, actions }: QuickActionsSectionProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4 sm:grid-cols-2">
+    <DashboardSectionCard title={title} description={description}>
+      <div className="dashboard-grid-2">
         {actions.map((action, index) => (
           <QuickActionCard
             key={index}
@@ -32,7 +28,7 @@ export function QuickActionsSection({ title, description, actions }: QuickAction
             href={action.href}
           />
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </DashboardSectionCard>
   )
 }

@@ -8,8 +8,8 @@ interface ChartCardProps {
 
 export function ChartCard({ title, children }: ChartCardProps) {
   return (
-    <Card className="p-6">
-      <h3 className="font-semibold mb-4">{title}</h3>
+    <Card className="dashboard-card">
+      <h3 className="dashboard-card__title">{title}</h3>
       {children}
     </Card>
   )

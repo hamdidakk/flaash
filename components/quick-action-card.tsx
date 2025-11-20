@@ -12,15 +12,15 @@ interface QuickActionCardProps {
 export function QuickActionCard({ title, description, icon: Icon, href }: QuickActionCardProps) {
   return (
     <Link href={href}>
-      <Card className="hover:bg-accent transition-colors cursor-pointer">
-        <CardContent className="p-6">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <Icon className="w-5 h-5 text-primary" />
+      <Card className="dashboard-quick-action">
+        <CardContent className="dashboard-quick-action__body">
+          <div className="dashboard-quick-action__content">
+            <div className="dashboard-quick-action__icon">
+              <Icon className="h-5 w-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold">{title}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{description}</p>
+              <h3 className="dashboard-quick-action__title">{title}</h3>
+              <p className="dashboard-quick-action__description">{description}</p>
             </div>
           </div>
         </CardContent>

@@ -43,18 +43,15 @@ export function AdvancedTools() {
 
   if (!isAuthenticated) {
     return (
-      <Card className="mt-6 border-dashed border-muted-foreground/40 bg-white/70 p-6">
+      <Card className="mt-6 border-dashed border-muted-foreground/40 card-surface-light p-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm font-semibold text-foreground">Outils avancés</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="public-section-title">Outils avancés</p>
+            <p className="public-section-description">
               Connectez-vous pour accéder aux outils RAG (recherche vectorielle, génération et suivi des documents).
             </p>
           </div>
-          <Button
-            asChild
-            className="mt-2 border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2 md:mt-0"
-          >
+          <Button asChild className="mt-2 cta-accent md:mt-0">
             <Link href="/login?redirect=/chat">Se connecter</Link>
           </Button>
         </div>
@@ -63,20 +60,20 @@ export function AdvancedTools() {
   }
 
   return (
-    <Card className="mt-6 bg-white/80 p-6 shadow-sm">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <Card className="mt-6 card-surface-light p-6">
+      <div className="public-card-muted__header">
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-foreground">Outils avancés</p>
+            <p className="public-section-title">Outils avancés</p>
             {!isAdmin && <Badge variant="secondary">Mode limité</Badge>}
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="public-section-description">
             Accédez aux mêmes commandes que l’équipe éditoriale pour interroger le vector store ou lancer des RAG tests.
           </p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="whitespace-nowrap border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2">
+            <Button className="whitespace-nowrap cta-accent">
               Ouvrir les outils
             </Button>
           </DialogTrigger>
@@ -87,7 +84,7 @@ export function AdvancedTools() {
                 Ces outils appellent directement l’API Dakkom. Les actions sont limitées selon votre rôle.
               </DialogDescription>
             </DialogHeader>
-            <div className={cn("space-y-4 py-4")}>
+            <div className={cn("public-section-body py-4")}>
               <DocumentListPanel onHistory={handleHistory} onTrack={handleTrack} context="chat" />
               <SearchPanel
                 maxResults={isAdmin ? 20 : 5}

@@ -55,8 +55,8 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
 
   if (throttled) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center px-4">
-        <div className="w-full max-w-lg">
+      <div className="dashboard-fullscreen">
+        <div className="dashboard-fullscreen__panel">
           <ThrottlingAlert
             reason={error}
             onRetry={() => {
@@ -71,10 +71,10 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
 
   if (status === "idle" || status === "loading") {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="dashboard-fullscreen--simple">
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="mt-4 text-sm text-muted-foreground">{t("common.loading")}</p>
+          <div className="dashboard-spinner" />
+          <p className="dashboard-spinner__text">{t("common.loading")}</p>
         </div>
       </div>
     )
@@ -82,10 +82,10 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
 
   if (status === "unauthenticated" && (!errorCode || errorCode === 401 || errorCode === 403)) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="dashboard-fullscreen--simple">
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="mt-4 text-sm text-muted-foreground">
+          <div className="dashboard-spinner" />
+          <p className="dashboard-spinner__text">
             {t("auth.redirectingToLogin") || t("common.loading")}
           </p>
         </div>
@@ -96,10 +96,10 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
   if (status === "unauthenticated" || errorCode) {
     const code: ErrorCode | "generic" = errorCode ?? 401
     return (
-      <div className="flex h-screen flex-col items-center justify-center px-4">
-        <div className="w-full max-w-lg">
+      <div className="dashboard-fullscreen">
+        <div className="dashboard-fullscreen__panel">
           <ErrorPage code={code} />
-          {error && <p className="mt-4 text-center text-sm text-muted-foreground">{error}</p>}
+          {error && <p className="dashboard-spinner__text">{error}</p>}
         </div>
       </div>
     )
@@ -107,10 +107,10 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
 
   if (error && status !== "authenticated") {
     return (
-      <div className="flex h-screen flex-col items-center justify-center px-4">
-        <div className="w-full max-w-lg">
+      <div className="dashboard-fullscreen">
+        <div className="dashboard-fullscreen__panel">
           <ErrorPage code="generic" />
-          <p className="mt-4 text-center text-sm text-muted-foreground">{error}</p>
+          <p className="dashboard-spinner__text">{error}</p>
         </div>
       </div>
     )
@@ -123,10 +123,10 @@ export function DashboardGuard({ children }: DashboardGuardProps) {
   // Vérifier que l'utilisateur a accès au dashboard
   if (!isDashboardUser(user)) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center px-4">
-        <div className="w-full max-w-lg">
+      <div className="dashboard-fullscreen">
+        <div className="dashboard-fullscreen__panel">
           <ErrorPage code={403} />
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="dashboard-spinner__text">
             {t("auth.accessDenied")}
           </p>
         </div>

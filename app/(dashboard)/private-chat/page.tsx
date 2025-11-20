@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { useLanguage } from "@/lib/language-context"
 import { ChatSettingsPanel, type ChatSettings } from "@/components/chat/chat-settings-panel"
@@ -185,7 +185,7 @@ export default function ChatPage() {
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col space-y-4">
       <div className="flex items-center justify-between">
-        <PageHeader title={t("chat.title")} description={t("chat.description")} />
+        <DashboardPageHeader title={t("chat.title")} description={t("chat.description")} />
         <ChatSettingsPanel settings={settings} onSettingsChange={handleSettingsChange} />
       </div>
       {throttledReason && <ThrottlingAlert reason={throttledReason} onRetry={() => setThrottledReason(null)} />}
@@ -206,5 +206,6 @@ export default function ChatPage() {
     </div>
   )
 }
+
 
 

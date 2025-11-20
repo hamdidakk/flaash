@@ -1,12 +1,11 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { useErrorHandler } from "@/hooks/use-error-handler"
-import { EmptyState } from "@/components/empty-state"
 import { DocumentsSearch } from "@/components/documents/documents-search"
 import { DocumentsFilters } from "@/components/documents/documents-filters"
 import { DocumentsTable } from "@/components/documents/documents-table"
@@ -159,7 +158,7 @@ export default function DocumentsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title={t("documents.title")}
         description={t("documents.description")}
         actions={
@@ -192,27 +191,33 @@ export default function DocumentsPage() {
         onClearFilters={handleClearFilters}
       />
 
-      {isLoading ? (
-        <div className="py-8 text-center text-sm text-muted-foreground">{t("common.loading")}</div>
-      ) : tableRows.length === 0 ? (
-        <EmptyState icon={FileText} title={t("documents.empty.title")} description={t("documents.empty.description")} />
-      ) : (
-        <DocumentsTable
-          documents={tableRows}
-          onViewChunks={(row) => {
-            const original = documents.find((doc) => doc.id === row.id)
-            if (original) {
-              void handleViewChunks(original)
-            }
-          }}
-          onDelete={(row) => {
-            const original = documents.find((doc) => doc.id === row.id)
-            if (original) {
-              handleDelete(original)
-            }
-          }}
-        />
-      )}
+      <DocumentsTable
+        documents={tableRows}
+        onViewChunks={(row) => {
+          const original = documents.find((doc) => doc.id === row.id)
+          if (original) {
+            void handleViewChunks(original)
+          }
+        }}
+        onDelete={(row) => {
+          const original = documents.find((doc) => doc.id === row.id)
+          if (original) {
+            handleDelete(original)
+          }
+        }}
+        isLoading={isLoading}
+        emptyState={{
+          title: t("documents.empty.title"),
+          description: t("documents.empty.description"),
+          icon: <FileText className="h-10 w-10 text-muted-foreground" />,
+          action: (
+            <Button variant="default" onClick={() => handleOpenUpload("single")}>
+              <Upload className="mr-2 h-4 w-4" />
+              {t("documents.upload")}
+            </Button>
+          ),
+        }}
+      />
 
         <ChunksDialog
           open={showChunks}
@@ -237,3 +242,4 @@ export default function DocumentsPage() {
     </div>
   )
 }
+

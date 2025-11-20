@@ -75,7 +75,7 @@ export function ThemeDetailClient({ theme }: ThemeDetailClientProps) {
         <SectionHeader title={promptSectionTitle} description={promptSectionDescription} />
 
         {promptChunks.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucun prompt n’est disponible pour cette thématique.</p>
+          <p className="public-theme-detail__notice">Aucun prompt n’est disponible pour cette thématique.</p>
         ) : (
           <div className="public-theme-detail__prompts">
             {promptChunks.map((chunk, index) => (

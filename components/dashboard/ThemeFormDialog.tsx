@@ -11,10 +11,8 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import { Plus, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useErrorHandler } from "@/hooks/use-error-handler"
@@ -25,6 +23,11 @@ import {
   type ThemePayload,
   type ThemeStat,
 } from "@/lib/themes-admin-api"
+import {
+  DashboardFormSection,
+  DashboardFormField,
+  DashboardFormActions,
+} from "@/components/dashboard/DashboardForm"
 
 type ThemeFormState = {
   title: string
@@ -173,9 +176,8 @@ export function ThemeFormDialog({ open, onOpenChange, initialTheme, onSaved }: T
         </DialogHeader>
 
         <div className="space-y-6 py-2">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="theme-title">Titre *</Label>
+          <DashboardFormSection columns={2} divider>
+            <DashboardFormField label="Titre" required htmlFor="theme-title">
               <Input
                 id="theme-title"
                 value={formState.title}
@@ -183,9 +185,8 @@ export function ThemeFormDialog({ open, onOpenChange, initialTheme, onSaved }: T
                 placeholder="Ex: Futurs de société"
                 required
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="theme-slug">Slug *</Label>
+            </DashboardFormField>
+            <DashboardFormField label="Slug" required htmlFor="theme-slug">
               <Input
                 id="theme-slug"
                 value={formState.slug}
@@ -194,42 +195,38 @@ export function ThemeFormDialog({ open, onOpenChange, initialTheme, onSaved }: T
                 required
                 disabled={isEditing}
               />
-            </div>
-          </div>
+            </DashboardFormField>
+          </DashboardFormSection>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="theme-subtitle">Sous-titre</Label>
+          <DashboardFormSection columns={2} divider>
+            <DashboardFormField label="Sous-titre" htmlFor="theme-subtitle">
               <Input
                 id="theme-subtitle"
                 value={formState.subtitle}
                 onChange={(e) => updateState("subtitle", e.target.value)}
                 placeholder="Une phrase d’accroche"
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="theme-tag">Tag / référence</Label>
+            </DashboardFormField>
+            <DashboardFormField label="Tag / référence" htmlFor="theme-tag">
               <Input
                 id="theme-tag"
                 value={formState.tag}
                 onChange={(e) => updateState("tag", e.target.value)}
                 placeholder="Numéro 06"
               />
-            </div>
-          </div>
+            </DashboardFormField>
+          </DashboardFormSection>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="theme-icon">Icône / emoji</Label>
+          <DashboardFormSection columns={2} divider>
+            <DashboardFormField label="Icône / emoji" htmlFor="theme-icon">
               <Input
                 id="theme-icon"
                 value={formState.icon}
                 onChange={(e) => updateState("icon", e.target.value)}
                 placeholder="🌆"
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="theme-order">Ordre d’affichage</Label>
+            </DashboardFormField>
+            <DashboardFormField label="Ordre d’affichage" htmlFor="theme-order">
               <Input
                 id="theme-order"
                 type="number"
@@ -237,39 +234,34 @@ export function ThemeFormDialog({ open, onOpenChange, initialTheme, onSaved }: T
                 onChange={(e) => updateState("display_order", Number(e.target.value))}
                 min={1}
               />
-            </div>
-          </div>
+            </DashboardFormField>
+          </DashboardFormSection>
 
-          <div className="space-y-2">
-            <Label htmlFor="theme-description">Présentation</Label>
-            <Textarea
-              id="theme-description"
-              rows={3}
-              value={formState.description}
-              onChange={(e) => updateState("description", e.target.value)}
-              placeholder="Texte utilisé côté admin ou fiche thème."
-            />
-          </div>
+          <DashboardFormSection columns={1} divider>
+            <DashboardFormField label="Présentation" htmlFor="theme-description">
+              <Textarea
+                id="theme-description"
+                rows={3}
+                value={formState.description}
+                onChange={(e) => updateState("description", e.target.value)}
+                placeholder="Texte utilisé côté admin ou fiche thème."
+              />
+            </DashboardFormField>
+            <DashboardFormField label="Extrait public" htmlFor="theme-excerpt">
+              <Textarea
+                id="theme-excerpt"
+                rows={3}
+                value={formState.excerpt}
+                onChange={(e) => updateState("excerpt", e.target.value)}
+                placeholder="Résumé affiché sur le site public."
+              />
+            </DashboardFormField>
+          </DashboardFormSection>
 
-          <div className="space-y-2">
-            <Label htmlFor="theme-excerpt">Extrait public</Label>
-            <Textarea
-              id="theme-excerpt"
-              rows={3}
-              value={formState.excerpt}
-              onChange={(e) => updateState("excerpt", e.target.value)}
-              placeholder="Résumé affiché sur le site public."
-            />
-          </div>
-
-          <Separator />
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold uppercase text-muted-foreground">Stats</h3>
-                <p className="text-xs text-muted-foreground">Label + valeur affichés sous forme de compteurs.</p>
-              </div>
+          <DashboardFormSection
+            title="Stats"
+            description="Label + valeur affichés sous forme de compteurs."
+            actions={
               <Button
                 type="button"
                 variant="outline"
@@ -278,27 +270,28 @@ export function ThemeFormDialog({ open, onOpenChange, initialTheme, onSaved }: T
               >
                 <Plus className="mr-1 h-4 w-4" /> Ajouter
               </Button>
-            </div>
-            <div className="space-y-3">
+            }
+            columns="none"
+            divider
+          >
+            <div className="dashboard-repeat-list">
               {stats.map((stat, index) => (
-                <div key={`stat-${index}`} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-                  <div className="space-y-2">
-                    <Label>Label</Label>
+                <div key={`stat-${index}`} className="dashboard-repeat-row--grid">
+                  <DashboardFormField label="Label">
                     <Input
                       value={stat.label}
                       onChange={(e) => updateStat(index, "label", e.target.value)}
                       placeholder="Articles"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Valeur</Label>
+                  </DashboardFormField>
+                  <DashboardFormField label="Valeur">
                     <Input
                       value={stat.value}
                       onChange={(e) => updateStat(index, "value", e.target.value)}
                       placeholder="18"
                     />
-                  </div>
-                  <div className="flex items-end justify-end">
+                  </DashboardFormField>
+                  <div className="dashboard-repeat-remove">
                     <Button
                       type="button"
                       variant="ghost"
@@ -317,71 +310,73 @@ export function ThemeFormDialog({ open, onOpenChange, initialTheme, onSaved }: T
                 </div>
               ))}
             </div>
-          </div>
+          </DashboardFormSection>
 
-          <Separator />
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold uppercase text-muted-foreground">Prompts</h3>
-                <p className="text-xs text-muted-foreground">Questions prêtes à envoyer dans le chat public.</p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => updateState("prompts", [...prompts, ""])}
-              >
+          <DashboardFormSection
+            title="Prompts"
+            description="Questions prêtes à envoyer dans le chat public."
+            actions={
+              <Button type="button" variant="outline" size="sm" onClick={() => updateState("prompts", [...prompts, ""])}>
                 <Plus className="mr-1 h-4 w-4" /> Ajouter
               </Button>
-            </div>
-            <div className="space-y-3">
+            }
+            columns="none"
+            divider
+          >
+            <div className="dashboard-repeat-list">
               {prompts.map((prompt, index) => (
-                <div key={`prompt-${index}`} className="flex gap-3">
-                  <Textarea
-                    value={prompt}
-                    onChange={(e) => updatePrompt(index, e.target.value)}
-                    placeholder="Ex: Quelles sont les coopératives énergétiques émergentes ?"
-                    rows={2}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="mt-1 text-muted-foreground"
-                    onClick={() =>
-                      updateState(
-                        "prompts",
-                        prompts.length > 1 ? prompts.filter((_, idx) => idx !== index) : [""],
-                      )
-                    }
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                <div key={`prompt-${index}`} className="dashboard-repeat-row">
+                  <div className="flex-1">
+                    <DashboardFormField label={`Prompt ${index + 1}`}>
+                      <Textarea
+                        value={prompt}
+                        onChange={(e) => updatePrompt(index, e.target.value)}
+                        placeholder="Ex: Quelles sont les coopératives énergétiques émergentes ?"
+                        rows={2}
+                      />
+                    </DashboardFormField>
+                  </div>
+                  <div className="dashboard-repeat-remove dashboard-repeat-remove--offset">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="text-muted-foreground"
+                      onClick={() =>
+                        updateState(
+                          "prompts",
+                          prompts.length > 1 ? prompts.filter((_, idx) => idx !== index) : [""],
+                        )
+                      }
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+          </DashboardFormSection>
 
-          <Separator />
-
-          <div className="flex items-center justify-between rounded-lg border p-3">
-            <div>
-              <p className="text-sm font-medium">Visible côté public</p>
-              <p className="text-xs text-muted-foreground">Contrôle le champ is_active de l’API.</p>
+          <DashboardFormSection columns="none">
+            <div className="dashboard-toggle-card">
+              <div>
+                <p className="dashboard-toggle-card__title">Visible côté public</p>
+                <p className="dashboard-toggle-card__hint">Contrôle le champ is_active de l’API.</p>
+              </div>
+              <Switch checked={formState.is_active} onCheckedChange={(checked) => updateState("is_active", checked)} />
             </div>
-            <Switch checked={formState.is_active} onCheckedChange={(checked) => updateState("is_active", checked)} />
-          </div>
+          </DashboardFormSection>
         </div>
 
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
-            Annuler
-          </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Enregistrement…" : isEditing ? "Mettre à jour" : "Créer"}
-          </Button>
+          <DashboardFormActions>
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+              Annuler
+            </Button>
+            <Button onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "Enregistrement…" : isEditing ? "Mettre à jour" : "Créer"}
+            </Button>
+          </DashboardFormActions>
         </DialogFooter>
       </DialogContent>
     </Dialog>

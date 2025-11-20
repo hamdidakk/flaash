@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -70,7 +70,7 @@ export default function SearchPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("search.title")} description={t("search.description")} />
+      <DashboardPageHeader title={t("search.title")} description={t("search.description")} />
 
         <Card className="p-6">
           <div className="flex gap-4">
@@ -168,3 +168,4 @@ export default function SearchPage() {
     </div>
   )
 }
+

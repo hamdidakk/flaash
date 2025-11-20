@@ -1,15 +1,15 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { listThemesAdmin, type ThemeAdmin } from "@/lib/themes-admin-api"
 import { useErrorHandler } from "@/hooks/use-error-handler"
-import { Skeleton } from "@/components/ui/skeleton"
 import { RefreshCw, Plus } from "lucide-react"
 import { ThemeFormDialog } from "@/components/dashboard/ThemeFormDialog"
+import { DashboardTable, type DashboardTableColumn } from "@/components/dashboard/DashboardTable"
 
 export default function ThemesAdminPage() {
   const { handleError } = useErrorHandler()
@@ -63,13 +63,59 @@ export default function ThemesAdminPage() {
     [],
   )
 
+  const columns: DashboardTableColumn<ThemeAdmin>[] = [
+    {
+      key: "title",
+      header: "Titre",
+      render: (theme) => (
+        <div>
+          <div className="font-medium text-foreground">{theme.title}</div>
+          {theme.subtitle ? <div className="text-xs text-muted-foreground">{theme.subtitle}</div> : null}
+        </div>
+      ),
+    },
+    {
+      key: "slug",
+      header: "Slug",
+      className: "font-mono text-xs text-muted-foreground",
+    },
+    {
+      key: "display_order",
+      header: "Ordre",
+      width: "80px",
+    },
+    {
+      key: "is_active",
+      header: "Statut",
+      render: (theme) => (
+        <Badge variant={theme.is_active ? "default" : "secondary"}>{theme.is_active ? "Publié" : "Masqué"}</Badge>
+      ),
+    },
+    {
+      key: "updated_at",
+      header: "Mise à jour",
+      className: "text-muted-foreground",
+      render: (theme) => (theme.updated_at ? countryFormatter.format(new Date(theme.updated_at)) : "—"),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      render: (theme) => (
+        <Button variant="ghost" size="sm" onClick={() => handleEditTheme(theme)}>
+          Éditer
+        </Button>
+      ),
+    },
+  ]
+
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title="Thématiques"
         description="Administrez les dossiers éditoriaux utilisés sur le site public et dans l’agent."
         actions={
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={() => void loadThemes()} disabled={isRefreshing}>
               <RefreshCw className="mr-2 h-4 w-4" />
               Rafraîchir
@@ -86,57 +132,16 @@ export default function ThemesAdminPage() {
         <div className="border-b px-6 py-4">
           <h2 className="text-base font-semibold">Liste des thématiques</h2>
         </div>
-        {isLoading ? (
-          <div className="space-y-2 p-6">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <Skeleton key={`skeleton-${idx}`} className="h-12 w-full" />
-            ))}
-          </div>
-        ) : themes.length === 0 ? (
-          <div className="p-6 text-sm text-muted-foreground">
-            Aucune thématique pour l’instant. Cliquez sur “Nouvelle thématique” pour commencer.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y text-sm">
-              <thead>
-                <tr className="bg-muted/40 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  <th className="px-6 py-3">Titre</th>
-                  <th className="px-4 py-3">Slug</th>
-                  <th className="px-4 py-3">Ordre</th>
-                  <th className="px-4 py-3">Statut</th>
-                  <th className="px-4 py-3">Mise à jour</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {themes.map((theme) => (
-                  <tr key={theme.slug} className="hover:bg-muted/50">
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-foreground">{theme.title}</div>
-                      {theme.subtitle ? <div className="text-xs text-muted-foreground">{theme.subtitle}</div> : null}
-                    </td>
-                    <td className="px-4 py-4 font-mono text-xs text-muted-foreground">{theme.slug}</td>
-                    <td className="px-4 py-4">{theme.display_order}</td>
-                    <td className="px-4 py-4">
-                      <Badge variant={theme.is_active ? "default" : "secondary"}>
-                        {theme.is_active ? "Publié" : "Masqué"}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-4 text-muted-foreground">
-                      {theme.updated_at ? countryFormatter.format(new Date(theme.updated_at)) : "—"}
-                    </td>
-                    <td className="px-4 py-4 text-right">
-                      <Button variant="ghost" size="sm" onClick={() => handleEditTheme(theme)}>
-                        Éditer
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <DashboardTable
+          columns={columns}
+          rows={themes}
+          isLoading={isLoading}
+          getRowKey={(theme) => theme.slug}
+          emptyState={{
+            title: "Aucune thématique pour l’instant.",
+            description: "Cliquez sur “Nouvelle thématique” pour commencer.",
+          }}
+        />
       </Card>
 
       <ThemeFormDialog

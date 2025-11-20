@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -62,7 +62,7 @@ export default function BillingPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("billing.title")} description={t("billing.description")} />
+      <DashboardPageHeader title={t("billing.title")} description={t("billing.description")} />
 
       {/* Current Plan */}
       <Card>
@@ -168,3 +168,4 @@ export default function BillingPage() {
     </div>
   )
 }
+

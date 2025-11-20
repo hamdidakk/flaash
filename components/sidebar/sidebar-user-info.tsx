@@ -12,14 +12,12 @@ export function SidebarUserInfo({ user }: { user?: SidebarUser }) {
   const initial = (displayName.charAt(0) || "?").toUpperCase()
 
   return (
-    <div className="border-t bg-muted/30 p-4">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-sm font-semibold text-primary-foreground shadow-sm">
-          {initial}
-        </div>
-        <div className="flex-1 overflow-hidden">
-          <p className="truncate text-sm font-semibold">{displayName || ""}</p>
-          <p className="truncate text-xs text-muted-foreground">{user.email || ""}</p>
+    <div className="sidebar-user">
+      <div className="sidebar-user__body">
+        <div className="sidebar-user__avatar">{initial}</div>
+        <div className="sidebar-user__info">
+          <p className="sidebar-user__name">{displayName || ""}</p>
+          <p className="sidebar-user__email">{user.email || ""}</p>
         </div>
       </div>
     </div>

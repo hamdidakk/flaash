@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -19,7 +19,7 @@ export default function OrganizationsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title={t("organizations.title")}
         description={t("organizations.description")}
         actions={
@@ -89,3 +89,4 @@ export default function OrganizationsPage() {
     </div>
   )
 }
+

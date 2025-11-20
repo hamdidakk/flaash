@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,7 @@ export default function AlertsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title={t("alerts.title")}
         description={t("alerts.description")}
         actions={
@@ -83,3 +83,4 @@ export default function AlertsPage() {
     </div>
   )
 }
+

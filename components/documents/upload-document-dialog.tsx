@@ -6,7 +6,6 @@ import { useMemo, useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/lib/language-context"
 import { useErrorHandler } from "@/hooks/use-error-handler"
 import { Upload, File, X } from "lucide-react"
@@ -17,6 +16,7 @@ import type { KnowledgeDocument } from "@/lib/types"
 import { uploadDocument, uploadBatch } from "@/lib/dakkom-api"
 import { AppError } from "@/lib/error-handler"
 import { ThrottlingAlert } from "@/components/error/throttling-alert"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 interface UploadDocumentDialogProps {
   open: boolean
@@ -184,18 +184,27 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <div className="flex items-center justify-between gap-3">
+          <div className="dashboard-dialog__header">
             <DialogTitle>{t("documents.uploadDialog.title")}</DialogTitle>
             {isBatch && <Badge variant="secondary">{t("documents.uploadDialog.batchMode")}</Badge>}
           </div>
           <DialogDescription>{t("documents.uploadDialog.description")}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {throttledReason && <ThrottlingAlert reason={throttledReason} onRetry={() => setThrottledReason(null)} />}
-          <div className="space-y-2">
-            <Label htmlFor="file-upload">{t("documents.uploadDialog.selectFiles")}</Label>
-            <div className="flex items-center gap-2">
+        <div className="dashboard-dialog">
+          {throttledReason ? <ThrottlingAlert reason={throttledReason} onRetry={() => setThrottledReason(null)} /> : null}
+
+          <DashboardFormSection columns="none">
+            <DashboardFormField
+              label={t("documents.uploadDialog.selectFiles")}
+              description={
+                <div className="space-y-1 text-muted-foreground">
+                  <p className="text-xs">{t("documents.uploadDialog.supportedFormats")}</p>
+                  {isBatch ? <p className="text-xs">{t("documents.uploadDialog.batchHelper")}</p> : null}
+                </div>
+              }
+              htmlFor="file-upload"
+            >
               <Input
                 id="file-upload"
                 type="file"
@@ -204,57 +213,57 @@ export function UploadDocumentDialog({ open, onOpenChange, onUploadComplete, mod
                 onChange={handleFileChange}
                 className="cursor-pointer"
               />
-            </div>
-            <p className="text-xs text-muted-foreground">{t("documents.uploadDialog.supportedFormats")}</p>
-            {isBatch && <p className="text-xs text-muted-foreground">{t("documents.uploadDialog.batchHelper")}</p>}
-          </div>
+            </DashboardFormField>
 
-          {entries.length > 0 && (
-            <div className="space-y-2">
-              <Label>{t("documents.uploadDialog.selectedFiles")}</Label>
-              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
-                {entries.map((entry) => (
-                  <div key={entry.id} className="rounded-lg border p-3 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2">
-                        <File className="h-4 w-4 text-muted-foreground mt-1" />
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{entry.file.name}</p>
-                          <p className="text-xs text-muted-foreground">{formatFileSize(entry.file.size)}</p>
+            {entries.length > 0 ? (
+              <DashboardFormField label={t("documents.uploadDialog.selectedFiles")}>
+                <div className="dashboard-file-list">
+                  {entries.map((entry) => (
+                    <div key={entry.id} className="dashboard-file-card">
+                      <div className="dashboard-file-card__header">
+                        <div className="dashboard-file-card__meta">
+                          <File className="mt-1 h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="dashboard-file-card__title">{entry.file.name}</p>
+                            <p className="dashboard-file-card__size">{formatFileSize(entry.file.size)}</p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveFile(entry.id)}
+                          disabled={isUploading}
+                          className="dashboard-button-icon"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="dashboard-breakdown__item">
+                        <Progress value={entry.progress} />
+                        <div className="dashboard-file-card__footer">
+                          <span>{statusLabels[entry.status]}</span>
+                          <span>{Math.round(entry.progress)}%</span>
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveFile(entry.id)}
-                        disabled={isUploading}
-                        className="h-7 w-7 p-0"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
                     </div>
-                    <div className="space-y-1">
-                      <Progress value={entry.progress} />
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{statusLabels[entry.status]}</span>
-                        <span>{Math.round(entry.progress)}%</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                  ))}
+                </div>
+              </DashboardFormField>
+            ) : null}
+          </DashboardFormSection>
 
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isUploading}>
-              {t("common.cancel")}
-            </Button>
-            <Button onClick={handleUpload} disabled={entries.length === 0 || isUploading}>
-              <Upload className="mr-2 h-4 w-4" />
-              {isUploading ? `${t("documents.uploading")} (${averageProgress}%)` : t("documents.upload")}
-            </Button>
-          </div>
+          <DashboardFormActions className="pt-2">
+            <div className="flex-1" />
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isUploading}>
+                {t("common.cancel")}
+              </Button>
+              <Button onClick={handleUpload} disabled={entries.length === 0 || isUploading}>
+                <Upload className="mr-2 h-4 w-4" />
+                {isUploading ? `${t("documents.uploading")} (${averageProgress}%)` : t("documents.upload")}
+              </Button>
+            </div>
+          </DashboardFormActions>
         </div>
       </DialogContent>
     </Dialog>

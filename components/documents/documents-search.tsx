@@ -14,9 +14,9 @@ export function DocumentsSearch({ value, onChange }: DocumentsSearchProps) {
   const { t } = useLanguage()
 
   return (
-    <Card className="p-4">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <Card className="dashboard-search-card">
+      <div className="dashboard-search">
+        <Search className="dashboard-search__icon" />
         <Input
           placeholder={t("documents.search")}
           value={value}

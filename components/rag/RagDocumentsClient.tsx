@@ -147,105 +147,97 @@ export function RagDocumentsClient() {
   }
 
   return (
-    <div className="rag-documents space-y-6">
+    <div className="rag-documents rag-stack">
       {uploadNotice && (
-        <Card className="border border-[var(--color-flaash-green)]/40 bg-[var(--color-flaash-green)]/10 px-6 py-4 text-white shadow-[0_0_25px_rgba(0,172,142,0.2)]">
-          <div className="flex items-center gap-3">
+        <Card className="rag-card rag-card--notice">
+          <div className="rag-toolbar rag-toolbar--wrap">
             <Sparkles className="h-4 w-4 text-[var(--color-flaash-green)]" />
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-white/70">Mise à jour</p>
+              <p className="rag-meta-label">Mise à jour</p>
               <p className="text-base font-semibold">
                 {uploadNotice} fichier{uploadNotice > 1 ? "s" : ""} en cours d’intégration dans la base.
               </p>
             </div>
-            <Button variant="ghost" size="sm" className="ml-auto text-white hover:bg-white/10" onClick={() => setUploadNotice(null)}>
+            <Button variant="ghost" size="sm" className="ml-auto rag-button-ghost" onClick={() => setUploadNotice(null)}>
               OK
             </Button>
           </div>
         </Card>
       )}
-      <Card className="flex flex-wrap items-center justify-between gap-4 border-white/10 bg-white/5 p-6 text-white shadow-lg shadow-black/20">
-        <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-white/60">Base documentaire</p>
-          <h2 className="mt-2 text-2xl font-semibold">Documents indexés</h2>
-          <p className="text-sm text-white/70">{documents.length} fichier(s) disponibles pour le RAG.</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="ghost"
-            className="border border-white/20 bg-white/10 text-white hover:bg-white/20"
-            onClick={() => void loadDocuments()}
-            disabled={isLoading}
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Rafraîchir
-          </Button>
-          <Button
-            className="bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)]"
-            onClick={() => setIsUploadOpen(true)}
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            Ajouter un document
-          </Button>
+      <Card className="rag-card">
+        <div className="rag-card__header rag-card__header--start">
+          <div>
+            <p className="rag-meta-label">Base documentaire</p>
+            <h2 className="rag-card__title">Documents indexés</h2>
+            <p className="rag-card__subtitle">{documents.length} fichier(s) disponibles pour le RAG.</p>
+          </div>
+          <div className="rag-card__actions">
+            <Button variant="ghost" className="rag-button-ghost" onClick={() => void loadDocuments()} disabled={isLoading}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Rafraîchir
+            </Button>
+            <Button className="dashboard-cta-accent" onClick={() => setIsUploadOpen(true)}>
+              <Upload className="mr-2 h-4 w-4" />
+              Ajouter un document
+            </Button>
+          </div>
         </div>
       </Card>
 
-      <Card className="overflow-hidden border border-white/10 bg-white/[0.04]">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/5 px-6 py-4">
+      <Card className="rag-card overflow-hidden">
+        <div className="rag-card__section rag-card__header">
           <div>
-            <h3 className="text-lg font-semibold text-white">Fichiers indexés</h3>
-            <p className="text-sm text-white/70">Prévisualisez les chunks ou supprimez un document de la base.</p>
+            <h3 className="rag-card__title text-xl">Fichiers indexés</h3>
+            <p className="rag-card__subtitle">Prévisualisez les chunks ou supprimez un document de la base.</p>
           </div>
-          <div className="relative w-full max-w-xs">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
+          <div className="rag-card__search">
+            <Search className="rag-card__search-icon" />
             <Input
               placeholder="Rechercher un document…"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="border-white/20 bg-white/5 pl-10 text-white placeholder:text-white/50"
+              className="rag-input pl-10"
             />
           </div>
         </div>
 
         {isLoading ? (
-          <div className="px-6 py-10 text-center text-sm text-white/70">Chargement des documents…</div>
+          <div className="rag-empty-state">Chargement des documents…</div>
         ) : filteredDocs.length === 0 ? (
-          <div className="px-6 py-10 text-center text-sm text-white/70">
-            Aucun document ne correspond à votre recherche.
-          </div>
+          <div className="rag-empty-state">Aucun document ne correspond à votre recherche.</div>
         ) : (
           <ScrollArea className="max-h-[70vh]">
-            <table className="w-full">
-              <thead className="border-b border-white/10 bg-white/[0.02] text-left text-sm uppercase tracking-wide text-white/60">
+            <table className="rag-table">
+              <thead className="rag-table__head">
                 <tr>
-                  <th className="px-6 py-3">Document</th>
-                  <th className="px-6 py-3">Source</th>
-                  <th className="px-6 py-3">Ajouté</th>
-                  <th className="px-6 py-3 text-right">Actions</th>
+                  <th className="rag-table__cell">Document</th>
+                  <th className="rag-table__cell">Source</th>
+                  <th className="rag-table__cell">Ajouté</th>
+                  <th className="rag-table__cell rag-table__cell--right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredDocs.map((doc) => (
-                  <tr key={doc.id} className="border-b border-white/[0.04] text-white/80 hover:bg-white/[0.03]">
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-white">{doc.name}</p>
-                      <div className="mt-1 flex items-center gap-2 text-xs text-white/60">
+                  <tr key={doc.id} className="rag-table__row">
+                    <td className="rag-table__cell">
+                      <p className="rag-table__title">{doc.name}</p>
+                      <div className="rag-table__subtitle">
                         <DocumentStatusBadge status={doc.status} />
                         {doc.chunkCount > 0 && <span>{doc.chunkCount} chunk(s)</span>}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm">
-                      <Badge variant="outline" className="border-white/30 text-white">
+                    <td className="rag-table__cell text-sm">
+                      <Badge variant="outline" className="rag-table__badge">
                         {doc.source || DEFAULT_SOURCE_LABEL}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-white/70">{formatDate(doc.uploadedAtRaw)}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="rag-table__cell text-sm text-white/70">{formatDate(doc.uploadedAtRaw)}</td>
+                    <td className="rag-table__cell">
+                      <div className="rag-table__actions">
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="text-white hover:bg-white/10"
+                          className="rag-action-button"
                           onClick={() => void handleViewChunks(doc)}
                           disabled={isChunksLoading && selectedDoc?.id === doc.id}
                         >
@@ -255,7 +247,7 @@ export function RagDocumentsClient() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="text-destructive hover:bg-destructive/20"
+                          className="rag-action-button rag-action-button--danger"
                           onClick={() => setDocumentToDelete(doc)}
                         >
                           <Trash2 className="h-4 w-4" />

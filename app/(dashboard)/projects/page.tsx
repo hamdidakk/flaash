@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -46,7 +46,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title={t("projects.title")}
         description={t("projects.description")}
         actions={
@@ -162,3 +162,4 @@ export default function ProjectsPage() {
     </div>
   )
 }
+

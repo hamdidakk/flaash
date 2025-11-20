@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { UsersTable } from "@/components/dashboard/users-table"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/lib/language-context"
@@ -17,7 +17,7 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title={t("users.title")}
         description={t("users.description")}
         actions={
@@ -40,3 +40,4 @@ export default function UsersPage() {
     </div>
   )
 }
+

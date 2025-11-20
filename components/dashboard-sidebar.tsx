@@ -63,11 +63,11 @@ export function DashboardSidebar() {
   ]
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-card shadow-sm">
+    <div className="dashboard-sidebar">
       <SidebarLogo />
 
-      <ScrollArea className="flex-1 overflow-y-auto px-3 py-4">
-        <div className="space-y-6">
+      <ScrollArea className="dashboard-sidebar__scroll">
+        <div className="dashboard-sidebar__sections">
           <SidebarNavSection title={t("nav.main")} items={navigation} />
           <Separator className="bg-border/50" />
           <SidebarNavSection title={t("nav.management")} items={management} />

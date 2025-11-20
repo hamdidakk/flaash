@@ -74,7 +74,7 @@ export function RagAppShell({ children }: { children: React.ReactNode }) {
             </p>
           </div>
           <div className="rag-main__cta-group">
-            <Button asChild size="lg" className="bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)]">
+            <Button asChild size="lg" className="dashboard-cta-accent">
               <Link href="/rag/upload">Ajouter des documents</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>

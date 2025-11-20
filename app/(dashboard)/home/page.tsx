@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { StatsGrid } from "@/components/dashboard/stats-grid"
 import { QuickActionsSection } from "@/components/dashboard/quick-actions-section"
 import { RecentActivitySection } from "@/components/dashboard/recent-activity-section"
@@ -129,7 +129,7 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("dashboard.title")} description={t("dashboard.description")} />
+      <DashboardPageHeader title={t("dashboard.title")} description={t("dashboard.description")} />
 
       <StatsGrid stats={statsData} />
 
@@ -153,3 +153,4 @@ export default function HomePage() {
     </div>
   )
 }
+

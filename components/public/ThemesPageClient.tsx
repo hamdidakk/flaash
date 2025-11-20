@@ -38,8 +38,8 @@ export function ThemesPageClient({ themes }: ThemesPageClientProps) {
 
   if (!heroTheme) {
     return (
-      <PageSection className="public-themes-page text-center text-muted-foreground">
-        <p>Aucune thématique n’est publiée pour le moment.</p>
+      <PageSection className="public-themes-page">
+        <p className="public-themes-notice">Aucune thématique n’est publiée pour le moment.</p>
       </PageSection>
     )
   }

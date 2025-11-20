@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,7 @@ export default function JobsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("jobs.title")} description={t("jobs.description")} />
+      <DashboardPageHeader title={t("jobs.title")} description={t("jobs.description")} />
 
       <div className="space-y-4">
         {jobs.map((job) => (
@@ -62,3 +62,4 @@ export default function JobsPage() {
     </div>
   )
 }
+

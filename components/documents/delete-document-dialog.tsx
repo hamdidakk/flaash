@@ -65,14 +65,9 @@ export function DeleteDocumentDialog({
             {t("documents.deleteDialog.description")} <strong>{documentName}</strong>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
+        <AlertDialogFooter className="dashboard-dialog__footer">
           <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            {t("common.delete")}
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>{t("common.delete")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -21,7 +21,7 @@ export function ToolsWorkspace() {
   }, [])
 
   return (
-    <div className="grid gap-6">
+    <div className="dashboard-grid--loose">
       <DocumentListPanel onHistory={handleHistory} onTrack={handleTrack} context="dashboard" />
       <SearchPanel onHistory={handleHistory} onTrack={handleTrack} context="dashboard" />
       <RagPanel onHistory={handleHistory} onTrack={handleTrack} context="dashboard" />

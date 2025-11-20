@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
@@ -24,6 +23,7 @@ import {
   resetDefaultRagSettings,
   type RagSettings,
 } from "@/lib/rag-settings"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 export function RagSettingsClient() {
   const { toast } = useToast()
@@ -101,24 +101,18 @@ export function RagSettingsClient() {
   ]
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="rag-stack text-white">
+      <div className="rag-card__header rag-card__header--start">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Paramètres RAG</h1>
-          <p className="mt-2 text-muted-foreground">
-            Configurez les paramètres par défaut pour vos conversations RAG.
-          </p>
+          <h1 className="rag-page-heading">Paramètres RAG</h1>
+          <p className="rag-page-subtitle">Configurez les paramètres par défaut pour vos conversations RAG.</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleReset} disabled={!hasChanges}>
+        <div className="rag-card__actions">
+          <Button variant="outline" onClick={handleReset} disabled={!hasChanges} className="rag-button-ghost">
             <RotateCcw className="mr-2 size-4" />
             Réinitialiser
           </Button>
-          <Button
-            onClick={handleSave}
-            disabled={!hasChanges}
-            className="bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)]"
-          >
+          <Button onClick={handleSave} disabled={!hasChanges} className="dashboard-cta-accent">
             <Save className="mr-2 size-4" />
             Enregistrer
           </Button>
@@ -126,15 +120,15 @@ export function RagSettingsClient() {
       </div>
 
       {/* Modèle */}
-      <Card className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-[var(--color-flaash-green)]/10 p-3">
-            <Settings className="size-6 text-[var(--color-flaash-green)]" />
+      <Card className="rag-card">
+        <div className="rag-toolbar rag-toolbar--start">
+          <div className="rag-icon-badge rag-icon-badge--green">
+            <Settings className="size-6" />
           </div>
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 rag-stack--dense">
             <div>
               <h2 className="text-xl font-semibold">Modèle de langage</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-white/70">
                 Choisissez le modèle d'IA utilisé par défaut pour générer les réponses.
               </p>
             </div>
@@ -147,125 +141,124 @@ export function RagSettingsClient() {
       </Card>
 
       {/* Température et Prompt système */}
-      <Card className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-blue-500/10 p-3">
-            <Settings className="size-6 text-blue-500" />
+      <Card className="rag-card">
+        <div className="rag-toolbar rag-toolbar--start">
+          <div className="rag-icon-badge rag-icon-badge--blue">
+            <Settings className="size-6" />
           </div>
-          <div className="flex-1 space-y-6">
+          <div className="flex-1 rag-stack">
             <div>
               <h2 className="text-xl font-semibold">Paramètres avancés</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-white/70">
                 Ajustez la créativité et le comportement du modèle.
               </p>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>Température</Label>
-                <span className="text-sm font-medium text-muted-foreground">{settings.temperature.toFixed(1)}</span>
-              </div>
-              <Slider
-                value={[settings.temperature]}
-                onValueChange={(values) => setSettings((prev) => ({ ...prev, temperature: values[0] }))}
-                min={0}
-                max={2}
-                step={0.1}
-                className="slider-green"
-              />
-              <p className="text-xs text-muted-foreground">
-                Une valeur basse (0.3-0.5) donne des réponses plus factuelles et cohérentes. Une valeur élevée (0.7-1.0)
-                favorise la créativité et la variété.
-              </p>
-            </div>
+            <DashboardFormSection columns={1}>
+              <DashboardFormField
+                label="Température"
+                description="Une valeur basse (0.3-0.5) donne des réponses cohérentes, une valeur élevée favorise la créativité."
+                hint={<span className="text-xs font-medium text-muted-foreground">{settings.temperature.toFixed(1)}</span>}
+              >
+                <Slider
+                  value={[settings.temperature]}
+                  onValueChange={(values) => setSettings((prev) => ({ ...prev, temperature: values[0] }))}
+                  min={0}
+                  max={2}
+                  step={0.1}
+                  className="slider-green"
+                />
+              </DashboardFormField>
 
-            <div className="space-y-2">
-              <Label>Prompt système</Label>
-              <Textarea
-                value={settings.systemPrompt}
-                onChange={(e) => setSettings((prev) => ({ ...prev, systemPrompt: e.target.value }))}
-                placeholder="Définissez le comportement par défaut de l'assistant..."
-                rows={4}
-                className="font-mono text-sm"
-              />
-              <p className="text-xs text-muted-foreground">
-                Ce prompt définit le rôle et le comportement de l'assistant pour toutes les conversations.
-              </p>
-            </div>
+              <DashboardFormField
+                label="Prompt système"
+                description="Définit le rôle et le comportement de l’assistant pour toutes les conversations."
+              >
+                <Textarea
+                  value={settings.systemPrompt}
+                  onChange={(e) => setSettings((prev) => ({ ...prev, systemPrompt: e.target.value }))}
+                  placeholder="Définissez le comportement par défaut de l'assistant..."
+                  rows={4}
+                  className="font-mono text-sm"
+                />
+              </DashboardFormField>
+            </DashboardFormSection>
           </div>
         </div>
       </Card>
 
       {/* Type de prompt et Collection */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="p-6">
-          <div className="space-y-4">
+      <div className="rag-grid-2">
+        <Card className="rag-card">
+          <div className="rag-stack--dense">
             <div>
               <h3 className="font-semibold">Type de prompt</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-white/70">
                 Choisissez le format de prompt utilisé pour les requêtes RAG.
               </p>
             </div>
-            <Select
-              value={settings.promptType}
-              onValueChange={(value: RagPromptType) => setSettings((prev) => ({ ...prev, promptType: value }))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {promptTypeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    <div>
-                      <div className="font-medium">{option.label}</div>
-                      <div className="text-xs text-muted-foreground">{option.description}</div>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DashboardFormSection columns={1}>
+              <DashboardFormField label="Type de prompt">
+                <Select value={settings.promptType} onValueChange={(value: RagPromptType) => setSettings((prev) => ({ ...prev, promptType: value }))}>
+                  <SelectTrigger className="rag-select-trigger">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {promptTypeOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <div>
+                          <div className="font-medium">{option.label}</div>
+                          <div className="text-xs text-white/70">{option.description}</div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </DashboardFormField>
+            </DashboardFormSection>
           </div>
         </Card>
 
-        <Card className="p-6">
-          <div className="space-y-4">
+        <Card className="rag-card">
+          <div className="rag-stack--dense">
             <div>
               <h3 className="font-semibold">Collection par défaut</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-white/70">
                 Sélectionnez la collection utilisée par défaut pour les recherches.
               </p>
             </div>
-            <Select
-              value={settings.collectionId}
-              onValueChange={(value) => setSettings((prev) => ({ ...prev, collectionId: value }))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {collectionOptions.map((option) => (
-                  <SelectItem key={option.id} value={option.id}>
-                    <div>
-                      <div className="font-medium">{option.name}</div>
-                      <div className="text-xs text-muted-foreground">{option.description}</div>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DashboardFormSection columns={1}>
+              <DashboardFormField label="Collection par défaut">
+                <Select value={settings.collectionId} onValueChange={(value) => setSettings((prev) => ({ ...prev, collectionId: value }))}>
+                  <SelectTrigger className="rag-select-trigger">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {collectionOptions.map((option) => (
+                      <SelectItem key={option.id} value={option.id}>
+                        <div>
+                          <div className="font-medium">{option.name}</div>
+                          <div className="text-xs text-white/70">{option.description}</div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </DashboardFormField>
+            </DashboardFormSection>
           </div>
         </Card>
       </div>
 
       {/* Info */}
-      <Card className="border-blue-200 bg-blue-50/50 p-6 dark:border-blue-900 dark:bg-blue-950/20">
-        <div className="flex gap-4">
+      <Card className="rag-card border border-blue-500/30 bg-blue-500/10">
+        <div className="rag-toolbar rag-toolbar--start">
           <div className="shrink-0">
-            <Settings className="size-5 text-blue-600 dark:text-blue-400" />
+            <Settings className="size-5 text-blue-300" />
           </div>
           <div className="flex-1">
-            <h4 className="font-medium text-blue-900 dark:text-blue-100">Note importante</h4>
-            <p className="mt-2 text-sm text-blue-800 dark:text-blue-200">
+            <h4 className="font-medium text-white">Note importante</h4>
+            <p className="mt-2 text-sm text-white/80">
               Ces paramètres sont utilisés comme valeurs par défaut pour toutes les nouvelles conversations. Vous
               pouvez toujours les modifier individuellement dans chaque conversation via le panneau de paramètres.
             </p>

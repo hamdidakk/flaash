@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -113,7 +113,7 @@ export default function EvaluationPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("evaluation.title")} description={t("evaluation.description")} />
+      <DashboardPageHeader title={t("evaluation.title")} description={t("evaluation.description")} />
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="p-6">
@@ -222,3 +222,4 @@ export default function EvaluationPage() {
     </div>
   )
 }
+

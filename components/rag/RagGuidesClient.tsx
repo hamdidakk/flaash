@@ -7,57 +7,53 @@ import Link from "next/link"
 
 export function RagGuidesClient() {
   return (
-    <div className="space-y-6">
+    <div className="rag-stack text-white">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Guides & Inspirations</h1>
-        <p className="mt-2 text-muted-foreground">
-          Découvrez les meilleures pratiques pour exploiter pleinement le RAG FLAASH.
-        </p>
+        <h1 className="rag-page-heading">Guides & Inspirations</h1>
+        <p className="rag-page-subtitle">Découvrez les meilleures pratiques pour exploiter pleinement le RAG FLAASH.</p>
       </div>
 
       {/* Quick Start */}
-      <Card className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-[var(--color-flaash-green)]/10 p-3">
-            <CheckCircle2 className="size-6 text-[var(--color-flaash-green)]" />
+      <Card className="rag-card">
+        <div className="rag-toolbar rag-toolbar--start">
+          <div className="rag-icon-badge rag-icon-badge--green">
+            <CheckCircle2 className="size-6" />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-semibold">Démarrage rapide</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Suivez ces étapes pour commencer à utiliser le RAG efficacement.
-            </p>
-            <ol className="mt-4 space-y-3 text-sm">
+            <h2 className="rag-title-lg">Démarrage rapide</h2>
+            <p className="mt-2 rag-text-caption">Suivez ces étapes pour commencer à utiliser le RAG efficacement.</p>
+            <ol className="mt-4 rag-list--numbered">
               <li className="flex gap-3">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-flaash-green)] text-xs font-semibold text-white">
+                <span className="rag-step-badge">
                   1
                 </span>
                 <div>
                   <strong>Ajoutez vos documents</strong> via la page{" "}
-                  <Link href="/rag/upload" className="text-[var(--color-flaash-green)] hover:underline">
+                  <Link href="/rag/upload" className="rag-link">
                     Ajouter
                   </Link>
                   . Formats supportés : PDF, DOCX, TXT, MD.
                 </div>
               </li>
               <li className="flex gap-3">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-flaash-green)] text-xs font-semibold text-white">
+                <span className="rag-step-badge">
                   2
                 </span>
                 <div>
                   <strong>Vérifiez le traitement</strong> dans{" "}
-                  <Link href="/rag/documents" className="text-[var(--color-flaash-green)] hover:underline">
+                  <Link href="/rag/documents" className="rag-link">
                     Documents
                   </Link>
                   . Attendez que les chunks soient générés.
                 </div>
               </li>
               <li className="flex gap-3">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-flaash-green)] text-xs font-semibold text-white">
+                <span className="rag-step-badge">
                   3
                 </span>
                 <div>
                   <strong>Posez vos questions</strong> dans{" "}
-                  <Link href="/rag" className="text-[var(--color-flaash-green)] hover:underline">
+                  <Link href="/rag" className="rag-link">
                     Conversations
                   </Link>
                   . L'IA répondra en s'appuyant sur vos documents.
@@ -69,15 +65,15 @@ export function RagGuidesClient() {
       </Card>
 
       {/* Best Practices */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="p-6">
-          <div className="flex items-start gap-4">
-            <div className="rounded-lg bg-blue-500/10 p-3">
-              <Lightbulb className="size-6 text-blue-500" />
+      <div className="rag-grid-guides">
+        <Card className="rag-card">
+          <div className="rag-toolbar rag-toolbar--start">
+            <div className="rag-icon-badge rag-icon-badge--blue">
+              <Lightbulb className="size-6" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold">Bonnes pratiques</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <h3 className="rag-title-lg">Bonnes pratiques</h3>
+              <ul className="mt-3 rag-list--compact rag-text-muted">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-500" />
                   <span>Utilisez des documents structurés et bien formatés pour de meilleurs résultats.</span>
@@ -99,14 +95,14 @@ export function RagGuidesClient() {
           </div>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-start gap-4">
-            <div className="rounded-lg bg-amber-500/10 p-3">
-              <AlertCircle className="size-6 text-amber-500" />
+        <Card className="rag-card">
+          <div className="rag-toolbar rag-toolbar--start">
+            <div className="rag-icon-badge rag-icon-badge--amber">
+              <AlertCircle className="size-6" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold">Pièges à éviter</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <h3 className="rag-title-lg">Pièges à éviter</h3>
+              <ul className="mt-3 rag-list--compact rag-text-muted">
                 <li className="flex items-start gap-2">
                   <AlertCircle className="mt-0.5 size-4 shrink-0 text-amber-500" />
                   <span>Ne mélangez pas des documents de domaines très différents dans une même collection.</span>
@@ -130,56 +126,56 @@ export function RagGuidesClient() {
       </div>
 
       {/* Examples */}
-      <Card className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-purple-500/10 p-3">
-            <Code className="size-6 text-purple-500" />
+      <Card className="rag-card">
+        <div className="rag-toolbar rag-toolbar--start">
+          <div className="rag-icon-badge rag-icon-badge--purple">
+            <Code className="size-6" />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-semibold">Exemples de questions</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h2 className="rag-title-lg">Exemples de questions</h2>
+            <p className="mt-2 text-sm rag-text-muted">
               Voici des exemples de questions efficaces pour tirer le meilleur parti du RAG.
             </p>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="rounded-lg border bg-muted/50 p-4">
-                <div className="flex items-center gap-2">
+              <div className="rag-surface-card text-sm">
+                <div className="rag-toolbar rag-toolbar--compact">
                   <MessageSquare className="size-4 text-[var(--color-flaash-green)]" />
                   <span className="text-sm font-medium">Questions factuelles</span>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <ul className="mt-3 rag-list--compact rag-text-muted">
                   <li>"Quelles sont les principales conclusions du document X ?"</li>
                   <li>"Résume les points clés de la section Y."</li>
                   <li>"Quels sont les chiffres mentionnés concernant Z ?"</li>
                 </ul>
               </div>
-              <div className="rounded-lg border bg-muted/50 p-4">
-                <div className="flex items-center gap-2">
+              <div className="rag-surface-card text-sm">
+                <div className="rag-toolbar rag-toolbar--compact">
                   <Search className="size-4 text-[var(--color-flaash-green)]" />
                   <span className="text-sm font-medium">Recherche comparative</span>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <ul className="mt-3 rag-list--compact rag-text-muted">
                   <li>"Compare les approches A et B présentées dans les documents."</li>
                   <li>"Quelles sont les différences entre X et Y ?"</li>
                   <li>"Quels documents traitent du sujet Z ?"</li>
                 </ul>
               </div>
-              <div className="rounded-lg border bg-muted/50 p-4">
-                <div className="flex items-center gap-2">
+              <div className="rag-surface-card text-sm">
+                <div className="rag-toolbar rag-toolbar--compact">
                   <FileText className="size-4 text-[var(--color-flaash-green)]" />
                   <span className="text-sm font-medium">Analyse contextuelle</span>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <ul className="mt-3 rag-list--compact rag-text-muted">
                   <li>"Explique le contexte historique de X."</li>
                   <li>"Quelles sont les implications de Y selon les documents ?"</li>
                   <li>"Comment Z est-il abordé dans différents documents ?"</li>
                 </ul>
               </div>
-              <div className="rounded-lg border bg-muted/50 p-4">
-                <div className="flex items-center gap-2">
+              <div className="rag-surface-card text-sm">
+                <div className="rag-toolbar rag-toolbar--compact">
                   <Upload className="size-4 text-[var(--color-flaash-green)]" />
                   <span className="text-sm font-medium">Synthèse</span>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <ul className="mt-3 rag-list--compact rag-text-muted">
                   <li>"Fais une synthèse des points communs entre tous les documents."</li>
                   <li>"Quels sont les thèmes récurrents dans ma base de documents ?"</li>
                   <li>"Résume l'évolution de X à travers les documents."</li>
@@ -191,17 +187,17 @@ export function RagGuidesClient() {
       </Card>
 
       {/* Tips */}
-      <Card className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-green-500/10 p-3">
-            <BookOpen className="size-6 text-green-500" />
+      <Card className="rag-card">
+        <div className="rag-toolbar rag-toolbar--start">
+          <div className="rag-icon-badge rag-icon-badge--green">
+            <BookOpen className="size-6" />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-semibold">Conseils avancés</h2>
-            <div className="mt-4 space-y-4">
+            <h2 className="rag-title-lg">Conseils avancés</h2>
+            <div className="mt-4 rag-stack--dense">
               <div>
                 <h4 className="font-medium">Optimisation des paramètres</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm rag-text-muted">
                   Ajustez la température et le type de prompt dans les{" "}
                   <Link href="/rag/settings" className="text-[var(--color-flaash-green)] hover:underline">
                     Paramètres
@@ -212,14 +208,14 @@ export function RagGuidesClient() {
               </div>
               <div>
                 <h4 className="font-medium">Gestion des collections</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm rag-text-muted">
                   Organisez vos documents en collections thématiques pour améliorer la précision des réponses. Utilisez
                   des collections spécifiques lorsque vous posez des questions sur un domaine particulier.
                 </p>
               </div>
               <div>
                 <h4 className="font-medium">Vérification des sources</h4>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm rag-text-muted">
                   Toujours vérifier les citations fournies par l'IA. Cliquez sur les références pour voir les chunks
                   exacts utilisés pour générer la réponse.
                 </p>

@@ -1,13 +1,12 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { SettingsSection } from "@/components/dashboard/settings-section"
 import { RegenerateKeyDialog } from "@/components/settings/regenerate-key-dialog"
 import { PartnerAuthCard } from "@/components/dashboard/partner-auth-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -30,6 +29,7 @@ import {
   setStoredApiKey,
   getApiIntegrationStatus,
 } from "@/lib/dakkom-api"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 export default function SettingsPage() {
   const { t } = useLanguage()
@@ -152,13 +152,16 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("settings.title")} description={t("settings.description")} />
+      <DashboardPageHeader title={t("settings.title")} description={t("settings.description")} />
 
       <SettingsSection title={t("settings.apiConfig.title") ?? "Dakkom API"} icon={Key}>
-        <div className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="dakkom-base-url">{t("settings.apiConfig.baseUrlLabel")}</Label>
+        <div className="space-y-6">
+          <DashboardFormSection columns={2}>
+            <DashboardFormField
+              label={t("settings.apiConfig.baseUrlLabel")}
+              description={t("settings.apiConfig.baseUrlDescription")}
+              htmlFor="dakkom-base-url"
+            >
               <Input
                 id="dakkom-base-url"
                 type="url"
@@ -166,10 +169,12 @@ export default function SettingsPage() {
                 value={apiBaseUrl}
                 onChange={(event) => setApiBaseUrl(event.target.value)}
               />
-              <p className="text-xs text-muted-foreground">{t("settings.apiConfig.baseUrlDescription")}</p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="dakkom-api-key">{t("settings.apiConfig.apiKeyLabel")}</Label>
+            </DashboardFormField>
+            <DashboardFormField
+              label={t("settings.apiConfig.apiKeyLabel")}
+              description={t("settings.apiConfig.apiKeyDescription")}
+              htmlFor="dakkom-api-key"
+            >
               <Input
                 id="dakkom-api-key"
                 type="text"
@@ -177,26 +182,25 @@ export default function SettingsPage() {
                 value={apiKeyInput}
                 onChange={(event) => setApiKeyInput(event.target.value)}
               />
-              <p className="text-xs text-muted-foreground">{t("settings.apiConfig.apiKeyDescription")}</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between gap-3">
+            </DashboardFormField>
+          </DashboardFormSection>
+
+          <DashboardFormActions align="space-between" className="items-center">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Badge variant={apiConfigStatus.isConfigured ? "default" : "outline"}>
                 {apiConfigStatus.isConfigured ? t("settings.unlocked") : t("settings.locked")}
               </Badge>
-              {apiConfigStatus.baseUrl && <span className="truncate">{apiConfigStatus.baseUrl}</span>}
+              {apiConfigStatus.baseUrl ? <span className="truncate">{apiConfigStatus.baseUrl}</span> : null}
             </div>
             <Button onClick={handleSaveApiConfig}>{t("settings.apiConfig.save")}</Button>
-          </div>
+          </DashboardFormActions>
         </div>
       </SettingsSection>
 
       <SettingsSection title={t("settings.apiKey")} icon={Key}>
-        <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>{t("settings.projectLabel")}</Label>
+        <div className="space-y-6">
+          <DashboardFormSection columns={2}>
+            <DashboardFormField label={t("settings.projectLabel")}>
               <Select value={selectedProjectId} onValueChange={setSelectedProjectId}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -214,8 +218,8 @@ export default function SettingsPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            {activeOrganization && (
+            </DashboardFormField>
+            {activeOrganization ? (
               <div className="flex items-center gap-3 rounded-md border bg-muted/40 p-3">
                 <Shield className="h-5 w-5 text-primary" />
                 <div>
@@ -225,19 +229,19 @@ export default function SettingsPage() {
                   </p>
                 </div>
               </div>
-            )}
-          </div>
+            ) : null}
+          </DashboardFormSection>
 
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <DashboardFormActions align="space-between" className="items-center">
             <div className="flex items-center gap-2">
               <Badge variant={keyState?.locked ? "outline" : "default"}>
                 {keyState?.locked ? t("settings.locked") : t("settings.unlocked")}
               </Badge>
-              {keyState?.lastRotated && (
+              {keyState?.lastRotated ? (
                 <span className="text-xs text-muted-foreground">
                   {t("settings.lastRotated")} {formatDisplayDateShort(keyState.lastRotated)}
                 </span>
-              )}
+              ) : null}
             </div>
             <div className="flex items-center gap-2">
               <Button variant={keyState?.locked ? "default" : "outline"} size="sm" onClick={keyState?.locked ? handleUnlock : handleLock}>
@@ -255,11 +259,14 @@ export default function SettingsPage() {
                 {t("settings.regenerateKey")}
               </Button>
             </div>
-          </div>
+          </DashboardFormActions>
 
-          <div className="space-y-2">
-            <Label htmlFor="apiKey">{t("settings.apiKeyLabel")}</Label>
-            <div className="flex gap-2">
+          <DashboardFormSection columns="none">
+            <DashboardFormField
+              label={t("settings.apiKeyLabel")}
+              description={t("settings.apiKeyDescription")}
+              htmlFor="apiKey"
+            >
               <div className="relative flex-1">
                 <Input
                   id="apiKey"
@@ -270,7 +277,7 @@ export default function SettingsPage() {
                   disabled={!keyState}
                   className="pr-20 font-mono text-sm"
                 />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                <div className="absolute right-2 top-1/2 flex -translate-y-1/2 gap-1">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -291,12 +298,9 @@ export default function SettingsPage() {
                   </Button>
                 </div>
               </div>
-            </div>
-            <p className="text-sm text-muted-foreground">{t("settings.apiKeyDescription")}</p>
-            {keyState?.locked && (
-              <p className="text-xs text-muted-foreground">{t("settings.lockedHint")}</p>
-            )}
-          </div>
+            </DashboardFormField>
+            {keyState?.locked ? <p className="text-xs text-muted-foreground">{t("settings.lockedHint")}</p> : null}
+          </DashboardFormSection>
         </div>
       </SettingsSection>
 
@@ -308,3 +312,4 @@ export default function SettingsPage() {
     </div>
   )
 }
+

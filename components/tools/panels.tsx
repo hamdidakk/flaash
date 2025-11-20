@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react"
 import type React from "react"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -19,6 +18,8 @@ import {
 } from "@/lib/tools-api"
 import type { DakkomRetrievedDocument } from "@/lib/dakkom-api"
 import type { ToolHistoryEntryInput } from "@/hooks/use-tool-history"
+import { DashboardSectionCard } from "@/components/dashboard/DashboardSectionCard"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 type PanelContext = "dashboard" | "chat"
 
@@ -31,16 +32,19 @@ interface PanelCallbacks {
 export function ToolSection({
   title,
   description,
+  meta,
+  actions,
   children,
-}: React.PropsWithChildren<{ title: string; description: string }>) {
+}: React.PropsWithChildren<{
+  title: string
+  description: string
+  meta?: React.ReactNode
+  actions?: React.ReactNode
+}>) {
   return (
-    <Card className="space-y-4 p-6">
-      <div>
-        <h3 className="text-base font-semibold text-foreground">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </div>
+    <DashboardSectionCard title={title} description={description} meta={meta} actions={actions}>
       {children}
-    </Card>
+    </DashboardSectionCard>
   )
 }
 
@@ -96,23 +100,19 @@ export function DocumentListPanel({ onHistory, onTrack, context = "dashboard" }:
       title="Liste des documents"
       description="Interrogez directement le vector store pour connaître les fichiers disponibles."
     >
-      <div className="flex flex-wrap items-center gap-3">
-        <Button
-          onClick={handleLoad}
-          disabled={isLoading}
-          className="border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2"
-        >
+      <DashboardFormActions align="left">
+        <Button onClick={handleLoad} disabled={isLoading} className="dashboard-cta-accent">
           {isLoading ? "Chargement…" : "Charger les documents"}
         </Button>
-        {lastUpdated && <span className="text-xs text-muted-foreground">Dernière mise à jour : {lastUpdated}</span>}
-      </div>
-      <ScrollArea className="h-48 rounded-md border bg-muted/30 p-4">
+        {lastUpdated ? <span className="text-xs text-muted-foreground">Dernière mise à jour : {lastUpdated}</span> : null}
+      </DashboardFormActions>
+      <ScrollArea className="h-48 dashboard-panel-scroll">
         {documents.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucun document chargé pour l’instant.</p>
+          <p className="dashboard-panel-placeholder">Aucun document chargé pour l’instant.</p>
         ) : (
-          <ul className="space-y-1 text-sm">
+          <ul className="dashboard-panel-list">
             {documents.map((doc) => (
-              <li key={doc} className="font-mono text-xs">
+              <li key={doc} className="dashboard-panel-entry">
                 {doc}
               </li>
             ))}
@@ -187,18 +187,15 @@ export function SearchPanel({
 
   return (
     <ToolSection title="Recherche vectorielle" description="Soumettez une requête directement au vector store Dakkom.">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Question</Label>
+      <DashboardFormSection columns={2}>
+        <DashboardFormField label="Question">
           <Textarea rows={4} value={query} onChange={(e) => setQuery(e.target.value)} disabled={disabled} />
-        </div>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label>Collection</Label>
+        </DashboardFormField>
+        <DashboardFormSection columns={1}>
+          <DashboardFormField label="Collection">
             <Input value={collectionName} onChange={(e) => setCollectionName(e.target.value)} disabled={disabled} />
-          </div>
-          <div className="space-y-2">
-            <Label>Nombre de résultats : {limit}</Label>
+          </DashboardFormField>
+          <DashboardFormField label={`Nombre de résultats : ${limit}`}>
             <Slider
               value={[limit]}
               max={maxResults}
@@ -208,28 +205,26 @@ export function SearchPanel({
               disabled={disabled}
               className="slider-green"
             />
-          </div>
-          <Button
-            onClick={runSearch}
-            disabled={isPending || disabled}
-            className="border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2 disabled:opacity-60"
-          >
-            {isPending ? "Recherche…" : "Lancer la recherche"}
-          </Button>
-        </div>
-      </div>
-      <ScrollArea className="h-64 rounded-md border bg-muted/30 p-4">
+          </DashboardFormField>
+          <DashboardFormActions align="left">
+          <Button onClick={runSearch} disabled={isPending || disabled} className="dashboard-cta-accent">
+              {isPending ? "Recherche…" : "Lancer la recherche"}
+            </Button>
+          </DashboardFormActions>
+        </DashboardFormSection>
+      </DashboardFormSection>
+      <ScrollArea className="h-64 dashboard-panel-scroll">
         {results.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Les résultats apparaîtront ici.</p>
+          <p className="dashboard-panel-placeholder">Les résultats apparaîtront ici.</p>
         ) : (
-          <div className="space-y-4">
+          <div className="dashboard-panel-card">
             {results.map((result, index) => (
-              <div key={`${result.chunk_id ?? index}`} className="rounded-md border bg-white p-3 shadow-sm">
-                <p className="text-xs text-muted-foreground">
+              <div key={`${result.chunk_id ?? index}`} className="dashboard-panel-card__section bg-white">
+                <p className="dashboard-panel-placeholder text-xs">
                   Chunk <span className="font-mono">{String(result.chunk_id ?? index)}</span> — score{" "}
                   {typeof result.score === "number" ? result.score.toFixed(3) : "n/a"}
                 </p>
-                <p className="mt-2 text-sm">{String(result.snippet ?? result.document ?? "Aucun extrait")}</p>
+                <p className="dashboard-panel-card__text">{String(result.snippet ?? result.document ?? "Aucun extrait")}</p>
                 {result.metadata && (
                   <pre className="mt-2 rounded bg-muted p-2 text-[11px]">
                     {JSON.stringify(result.metadata as Record<string, unknown>, null, 2)}
@@ -316,19 +311,16 @@ export function RagPanel({
 
   return (
     <ToolSection title="Génération RAG" description="Configurez les paramètres et inspectez la réponse.">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Question</Label>
+      <DashboardFormSection columns={2}>
+        <DashboardFormField label="Question">
           <Textarea rows={4} value={query} onChange={(e) => setQuery(e.target.value)} disabled={disabled} />
-        </div>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label>Collection</Label>
+        </DashboardFormField>
+        <DashboardFormSection columns={1}>
+          <DashboardFormField label="Collection">
             <Input value={collectionName} onChange={(e) => setCollectionName(e.target.value)} disabled={disabled} />
-          </div>
-          {allowPromptSelection && (
-            <div className="space-y-2">
-              <Label>Type de prompt</Label>
+          </DashboardFormField>
+          {allowPromptSelection ? (
+            <DashboardFormField label="Type de prompt">
               <Select value={promptType} onValueChange={setPromptType} disabled={disabled}>
                 <SelectTrigger>
                   <SelectValue />
@@ -338,11 +330,10 @@ export function RagPanel({
                   <SelectItem value="long">Long</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-          )}
-          {allowTemperature && (
-            <div className="space-y-2">
-              <Label>Température : {temperature.toFixed(2)}</Label>
+            </DashboardFormField>
+          ) : null}
+          {allowTemperature ? (
+            <DashboardFormField label={`Température : ${temperature.toFixed(2)}`}>
               <Slider
                 value={[temperature]}
                 min={0}
@@ -352,32 +343,30 @@ export function RagPanel({
                 disabled={disabled}
                 className="slider-green"
               />
-            </div>
-          )}
-          <Button
-            onClick={runRag}
-            disabled={isPending || disabled}
-            className="border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2 disabled:opacity-60"
-          >
-            {isPending ? "Génération…" : "Générer la réponse"}
-          </Button>
-        </div>
-      </div>
+            </DashboardFormField>
+          ) : null}
+          <DashboardFormActions align="left">
+          <Button onClick={runRag} disabled={isPending || disabled} className="dashboard-cta-accent">
+              {isPending ? "Génération…" : "Générer la réponse"}
+            </Button>
+          </DashboardFormActions>
+        </DashboardFormSection>
+      </DashboardFormSection>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-md border bg-muted/30 p-4">
-          <h4 className="text-sm font-semibold">Réponse</h4>
-          <p className="mt-2 text-sm">{responseText || "Aucune réponse pour l’instant."}</p>
+      <div className="dashboard-panel-card md:grid md:grid-cols-2 md:gap-4">
+        <div className="dashboard-panel-card__section">
+          <h4 className="dashboard-panel-card__title">Réponse</h4>
+          <p className="dashboard-panel-card__text">{responseText || "Aucune réponse pour l’instant."}</p>
         </div>
-        <div className="rounded-md border bg-muted/30 p-4">
-          <h4 className="text-sm font-semibold">Documents récupérés</h4>
+        <div className="dashboard-panel-card__section">
+          <h4 className="dashboard-panel-card__title">Documents récupérés</h4>
           <ScrollArea className="mt-2 h-40">
             {retrieved.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Les citations apparaîtront ici.</p>
+              <p className="dashboard-panel-placeholder">Les citations apparaîtront ici.</p>
             ) : (
-              <ul className="space-y-2 text-xs">
+              <ul className="dashboard-panel-card__list">
                 {retrieved.map((doc, index) => (
-                  <li key={`${doc.chunk_id ?? index}`} className="rounded bg-white p-2 shadow-sm">
+                  <li key={`${doc.chunk_id ?? index}`} className="dashboard-panel-card__list-item">
                     <p className="font-semibold">{doc.source_file ?? `Chunk ${doc.chunk_id}`}</p>
                     <p className="text-muted-foreground">
                       Score : {typeof doc.probability === "number" ? doc.probability.toFixed(3) : "n/a"}
@@ -445,12 +434,10 @@ export function EvaluationPanel({ disabled, onHistory, onTrack, context = "dashb
       description={disabled ? "Disponible uniquement pour les administrateurs." : "Déclenchez un run d’évaluation RAG."}
     >
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Test set</Label>
+        <DashboardFormField label="Test set">
           <Input value={testSet} onChange={(e) => setTestSet(e.target.value)} disabled={disabled} />
-        </div>
-        <div className="space-y-2">
-          <Label>Type de prompt</Label>
+        </DashboardFormField>
+        <DashboardFormField label="Type de prompt">
           <Select value={promptType} onValueChange={setPromptType} disabled={disabled}>
             <SelectTrigger>
               <SelectValue />
@@ -460,15 +447,13 @@ export function EvaluationPanel({ disabled, onHistory, onTrack, context = "dashb
               <SelectItem value="long">Long</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </DashboardFormField>
       </div>
-      <Button
-        onClick={runEvaluation}
-        disabled={isPending || disabled}
-        className="border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2 disabled:opacity-60"
-      >
-        {isPending ? "Lancement…" : "Lancer l’évaluation"}
-      </Button>
+      <DashboardFormActions align="left">
+      <Button onClick={runEvaluation} disabled={isPending || disabled} className="dashboard-cta-accent">
+          {isPending ? "Lancement…" : "Lancer l’évaluation"}
+        </Button>
+      </DashboardFormActions>
       <Textarea
         className="mt-4 font-mono text-xs"
         rows={8}

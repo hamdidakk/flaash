@@ -4,7 +4,6 @@ import { useMemo, useRef, useState } from "react"
 import { Upload, File, Globe, CheckCircle2, AlertCircle, History } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
@@ -16,6 +15,7 @@ import { useErrorHandler } from "@/hooks/use-error-handler"
 import { useToast } from "@/hooks/use-toast"
 import { AppError } from "@/lib/error-handler"
 import { useUploadHistory, type UploadHistoryEntry } from "@/hooks/use-upload-history"
+import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
 
 type SourceOption = "INTERNAL" | "WEB_PAGE" | "OTHER"
 
@@ -153,85 +153,82 @@ export function RagUploadClient() {
   }
 
   return (
-    <div className="rag-upload space-y-6">
-      <Card className="border border-white/10 bg-white/[0.05] p-6 text-white">
-        <div className="flex flex-wrap items-start justify-between gap-6">
+    <div className="rag-upload rag-stack">
+      <Card className="rag-card">
+        <div className="rag-card__header rag-card__header--start">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-white/60">Ajout assisté</p>
-            <h2 className="mt-2 text-2xl font-semibold">Uploader des documents</h2>
-            <p className="text-sm text-white/70">
+            <p className="rag-meta-label">Ajout assisté</p>
+            <h2 className="rag-card__title">Uploader des documents</h2>
+            <p className="rag-card__subtitle">
               Glissez vos PDF, DOCX, TXT ou Markdown. Chaque fichier sera poussé vers Dakkom pour alimenter le RAG.
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/50">Statut</p>
-            <p className="text-base font-semibold">{summary || "En attente"}</p>
+          <div className="rag-card__stat">
+            <p className="rag-card__stat-label">Statut</p>
+            <p className="rag-card__stat-value">{summary || "En attente"}</p>
           </div>
         </div>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-        <Card className="space-y-5 border border-white/10 bg-white/[0.02] p-6 text-white">
-          <div>
-            <Label className="text-white">Source</Label>
-            <Select value={source} onValueChange={(value: SourceOption) => setSource(value)}>
-              <SelectTrigger className="mt-2 border-white/20 bg-white/5 text-white">
-                <SelectValue placeholder="Choisir une source" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="INTERNAL">Interne</SelectItem>
-                <SelectItem value="WEB_PAGE">Page web</SelectItem>
-                <SelectItem value="OTHER">Autre</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="rag-layout--split">
+        <Card className="rag-card rag-stack--dense">
+          <DashboardFormSection columns={source === "WEB_PAGE" ? 1 : 2} tone="dark">
+            <DashboardFormField label="Source">
+              <Select value={source} onValueChange={(value: SourceOption) => setSource(value)}>
+                <SelectTrigger className="mt-2 rag-select-trigger">
+                  <SelectValue placeholder="Choisir une source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="INTERNAL">Interne</SelectItem>
+                  <SelectItem value="WEB_PAGE">Page web</SelectItem>
+                  <SelectItem value="OTHER">Autre</SelectItem>
+                </SelectContent>
+              </Select>
+            </DashboardFormField>
 
-          {source === "WEB_PAGE" && (
-            <div>
-              <Label className="text-white" htmlFor="url">
-                URL liée
-              </Label>
-              <div className="mt-2 flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3">
-                <Globe className="h-4 w-4 text-white/60" />
-                <Input
-                  id="url"
-                  value={url}
-                  onChange={(event) => setUrl(event.target.value)}
-                  placeholder="https://exemple.com/article"
-                  className="border-0 bg-transparent text-white placeholder:text-white/50 focus-visible:ring-0"
-                />
+            {source === "WEB_PAGE" ? (
+              <DashboardFormField label="URL liée" htmlFor="url">
+                <div className="mt-2 rag-input-wrapper">
+                  <Globe className="h-4 w-4 text-white/60" />
+                  <Input
+                    id="url"
+                    value={url}
+                    onChange={(event) => setUrl(event.target.value)}
+                    placeholder="https://exemple.com/article"
+                    className="rag-input--inline"
+                  />
+                </div>
+              </DashboardFormField>
+            ) : null}
+          </DashboardFormSection>
+
+          <DashboardFormSection columns={1} tone="dark">
+            <DashboardFormField label="Notes (facultatif)" htmlFor="description">
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Ajoutez un contexte, une version ou une portée d'usage."
+                className="mt-2 rag-input"
+                rows={3}
+              />
+            </DashboardFormField>
+          </DashboardFormSection>
+
+          <DashboardFormSection columns={2} tone="dark">
+            <DashboardFormField label="Document validé" htmlFor="validated">
+              <div className="rag-toolbar rag-toolbar--compact">
+                <Switch id="validated" checked={isValidated} onCheckedChange={setIsValidated} />
+                <span className="rag-text-accent">Indique que la source est vérifiée.</span>
               </div>
-            </div>
-          )}
-
-          <div>
-            <Label className="text-white" htmlFor="description">
-              Notes (facultatif)
-            </Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              placeholder="Ajoutez un contexte, une version ou une portée d'usage."
-              className="mt-2 border-white/20 bg-white/5 text-white placeholder:text-white/50"
-              rows={3}
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-6">
-            <div className="flex items-center gap-3">
-              <Switch id="validated" checked={isValidated} onCheckedChange={setIsValidated} />
-              <Label htmlFor="validated" className="text-white">
-                Document validé
-              </Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch id="qa" checked={isQA} onCheckedChange={setIsQA} />
-              <Label htmlFor="qa" className="text-white">
-                Mode Q&A
-              </Label>
-            </div>
-          </div>
+            </DashboardFormField>
+            <DashboardFormField label="Mode Q&A" htmlFor="qa">
+              <div className="rag-toolbar rag-toolbar--compact">
+                <Switch id="qa" checked={isQA} onCheckedChange={setIsQA} />
+                <span className="rag-text-accent">Prépare le document pour des questions directes.</span>
+              </div>
+            </DashboardFormField>
+          </DashboardFormSection>
 
           <div
             className={`rag-upload__dropzone ${dragActive ? "rag-upload__dropzone--active" : ""}`}
@@ -249,9 +246,9 @@ export function RagUploadClient() {
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload className="h-10 w-10 text-white/70" />
-            <p className="text-base font-semibold">Glissez vos fichiers ou cliquez pour parcourir</p>
-            <p className="text-sm text-white/70">Formats acceptés : PDF, DOCX, TXT, MD (max ~20 Mo)</p>
-            <Button variant="secondary" className="bg-white/10 text-white hover:bg-white/20">
+            <p className="rag-text-lead">Glissez vos fichiers ou cliquez pour parcourir</p>
+            <p className="rag-text-caption">Formats acceptés : PDF, DOCX, TXT, MD (max ~20 Mo)</p>
+            <Button variant="secondary" className="rag-button-ghost">
               Sélectionner des fichiers
             </Button>
             <input
@@ -265,14 +262,14 @@ export function RagUploadClient() {
           </div>
 
           {entries.length > 0 && (
-            <div className="space-y-3">
+            <div className="rag-stack--dense">
               {entries.map((entry) => (
-                <Card key={entry.id} className="border-white/10 bg-white/[0.03] p-4 text-white">
-                  <div className="flex flex-wrap items-start gap-3">
+                <Card key={entry.id} className="rag-card bg-white/[0.03] p-4">
+                  <div className="rag-toolbar rag-toolbar--wrap">
                     <File className="h-5 w-5 text-white/60" />
                     <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium">{entry.file.name}</p>
+                    <div className="rag-toolbar rag-toolbar--between">
+                      <p className="rag-table__title">{entry.file.name}</p>
                         <Badge
                           variant="outline"
                           className={
@@ -292,9 +289,9 @@ export function RagUploadClient() {
                                 : "En attente"}
                         </Badge>
                       </div>
-                      <p className="text-xs text-white/60">{(entry.file.size / 1024 / 1024).toFixed(2)} Mo</p>
+                      <p className="rag-text-note">{(entry.file.size / 1024 / 1024).toFixed(2)} Mo</p>
                       <Progress value={entry.progress} className="mt-2" />
-                      {entry.message && <p className="mt-1 text-xs text-red-200">{entry.message}</p>}
+                      {entry.message && <p className="rag-text-note-danger">{entry.message}</p>}
                     </div>
                   </div>
                 </Card>
@@ -302,37 +299,37 @@ export function RagUploadClient() {
             </div>
           )}
 
-          <div className="flex flex-wrap justify-end gap-3">
-            <Button variant="ghost" className="text-white hover:bg-white/10" onClick={resetForm} disabled={isUploading}>
+          <DashboardFormActions>
+            <Button variant="ghost" className="rag-button-ghost" onClick={resetForm} disabled={isUploading}>
               Réinitialiser
             </Button>
             <Button
-              className="bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)]"
+              className="dashboard-cta-accent"
               onClick={handleSubmit}
               disabled={isUploading || entries.length === 0}
             >
               Lancer l’upload
             </Button>
-          </div>
+          </DashboardFormActions>
         </Card>
 
-        <div className="space-y-6">
-          <Card className="space-y-4 border border-white/10 bg-white/[0.03] p-6 text-white">
-            <div className="flex items-center gap-3">
+        <div className="rag-stack">
+          <Card className="rag-card rag-stack--dense">
+            <div className="rag-toolbar">
               <CheckCircle2 className="h-5 w-5 text-[var(--color-flaash-green)]" />
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-white/60">Checklist</p>
                 <h3 className="text-lg font-semibold text-white">Avant l’envoi</h3>
               </div>
             </div>
-            <ul className="space-y-3 text-sm text-white/80">
+            <ul className="rag-list">
               <li>• Vérifiez que le document ne contient pas de données confidentielles.</li>
               <li>• Ajoutez des notes pour contextualiser les futures réponses.</li>
               <li>• Utilisez “Document validé” uniquement pour les sources officielles.</li>
               <li>• “Mode Q&A” prépare le fichier pour un questionnement direct.</li>
             </ul>
 
-            <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 text-sm text-white/80">
+            <div className="rag-note-card">
               <div className="mb-2 flex items-center gap-2 font-semibold">
                 <AlertCircle className="h-4 w-4 text-yellow-300" />
                 Bon à savoir
@@ -344,9 +341,9 @@ export function RagUploadClient() {
             </div>
           </Card>
 
-          <Card className="space-y-3 border border-white/10 bg-white/[0.03] p-6 text-white">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+          <Card className="rag-card rag-stack--dense">
+            <div className="rag-toolbar rag-toolbar--between">
+              <div className="rag-toolbar rag-toolbar--compact">
                 <History className="h-4 w-4 text-[var(--color-flaash-green)]" />
                 <div>
                   <p className="text-sm uppercase tracking-[0.3em] text-white/60">Historique</p>
@@ -354,21 +351,18 @@ export function RagUploadClient() {
                 </div>
               </div>
               {history.length > 0 && (
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/10" onClick={clearHistory}>
+                <Button variant="ghost" size="sm" className="rag-button-ghost" onClick={clearHistory}>
                   Vider
                 </Button>
               )}
             </div>
             {history.length === 0 ? (
-              <p className="text-sm text-white/60">Aucun envoi enregistré pour l’instant.</p>
+              <p className="rag-text-muted">Aucun envoi enregistré pour l’instant.</p>
             ) : (
-              <ul className="space-y-3 text-sm text-white/80">
+              <ul className="rag-list">
                 {history.map((entry: UploadHistoryEntry) => (
-                  <li
-                    key={entry.id}
-                    className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2 text-xs leading-relaxed md:text-sm"
-                  >
-                    <div className="flex items-center justify-between gap-2">
+                  <li key={entry.id} className="rag-history-item">
+                    <div className="rag-toolbar rag-toolbar--between rag-toolbar--compact">
                       <span className="font-medium">{entry.name}</span>
                       <span
                         className={
@@ -388,16 +382,16 @@ export function RagUploadClient() {
                             : "Erreur"}
                       </span>
                     </div>
-                    <p className="text-white/60">
+                    <p className="rag-text-note">
                       {entry.source} • {(entry.size / 1024 / 1024).toFixed(2)} Mo •{" "}
                       {new Date(entry.timestamp).toLocaleTimeString("fr-FR")}
                     </p>
                     {entry.status === "confirmed" && entry.confirmedAt && (
-                      <p className="text-xs text-white/70">
+                      <p className="rag-text-note-strong">
                         Confirmé via la base à {new Date(entry.confirmedAt).toLocaleTimeString("fr-FR")}
                       </p>
                     )}
-                    {entry.message && <p className="text-red-200">{entry.message}</p>}
+                    {entry.message && <p className="rag-text-note-danger">{entry.message}</p>}
                   </li>
                 ))}
               </ul>

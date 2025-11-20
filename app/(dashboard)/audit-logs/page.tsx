@@ -1,6 +1,6 @@
 "use client"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useLanguage } from "@/lib/language-context"
@@ -46,7 +46,7 @@ export default function AuditLogsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("auditLogs.title")} description={t("auditLogs.description")} />
+      <DashboardPageHeader title={t("auditLogs.title")} description={t("auditLogs.description")} />
 
       <Card>
         <div className="overflow-x-auto">
@@ -83,3 +83,4 @@ export default function AuditLogsPage() {
     </div>
   )
 }
+

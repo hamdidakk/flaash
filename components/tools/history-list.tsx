@@ -1,10 +1,10 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { ToolHistoryEntry } from "@/hooks/use-tool-history"
 import { cn } from "@/lib/utils"
+import { DashboardSectionCard } from "@/components/dashboard/DashboardSectionCard"
 
 const PANEL_LABELS: Record<ToolHistoryEntry["panel"], string> = {
   documents: "Liste des documents",
@@ -21,17 +21,16 @@ interface ToolHistoryListProps {
 
 export function ToolHistoryList({ entries, onClear, className }: ToolHistoryListProps) {
   return (
-    <Card className={cn("space-y-4 border-dashed border-muted-foreground/40 p-4", className)}>
-      <div className="flex items-center justify-between gap-2">
-        <div>
-          <p className="text-sm font-semibold text-foreground">Historique</p>
-          <p className="text-xs text-muted-foreground">Dernières actions effectuées sur les outils.</p>
-        </div>
+    <DashboardSectionCard
+      title="Historique"
+      description="Dernières actions effectuées sur les outils."
+      className={cn("border-dashed border-muted-foreground/40", className)}
+      actions={
         <Button variant="outline" size="sm" onClick={onClear} disabled={entries.length === 0}>
           Vider
         </Button>
-      </div>
-
+      }
+    >
       {entries.length === 0 ? (
         <p className="text-xs text-muted-foreground">Aucune action enregistrée pour le moment.</p>
       ) : (
@@ -55,7 +54,7 @@ export function ToolHistoryList({ entries, onClear, className }: ToolHistoryList
           ))}
         </div>
       )}
-    </Card>
+    </DashboardSectionCard>
   )
 }
 

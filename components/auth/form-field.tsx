@@ -32,13 +32,13 @@ export function FormField({
   helperText,
 }: FormFieldProps) {
   return (
-    <div className="space-y-2">
+    <div className="form-field">
       <div className="flex items-center justify-between">
-        <Label htmlFor={id} className="flex items-center gap-2">
+        <Label htmlFor={id} className="form-field__label">
           {icon}
           {label}
         </Label>
-        {helperText}
+        {helperText ? <span className="form-field__helper">{helperText}</span> : null}
       </div>
       <Input
         id={id}

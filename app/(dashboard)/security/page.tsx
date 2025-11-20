@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Plus, RefreshCw, RotateCcw, Trash2, Copy } from "lucide-react"
 
-import { PageHeader } from "@/components/page-header"
+import { DashboardPageHeader } from "@/components/dashboard/DashboardPageHeader"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -195,7 +195,7 @@ export default function ApiKeysSecurityPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
+      <DashboardPageHeader
         title={t("apiKeys.page.title")}
         description={t("apiKeys.page.description")}
         actions={
@@ -506,5 +506,6 @@ export default function ApiKeysSecurityPage() {
     </div>
   )
 }
+
 
 

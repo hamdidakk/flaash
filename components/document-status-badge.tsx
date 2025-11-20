@@ -11,25 +11,25 @@ export function DocumentStatusBadge({ status }: DocumentStatusBadgeProps) {
       label: "Completed",
       variant: "default" as const,
       icon: CheckCircle2,
-      className: "bg-green-500/10 text-green-500 hover:bg-green-500/20",
+      className: "rag-status rag-status--success",
     },
     processing: {
       label: "Processing",
       variant: "secondary" as const,
       icon: Clock,
-      className: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20",
+      className: "rag-status rag-status--info",
     },
     pending: {
       label: "Pending",
       variant: "outline" as const,
       icon: Clock,
-      className: "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20",
+      className: "rag-status rag-status--warning",
     },
     failed: {
       label: "Failed",
       variant: "destructive" as const,
       icon: XCircle,
-      className: "bg-red-500/10 text-red-500 hover:bg-red-500/20",
+      className: "rag-status rag-status--danger",
     },
   }
 
