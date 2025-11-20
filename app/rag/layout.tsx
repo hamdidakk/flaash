@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import type React from "react"
+
 import "@/app/globals.css"
 import { RagAppShell } from "@/components/rag/RagAppShell"
 

@@ -187,11 +187,13 @@ export function SearchPanel({
 
   return (
     <ToolSection title="Recherche vectorielle" description="Soumettez une requête directement au vector store Dakkom.">
-      <DashboardFormSection columns={2}>
-        <DashboardFormField label="Question">
-          <Textarea rows={4} value={query} onChange={(e) => setQuery(e.target.value)} disabled={disabled} />
-        </DashboardFormField>
+      <div className="space-y-4">
         <DashboardFormSection columns={1}>
+          <DashboardFormField label="Question">
+            <Textarea rows={4} value={query} onChange={(e) => setQuery(e.target.value)} disabled={disabled} />
+          </DashboardFormField>
+        </DashboardFormSection>
+        <DashboardFormSection columns={2}>
           <DashboardFormField label="Collection">
             <Input value={collectionName} onChange={(e) => setCollectionName(e.target.value)} disabled={disabled} />
           </DashboardFormField>
@@ -206,13 +208,13 @@ export function SearchPanel({
               className="slider-green"
             />
           </DashboardFormField>
-          <DashboardFormActions align="left">
-          <Button onClick={runSearch} disabled={isPending || disabled} className="dashboard-cta-accent">
-              {isPending ? "Recherche…" : "Lancer la recherche"}
-            </Button>
-          </DashboardFormActions>
         </DashboardFormSection>
-      </DashboardFormSection>
+        <DashboardFormActions align="left">
+          <Button onClick={runSearch} disabled={isPending || disabled} className="dashboard-cta-accent">
+            {isPending ? "Recherche…" : "Lancer la recherche"}
+          </Button>
+        </DashboardFormActions>
+      </div>
       <ScrollArea className="h-64 dashboard-panel-scroll">
         {results.length === 0 ? (
           <p className="dashboard-panel-placeholder">Les résultats apparaîtront ici.</p>

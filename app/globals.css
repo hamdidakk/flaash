@@ -1226,6 +1226,18 @@
     @apply border border-[var(--color-flaash-green)] bg-[var(--color-flaash-green)] text-white hover:bg-[var(--color-flaash-green-hover)] focus-visible:ring-[var(--color-flaash-green)] focus-visible:ring-offset-2 disabled:opacity-60;
   }
 
+  .cta-accent,
+  .dashboard-cta-accent {
+    background-color: var(--color-flaash-green) !important;
+    border-color: var(--color-flaash-green) !important;
+    color: white !important;
+  }
+
+  .cta-accent:hover,
+  .dashboard-cta-accent:hover {
+    background-color: var(--color-flaash-green-hover) !important;
+  }
+
   .card-surface-light {
     @apply bg-white/80 shadow-sm;
   }

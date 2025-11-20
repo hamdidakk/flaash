@@ -1,56 +1,53 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { useState } from "react"
-import { MessageCircle, FileText, Upload, Settings, PanelLeft, PanelRight, BookOpen } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+import { MessageSquare, FileText, Upload, BookOpen, Settings, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FlaashWordmark } from "@/components/public/FlaashWordmark"
+import { cn } from "@/lib/utils"
 
-const navItems = [
-  { href: "/rag", label: "Conversations", icon: MessageCircle },
-  { href: "/rag/documents", label: "Documents", icon: FileText },
-  { href: "/rag/upload", label: "Ajouter", icon: Upload },
-  { href: "/rag/guides", label: "Guides", icon: BookOpen },
-  { href: "/rag/settings", label: "Paramètres", icon: Settings },
+const ragNavigation = [
+  { name: "Nouvelle conversation", href: "/rag", icon: MessageSquare },
+  { name: "Liste des documents", href: "/rag/documents", icon: FileText },
+  { name: "Gestion des documents", href: "/rag/upload", icon: Upload },
+  { name: "Guides & inspirations", href: "/rag/guides", icon: BookOpen },
+  { name: "Paramètres", href: "/rag/settings", icon: Settings },
 ]
 
 export function RagAppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
+  const pathname = usePathname()
 
   return (
     <div className={cn("rag-shell", collapsed && "rag-shell--collapsed")}>
       <aside className="rag-sidebar">
         <div className="rag-sidebar__top">
           <Link href="/" className="rag-sidebar__logo">
-            <span>FLAASH RAG</span>
+            <FlaashWordmark />
           </Link>
-          <Button
-            variant="ghost"
-            size="icon"
+          <button
+            onClick={() => setCollapsed(!collapsed)}
             className="rag-sidebar__toggle"
-            onClick={() => setCollapsed((prev) => !prev)}
-            aria-label={collapsed ? "Ouvrir la barre latérale" : "Réduire la barre latérale"}
+            aria-label={collapsed ? "Agrandir la sidebar" : "Réduire la sidebar"}
           >
-            {collapsed ? <PanelRight className="size-4" /> : <PanelLeft className="size-4" />}
-          </Button>
+            {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
+          </button>
         </div>
 
         <nav className="rag-sidebar__nav">
-          <span className="rag-sidebar__section">Navigation</span>
           <ul>
-            {navItems.map((item) => {
-              const Icon = item.icon
-              const active = pathname === item.href
+            {ragNavigation.map((item) => {
+              const isActive = pathname === item.href || (item.href !== "/rag" && pathname.startsWith(item.href))
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={cn("rag-sidebar__link", active && "rag-sidebar__link--active")}
+                    className={cn("rag-sidebar__link", isActive && "rag-sidebar__link--active")}
                   >
-                    <Icon className="size-4" />
-                    <span>{item.label}</span>
+                    <item.icon className="size-5 shrink-0" />
+                    <span>{item.name}</span>
                   </Link>
                 </li>
               )
@@ -59,32 +56,29 @@ export function RagAppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="rag-sidebar__footer">
-          <p className="rag-sidebar__caption">v0.1 – Demo</p>
-          <p className="rag-sidebar__caption">Back-end connecté</p>
+          <p>FLAASH RAG v1.0</p>
         </div>
       </aside>
 
-      <div className="rag-main">
+      <main className="rag-main">
         <header className="rag-main__header">
           <div>
             <p className="rag-main__eyebrow">FLAASH • Recherche augmentée</p>
-            <h1>Concevez vos réponses augmentées</h1>
-            <p>
-              Centralisez vos documents, entraînez le RAG et supervisez chaque itération dans un espace dédié.
-            </p>
+            <h1>Agent IA conversationnel</h1>
+            <p>Explorez vos documents entraînés, posez des questions et obtenez des réponses contextuelles basées sur votre base de connaissances.</p>
           </div>
           <div className="rag-main__cta-group">
-            <Button asChild size="lg" className="dashboard-cta-accent">
-              <Link href="/rag/upload">Ajouter des documents</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
+            <Button asChild variant="outline" size="sm">
               <Link href="/rag/documents">Voir la base</Link>
+            </Button>
+            <Button asChild className="dashboard-cta-accent" size="sm">
+              <Link href="/rag">Nouvelle conversation</Link>
             </Button>
           </div>
         </header>
 
-        <main className="rag-main__content">{children}</main>
-      </div>
+        <div className="rag-main__content">{children}</div>
+      </main>
     </div>
   )
 }
