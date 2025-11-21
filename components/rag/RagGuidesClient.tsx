@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export function RagGuidesClient() {
   return (
-    <div className="rag-stack text-white">
+    <div className="rag-stack">
       <div>
         <h1 className="rag-page-heading">Guides & Inspirations</h1>
         <p className="rag-page-subtitle">Découvrez les meilleures pratiques pour exploiter pleinement le RAG FLAASH.</p>

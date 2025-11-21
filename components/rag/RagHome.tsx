@@ -5,7 +5,7 @@ import { QuickAsk } from "@/components/public/blocks/QuickAsk"
 import { PublicWidget } from "@/components/public/Widget"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { Circle, Sparkles } from "lucide-react"
 import Link from "next/link"
 
 const suggestions = [
@@ -31,7 +31,7 @@ export function RagHome() {
             {suggestions.map((prompt) => (
               <Button key={prompt} variant="outline" className="rag-button--prompt">
                 <span>{prompt}</span>
-                <ArrowRight className="size-4" />
+                <Circle className="size-2 fill-black stroke-none" />
               </Button>
             ))}
           </div>
@@ -61,7 +61,7 @@ export function RagHome() {
           <Button asChild variant="ghost" className="rag-link-button px-0">
             <Link href="/rag/documents">
               Voir les documents suivis
-              <ArrowRight className="size-4" />
+              <Circle className="size-2 fill-black stroke-none" />
             </Link>
           </Button>
         </Card>

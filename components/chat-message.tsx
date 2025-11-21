@@ -10,8 +10,33 @@ interface ChatMessageProps {
   onCitationClick?: (citation: CitationLink) => void
 }
 
+const META_LABELS = {
+  fr: {
+    source: "Source",
+    source_type: "Type",
+    author: "Auteur",
+    theme: "Thématique",
+    topic: "Sujet",
+    category: "Catégorie",
+    collection: "Collection",
+    language: "Langue",
+    url: "Source",
+  },
+  en: {
+    source: "Source",
+    source_type: "Type",
+    author: "Author",
+    theme: "Theme",
+    topic: "Topic",
+    category: "Category",
+    collection: "Collection",
+    language: "Language",
+    url: "Source link",
+  },
+}
+
 export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { role, content, citations, timestamp, metadata, retrievedDocuments } = message
   const isUser = role === "user"
   const hasCitations = citations && citations.length > 0
@@ -68,26 +93,29 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
             <div className="space-y-3 border-t border-border/50 pt-2">
               {hasCitations && (
                 <div className="space-y-2">
-                  <p className="text-xs font-medium opacity-70">{t("chat.citations")}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {citations?.map((citation) => (
-                      <Button
-                        key={citation.id}
-                        variant="outline"
-                        size="sm"
-                        className="h-auto py-1 px-2 text-xs bg-transparent"
-                        onClick={() => onCitationClick?.(citation)}
-                      >
-                        <FileText className="h-3 w-3 mr-1" />
-                        {citation.document}
-                        {citation.page && <span className="ml-1">p.{citation.page}</span>}
-                        {typeof citation.score === "number" && (
-                          <Badge variant="secondary" className="ml-2 text-[10px]">
-                            {(citation.score * 100).toFixed(0)}%
-                          </Badge>
-                        )}
-                      </Button>
-                    ))}
+                  <div className="public-sources">
+                    <div className="public-sources__header">
+                      <p>{t("chat.citations")}</p>
+                    </div>
+                    <div className="public-sources__grid">
+                      {citations?.map((citation) => (
+                        <button
+                          type="button"
+                          key={citation.id}
+                          className="public-sources__tile"
+                          onClick={() => onCitationClick?.(citation)}
+                        >
+                          <div className="public-sources__tile-head">
+                            <FileText className="size-4" />
+                            <span className="public-sources__score">
+                              {typeof citation.score === "number" ? `${Math.round(citation.score * 100)}%` : "—"}
+                            </span>
+                          </div>
+                          <p className="public-sources__name">{citation.document}</p>
+                          {citation.page && <span className="public-sources__meta">p.{citation.page}</span>}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -97,14 +125,23 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
                   <p className="text-xs font-medium opacity-70">{t("chat.retrievedDocuments.title")}</p>
                   <div className="space-y-2">
                     {retrievedDocuments?.map((doc) => {
+                      const metadataEntries = Object.entries(doc.metadata ?? {}).filter(
+                        ([, value]) => typeof value === "string" && value.trim().length > 0,
+                      ) as Array<[string, string]>
+                      const getMetadataLabel = (key: string) => {
+                        const labels = META_LABELS[language as keyof typeof META_LABELS] ?? META_LABELS.en
+                        return labels[key as keyof typeof labels] ?? key.replace(/_/g, " ")
+                      }
                       const citation = citations?.find((item) => item.chunkId === doc.chunkId)
                       return (
                         <div
                           key={doc.id}
                           className="space-y-1 rounded-md border border-border/60 bg-background/40 px-3 py-2"
                         >
-                          <div className="flex items-center justify-between gap-2 text-xs font-medium">
-                            <span className="truncate">{doc.documentName}</span>
+                          <div className="flex items-center justify-between gap-2 text-xs font-medium text-gray-900">
+                            <span className="truncate text-[13px] font-semibold uppercase tracking-wide text-gray-900">
+                              {doc.documentName}
+                            </span>
                             {typeof doc.score === "number" && (
                               <Badge variant="outline" className="text-[10px]">
                                 {(doc.score * 100).toFixed(0)}%
@@ -118,6 +155,27 @@ export function ChatMessage({ message, onCitationClick }: ChatMessageProps) {
                             </p>
                           )}
                           <p className="text-xs leading-relaxed text-muted-foreground line-clamp-4">{doc.snippet}</p>
+                          {metadataEntries.length > 0 && (
+                            <div className="public-widget__doc-meta">
+                              {metadataEntries.map(([key, value]) =>
+                                key === "url" ? (
+                                  <a
+                                    key={`${doc.id}-${key}`}
+                                    className="public-widget__doc-meta-link"
+                                    href={value}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {getMetadataLabel(key)}
+                                  </a>
+                                ) : (
+                                  <span key={`${doc.id}-${key}`} className="public-widget__doc-meta-pill">
+                                    {getMetadataLabel(key)} · {value}
+                                  </span>
+                                ),
+                              )}
+                            </div>
+                          )}
                           {citation && onCitationClick && (
                             <Button
                               variant="ghost"

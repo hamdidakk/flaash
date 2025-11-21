@@ -2,13 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { ChatMessagesList } from "@/components/chat/chat-messages-list"
 import { ChatInput } from "@/components/chat/chat-input"
 import { WidgetHeader } from "@/components/public/chat/WidgetHeader"
 import { PromptsChips } from "@/components/public/chat/PromptsChips"
-import { TypingIndicator } from "@/components/public/chat/TypingIndicator"
 import type { RagMessage, CitationLink, ChunkRecord } from "@/lib/types"
 import { getDocumentChunksByName, ragGenerationPublic } from "@/lib/dakkom-api"
 import { ChunksDialog } from "@/components/documents/chunks-dialog"
@@ -18,6 +16,49 @@ import { Button } from "@/components/ui/button"
 import { trackEvent } from "@/lib/analytics"
 import { AppError } from "@/lib/error-handler"
 import { ThrottlingAlert } from "@/components/error/throttling-alert"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import type { DakkomRetrievedDocument } from "@/lib/dakkom-api"
+
+const KNOWN_METADATA_KEYS = ["source", "author", "theme", "topic", "category", "url", "collection", "language"]
+
+const extractDocumentMetadata = (doc: DakkomRetrievedDocument): Record<string, string> => {
+  const metadata: Record<string, string> = {}
+
+  const assignIfString = (key: string, value: unknown) => {
+    if (typeof value === "string" && value.trim().length > 0) {
+      metadata[key] = value.trim()
+    }
+  }
+
+  KNOWN_METADATA_KEYS.forEach((key) => {
+    if (key in doc) {
+      assignIfString(key, (doc as Record<string, unknown>)[key])
+    }
+  })
+
+  if (typeof (doc as Record<string, unknown>).source_type === "string") {
+    assignIfString("source_type", (doc as Record<string, unknown>).source_type)
+  }
+
+  if (doc.metadata && typeof doc.metadata === "object") {
+    Object.entries(doc.metadata).forEach(([key, value]) => {
+      if (!(key in metadata)) {
+        assignIfString(key, value)
+      }
+    })
+  }
+
+  return metadata
+}
+
+type NormalizedDocument = {
+  chunkId: string
+  documentId: string
+  documentName: string
+  snippet: string
+  score?: number
+  metadata: Record<string, string>
+}
 
 export function PublicWidget() {
   const { t, language } = useLanguage()
@@ -33,6 +74,9 @@ export function PublicWidget() {
         login: "Sign in",
         subscribe: "Subscribe / Buy",
         more: "Learn more",
+        responseType: "Response type",
+        short: "Short",
+        long: "Long",
         cooldown: (s: number) => `Please wait ${s}s…`,
         prompts: [
           "How do cities monitor their citizens?",
@@ -51,7 +95,10 @@ export function PublicWidget() {
       upsellBody: (limit: number) => `Vous avez atteint la limite de ${limit} requêtes gratuites.`,
       login: "Se connecter",
       subscribe: "S’abonner / Acheter",
-      more: "En savoir plus",
+        more: "En savoir plus",
+        responseType: "Type de réponse",
+        short: "Réponse courte",
+        long: "Réponse longue",
       cooldown: (s: number) => `Veuillez patienter ${s}s…`,
       prompts: [
         "Comment les villes surveillent-elles leurs citoyens ?",
@@ -75,6 +122,7 @@ export function PublicWidget() {
   const [isSourceModalOpen, setIsSourceModalOpen] = useState(false)
   const [sourceDocument, setSourceDocument] = useState<string | undefined>()
   const [sourceLinks, setSourceLinks] = useState<Array<{ label: string; href: string }>>([])
+  const [responseType, setResponseType] = useState<"short" | "long">("short")
   const COUNT_STORAGE_KEY = "public-chat:requests-count"
   const [requestCount, setRequestCount] = useState(0)
   const MIN_INTERVAL_MS = 2000
@@ -137,16 +185,30 @@ export function PublicWidget() {
     setMessages((prev) => [...prev, { id: `user_${Date.now()}`, role: "user", content: question, citations: [] }])
     trackEvent("ask", { source: "public_widget", length: question.length })
     try {
-      const res = await ragGenerationPublic({ query: question, prompt: "v2", temperature: 0.5 })
+      const res = await ragGenerationPublic({ query: question, prompt: "v2", temperature: 0.5, response_length: responseType })
       const retrieved = (res as any).retrieved_documents ?? []
-      const citations: CitationLink[] = retrieved.map((doc: any, idx: number) => ({
-        id: `${doc.chunk_id ?? idx}`,
-        chunkId: doc.chunk_id ?? String(idx),
-        documentId: doc.source_file ?? "",
-        document: doc.source_file ?? "",
+      const normalizedDocuments: NormalizedDocument[] = retrieved.map((doc: DakkomRetrievedDocument, idx: number) => {
+        const chunkId = doc.chunk_id ?? String(idx)
+        const documentId = doc.source_file ?? doc.document_id ?? ""
+        const documentName = doc.source_file ?? doc.document ?? `Document ${idx + 1}`
+        return {
+          chunkId,
+          documentId,
+          documentName,
+          snippet: (doc as any).document ?? (doc as any).content ?? "",
+          score: typeof doc.probability === "number" ? doc.probability : undefined,
+          metadata: extractDocumentMetadata(doc),
+        }
+      })
+
+      const citations: CitationLink[] = normalizedDocuments.map((doc, idx) => ({
+        id: `${doc.chunkId}_${idx}`,
+        chunkId: doc.chunkId,
+        documentId: doc.documentId,
+        document: doc.documentName,
         page: undefined,
-        contentPreview: doc.document ?? "",
-        score: typeof doc.probability === "number" ? doc.probability : undefined,
+        contentPreview: doc.snippet,
+        score: doc.score,
       }))
       setMessages((prev) => [
         ...prev,
@@ -155,14 +217,15 @@ export function PublicWidget() {
           role: "assistant",
           content: (res as any).generated_response?.text ?? t("errors.generic.description"),
           citations,
-          retrievedDocuments: citations.map((c, i) => ({
-            id: `${c.chunkId}_${i}`,
-            chunkId: c.chunkId,
-            documentId: c.documentId,
-            documentName: c.document,
-            snippet: c.contentPreview,
-            score: c.score,
-            metadata: {},
+          metadata: { promptType: responseType },
+          retrievedDocuments: normalizedDocuments.map((doc, i) => ({
+            id: `${doc.chunkId}_${i}`,
+            chunkId: doc.chunkId,
+            documentId: doc.documentId,
+            documentName: doc.documentName,
+            snippet: doc.snippet,
+            score: doc.score,
+            metadata: doc.metadata,
           })),
         },
       ])
@@ -227,6 +290,22 @@ export function PublicWidget() {
           </div>
         )}
         <div className="public-widget__body">
+          <div className="public-widget__response-type">
+            <span>{TEXT.responseType}</span>
+            <Select value={responseType} onValueChange={(val) => setResponseType(val as "short" | "long")}>
+              <SelectTrigger className="public-widget__response-type-trigger">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="short" className="public-widget__response-type-item">
+                  {TEXT.short}
+                </SelectItem>
+                <SelectItem value="long" className="public-widget__response-type-item">
+                  {TEXT.long}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <ChatMessagesList messages={messages} isLoading={isLoading} onCitationClick={handleCitationClick} />
           <ChatInput
             value={input}

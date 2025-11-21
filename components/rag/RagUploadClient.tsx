@@ -47,7 +47,7 @@ export function RagUploadClient() {
     const completed = entries.filter((entry) => entry.status === "completed").length
     const failed = entries.filter((entry) => entry.status === "error").length
     const pending = entries.length - completed - failed
-    return `${entries.length} fichier(s) • ${completed} terminés • ${pending} en attente${failed ? ` • ${failed} échec(s)` : ""}`
+    return `${entries.length} fichier(s) → ${completed} terminés → ${pending} en attente${failed ? ` → ${failed} échec(s)` : ""}`
   }, [entries])
 
   const handleFiles = (files: FileList | null) => {
@@ -323,10 +323,10 @@ export function RagUploadClient() {
               </div>
             </div>
             <ul className="rag-list">
-              <li>• Vérifiez que le document ne contient pas de données confidentielles.</li>
-              <li>• Ajoutez des notes pour contextualiser les futures réponses.</li>
-              <li>• Utilisez “Document validé” uniquement pour les sources officielles.</li>
-              <li>• “Mode Q&A” prépare le fichier pour un questionnement direct.</li>
+              <li><span className="rag-arrow">→</span> Vérifiez que le document ne contient pas de données confidentielles.</li>
+              <li><span className="rag-arrow">→</span> Ajoutez des notes pour contextualiser les futures réponses.</li>
+              <li><span className="rag-arrow">→</span> Utilisez "Document validé" uniquement pour les sources officielles.</li>
+              <li><span className="rag-arrow">→</span> "Mode Q&A" prépare le fichier pour un questionnement direct.</li>
             </ul>
 
             <div className="rag-note-card">
@@ -383,8 +383,8 @@ export function RagUploadClient() {
                       </span>
                     </div>
                     <p className="rag-text-note">
-                      {entry.source} • {(entry.size / 1024 / 1024).toFixed(2)} Mo •{" "}
-                      {new Date(entry.timestamp).toLocaleTimeString("fr-FR")}
+                      <span>{entry.source} <span className="rag-arrow">→</span> {(entry.size / 1024 / 1024).toFixed(2)} Mo <span className="rag-arrow">→</span>{" "}
+                      {new Date(entry.timestamp).toLocaleTimeString("fr-FR")}</span>
                     </p>
                     {entry.status === "confirmed" && entry.confirmedAt && (
                       <p className="rag-text-note-strong">

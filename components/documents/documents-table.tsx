@@ -37,16 +37,15 @@ export function DocumentsTable({ documents, onViewChunks, onDelete, isLoading = 
     {
       key: "name",
       header: t("documents.table.name"),
+      className: "rag-table__cell--primary",
       render: (doc) => (
         <div className="dashboard-file-card__header">
           <div className="dashboard-file-card__meta">
-            <FileText className="mt-1 h-4 w-4 text-muted-foreground" />
+            <FileText className="mt-1 h-4 w-4 text-white/70" />
             <div>
               <p className="dashboard-file-card__title leading-tight">{doc.name}</p>
-              <p className="dashboard-file-card__size">
-              {doc.owner} • {doc.source}
-              </p>
-              {doc.batchId ? <p className="text-[11px] text-muted-foreground/80">Batch {doc.batchId}</p> : null}
+              <p className="dashboard-file-card__size">{doc.owner} • {doc.source}</p>
+              {doc.batchId ? <p className="text-[11px] text-white/60">Batch {doc.batchId}</p> : null}
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ interface AuthCardProps {
 export function AuthCard({ title, description, children, footer }: AuthCardProps) {
   const hasHeader = title || description
   return (
-    <Card className="w-full max-w-md">
+    <Card className="auth-card w-full max-w-[460px]">
       {hasHeader && (
         <CardHeader className="space-y-1">
           {title && <CardTitle className="text-2xl font-bold">{title}</CardTitle>}

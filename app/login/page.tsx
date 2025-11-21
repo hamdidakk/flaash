@@ -64,22 +64,22 @@ export default function LoginPage() {
   }, [status, user, router, searchParams])
 
   return (
-    <main id="main">
+    <main id="main" className="login-page">
       <PublicHeader />
-      <section className="min-h-[calc(100vh-var(--public-header-height,4rem)-var(--public-footer-height,auto))] bg-gradient-to-b from-gray-50 to-white py-12 md:py-16">
-        <div className="mx-auto max-w-4xl px-4">
+      <section className="login-page__section">
+        <div className="login-page__container">
           {/* Contenu descriptif */}
-          <div className="mb-8 text-center md:mb-12">
-            <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+          <div className="login-page__header">
+            <h1 className="login-page__title">
               {t("auth.login")}
             </h1>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              {t("auth.loginDescription")}
+            <p className="login-page__description">
+              Accédez à votre espace FLAASH et vos outils IA.
             </p>
           </div>
 
           {/* Formulaire de connexion centré */}
-          <div className="flex justify-center">
+          <div className="login-page__form-wrapper">
             <AuthCard
               title=""
               description=""
@@ -104,13 +104,6 @@ export default function LoginPage() {
               )}
               <LoginForm />
             </AuthCard>
-          </div>
-
-          {/* Informations supplémentaires */}
-          <div className="mt-8 text-center text-sm text-gray-500">
-            <Link href="/reset-password" className="text-primary hover:underline">
-              {t("auth.forgotPassword")}
-            </Link>
           </div>
         </div>
       </section>

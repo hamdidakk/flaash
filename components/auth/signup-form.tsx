@@ -73,7 +73,7 @@ export function SignupForm() {
         disabled={isLoading}
         minLength={6}
       />
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full dashboard-cta-accent" disabled={isLoading}>
         {isLoading ? t("common.loading") : t("auth.signup")}
       </Button>
     </form>

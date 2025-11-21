@@ -63,7 +63,7 @@ export function RagAppShell({ children }: { children: React.ReactNode }) {
       <main className="rag-main">
         <header className="rag-main__header">
           <div>
-            <p className="rag-main__eyebrow">FLAASH • Recherche augmentée</p>
+            <p className="rag-main__eyebrow">FLAASH <span className="rag-arrow">→</span> Recherche augmentée</p>
             <h1>Agent IA conversationnel</h1>
             <p>Explorez vos documents entraînés, posez des questions et obtenez des réponses contextuelles basées sur votre base de connaissances.</p>
           </div>

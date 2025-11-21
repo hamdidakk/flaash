@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
+import Link from "next/link"
 import { useLanguage } from "@/lib/language-context"
 import { useErrorHandler } from "@/lib/use-error-handler"
 import { Button } from "@/components/ui/button"
@@ -76,10 +77,15 @@ export function LoginForm() {
         disabled={isLoading}
       />
       {throttled && <ThrottlingAlert reason={storeError || t("throttling.description")} onRetry={clearSessionError} />}
-      <Button type="submit" className="w-full" disabled={isLoading || throttled}>
+      <Button type="submit" className="w-full dashboard-cta-accent" disabled={isLoading || throttled}>
         {isLoading ? t("common.loading") : t("auth.login")}
       </Button>
       {formError && <p className="text-sm text-destructive">{formError}</p>}
+      <div className="login-form__forgot-password">
+        <Link href="/reset-password" className="login-form__forgot-link">
+          {t("auth.forgotPassword")}
+        </Link>
+      </div>
     </form>
   )
 }

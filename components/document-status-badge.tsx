@@ -8,25 +8,25 @@ interface DocumentStatusBadgeProps {
 export function DocumentStatusBadge({ status }: DocumentStatusBadgeProps) {
   const statusConfig = {
     completed: {
-      label: "Completed",
+      label: "Terminé",
       variant: "default" as const,
       icon: CheckCircle2,
       className: "rag-status rag-status--success",
     },
     processing: {
-      label: "Processing",
+      label: "En cours",
       variant: "secondary" as const,
       icon: Clock,
       className: "rag-status rag-status--info",
     },
     pending: {
-      label: "Pending",
+      label: "En attente",
       variant: "outline" as const,
       icon: Clock,
       className: "rag-status rag-status--warning",
     },
     failed: {
-      label: "Failed",
+      label: "Échec",
       variant: "destructive" as const,
       icon: XCircle,
       className: "rag-status rag-status--danger",

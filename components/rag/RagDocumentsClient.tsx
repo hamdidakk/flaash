@@ -220,7 +220,12 @@ export function RagDocumentsClient() {
                 {filteredDocs.map((doc) => (
                   <tr key={doc.id} className="rag-table__row">
                     <td className="rag-table__cell">
-                      <p className="rag-table__title">{doc.name}</p>
+                      <p 
+                        className="rag-table__title cursor-pointer hover:text-[var(--color-flaash-green)] transition-colors"
+                        onClick={() => void handleViewChunks(doc)}
+                      >
+                        {doc.name}
+                      </p>
                       <div className="rag-table__subtitle">
                         <DocumentStatusBadge status={doc.status} />
                         {doc.chunkCount > 0 && <span>{doc.chunkCount} chunk(s)</span>}
