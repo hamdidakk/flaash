@@ -13,12 +13,14 @@ import {
 import { useLanguage } from "@/lib/language-context"
 import { useToast } from "@/hooks/use-toast"
 import { removeDocumentByName } from "@/lib/dakkom-api"
+import { AppError } from "@/lib/error-handler"
 
 interface DeleteDocumentDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   documentName: string
   onDeleteComplete?: () => void
+  onAuthError?: () => void
 }
 
 export function DeleteDocumentDialog({
@@ -26,6 +28,7 @@ export function DeleteDocumentDialog({
   onOpenChange,
   documentName,
   onDeleteComplete,
+  onAuthError,
 }: DeleteDocumentDialogProps) {
   const { t } = useLanguage()
   const { toast } = useToast()
@@ -39,6 +42,12 @@ export function DeleteDocumentDialog({
       })
       onDeleteComplete?.()
     } catch (e) {
+      // Détecter les erreurs d'authentification
+      if (e instanceof AppError && (e.code === 401 || e.code === 403)) {
+        onAuthError?.()
+        return
+      }
+      
       // If the backend reports the file has no nodes, consider the delete idempotent/successful
       try {
         const msg = e instanceof Error ? e.message : String(e)

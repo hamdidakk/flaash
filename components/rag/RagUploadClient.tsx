@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast"
 import { AppError } from "@/lib/error-handler"
 import { useUploadHistory, type UploadHistoryEntry } from "@/hooks/use-upload-history"
 import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
+import { RagLoginModal } from "./RagLoginModal"
 
 type SourceOption = "INTERNAL" | "WEB_PAGE" | "OTHER"
 
@@ -41,6 +42,7 @@ export function RagUploadClient() {
   const [isQA, setIsQA] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
   const summary = useMemo(() => {
     if (entries.length === 0) return ""
@@ -77,12 +79,13 @@ export function RagUploadClient() {
       return
     }
     if (source === "WEB_PAGE" && !url.trim()) {
-      toast({ title: "URL requise", description: "Pour les sources web, indiquez l’URL à indexer.", variant: "destructive" })
+      toast({ title: "URL requise", description: "Pour les sources web, indiquez l'URL à indexer.", variant: "destructive" })
       return
     }
     setIsUploading(true)
     setEntries((prev) => prev.map((entry) => ({ ...entry, status: "uploading", progress: 12, message: undefined })))
     let successCount = 0
+    let hasAuthError = false
     for (const entry of entries) {
       try {
         const form = new FormData()
@@ -109,8 +112,15 @@ export function RagUploadClient() {
         })
       } catch (error) {
         let message = "Échec inattendu."
+        let errorCode: number | undefined
         if (error instanceof AppError) {
           message = error.message || message
+          errorCode = error.code
+          // Détecter les erreurs d'authentification
+          if (error.code === 401 || error.code === 403) {
+            hasAuthError = true
+            message = "Authentification requise. Veuillez vous connecter."
+          }
         } else if (error instanceof Error) {
           message = error.message
         }
@@ -129,10 +139,34 @@ export function RagUploadClient() {
         })
       }
     }
-    toast({
-      title: "Upload terminé",
-      description: "Les fichiers ont été transmis au backend Dakkom.",
-    })
+    
+    // Afficher la modal de connexion si erreur d'authentification
+    if (hasAuthError) {
+      setShowLoginModal(true)
+      setIsUploading(false)
+      return
+    }
+    
+    // Afficher le message approprié selon le résultat
+    if (successCount === 0) {
+      toast({
+        title: "Échec de l'upload",
+        description: "Aucun fichier n'a pu être uploadé. Vérifiez vos identifiants et réessayez.",
+        variant: "destructive",
+      })
+    } else if (successCount === entries.length) {
+      toast({
+        title: "Upload terminé",
+        description: "Les fichiers ont été transmis au backend Dakkom.",
+      })
+    } else {
+      toast({
+        title: "Upload partiel",
+        description: `${successCount} fichier(s) uploadé(s) sur ${entries.length}. Certains fichiers ont échoué.`,
+        variant: "default",
+      })
+    }
+    
     if (typeof window !== "undefined" && successCount > 0) {
       window.sessionStorage.setItem(
         "rag:last-upload",
@@ -399,6 +433,7 @@ export function RagUploadClient() {
           </Card>
         </div>
       </div>
+      <RagLoginModal open={showLoginModal} onOpenChange={setShowLoginModal} />
     </div>
   )
 }

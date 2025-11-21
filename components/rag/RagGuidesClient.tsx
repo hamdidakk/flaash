@@ -53,7 +53,7 @@ export function RagGuidesClient() {
                 </span>
                 <div>
                   <strong>Posez vos questions</strong> dans{" "}
-                  <Link href="/rag" className="rag-link">
+                  <Link href="/" className="rag-link">
                     Conversations
                   </Link>
                   . L'IA répondra en s'appuyant sur vos documents.

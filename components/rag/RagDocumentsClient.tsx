@@ -14,8 +14,10 @@ import { DeleteDocumentDialog } from "@/components/documents/delete-document-dia
 import { useErrorHandler } from "@/hooks/use-error-handler"
 import { useToast } from "@/hooks/use-toast"
 import type { KnowledgeDocument, ChunkRecord } from "@/lib/types"
-import { getDocumentChunksByName, listDocumentNames } from "@/lib/dakkom-api"
+import { getDocumentChunksByName, listDocumentNames, removeDocumentByName } from "@/lib/dakkom-api"
 import { useUploadHistory } from "@/hooks/use-upload-history"
+import { AppError } from "@/lib/error-handler"
+import { RagLoginModal } from "./RagLoginModal"
 
 const DEFAULT_SOURCE_LABEL = "Dakkom"
 
@@ -34,6 +36,7 @@ export function RagDocumentsClient() {
   const [documentToDelete, setDocumentToDelete] = useState<KnowledgeDocument | null>(null)
   const [isChunksLoading, setIsChunksLoading] = useState(false)
   const [uploadNotice, setUploadNotice] = useState<number | null>(null)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const loadRef = useRef(false)
 
   const filteredDocs = useMemo(() => {
@@ -64,7 +67,12 @@ export function RagDocumentsClient() {
       }))
       setDocuments(mapped)
     } catch (error) {
-      handleError(error, { title: "Impossible de charger les documents" })
+      // Détecter les erreurs d'authentification
+      if (error instanceof AppError && (error.code === 401 || error.code === 403)) {
+        setShowLoginModal(true)
+      } else {
+        handleError(error, { title: "Impossible de charger les documents" })
+      }
       setDocuments([])
     } finally {
       setIsLoading(false)
@@ -120,7 +128,12 @@ export function RagDocumentsClient() {
       }
       setIsChunksOpen(true)
     } catch (error) {
-      handleError(error, { title: `Impossible d'ouvrir ${doc.name}` })
+      // Détecter les erreurs d'authentification
+      if (error instanceof AppError && (error.code === 401 || error.code === 403)) {
+        setShowLoginModal(true)
+      } else {
+        handleError(error, { title: `Impossible d'ouvrir ${doc.name}` })
+      }
     } finally {
       setIsChunksLoading(false)
     }
@@ -291,7 +304,10 @@ export function RagDocumentsClient() {
         }}
         documentName={documentToDelete?.name || ""}
         onDeleteComplete={handleDeleteComplete}
+        onAuthError={() => setShowLoginModal(true)}
       />
+
+      <RagLoginModal open={showLoginModal} onOpenChange={setShowLoginModal} />
     </div>
   )
 }
