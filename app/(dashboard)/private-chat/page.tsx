@@ -14,7 +14,7 @@ import { AppError } from "@/lib/error-handler"
 import { ThrottlingAlert } from "@/components/error/throttling-alert"
 
 const DEFAULT_CHAT_SETTINGS: ChatSettings = {
-  model: "gpt-4o",
+  model: "auto",
   temperature: 0.7,
   systemPrompt:
     "You are a helpful assistant that answers questions based on the provided documents. Always cite your sources.",
@@ -110,7 +110,10 @@ export default function ChatPage() {
         collection_name: "document_collection",
         temperature: settings.temperature,
         prompt: settings.promptType,
-        model: settings.model,
+      }
+
+      if (settings.model && settings.model !== "auto") {
+        payload.model = settings.model
       }
 
       const res = await ragGeneration(payload)
@@ -142,7 +145,7 @@ export default function ChatPage() {
         citations,
         retrievedDocuments,
         metadata: {
-          model: settings.model,
+          ...(settings.model !== "auto" ? { model: settings.model } : {}),
           temperature: settings.temperature,
           promptType: settings.promptType,
           collectionId: settings.collectionId,

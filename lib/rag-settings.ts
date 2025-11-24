@@ -9,7 +9,7 @@ export interface RagSettings {
 }
 
 export const DEFAULT_RAG_SETTINGS: RagSettings = {
-  model: "gpt-4o",
+  model: "auto",
   temperature: 0.7,
   systemPrompt: "You are a helpful assistant that answers questions based on the provided documents. Always cite your sources.",
   promptType: "short",

@@ -13,6 +13,7 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
   const { t } = useLanguage()
 
   const models = [
+    { value: "auto", label: "Auto (Mistral)", description: t("chat.models.auto") },
     { value: "gpt-4o", label: "GPT-4o", description: t("chat.models.gpt4o") },
     { value: "gpt-4-turbo", label: "GPT-4 Turbo", description: t("chat.models.gpt4turbo") },
     { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo", description: t("chat.models.gpt35") },
@@ -20,10 +21,12 @@ export function ModelSelector({ value, onChange }: ModelSelectorProps) {
     { value: "mistral-medium", label: "Mistral Medium", description: t("chat.models.mistralMedium") },
   ]
 
+  const selectedValue = models.some((model) => model.value === value) ? value : "auto"
+
   return (
     <div className="space-y-2">
       <Label>{t("chat.settings.model")}</Label>
-      <Select value={value} onValueChange={onChange}>
+      <Select value={selectedValue} onValueChange={onChange}>
         <SelectTrigger>
           <SelectValue />
         </SelectTrigger>

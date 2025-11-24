@@ -382,6 +382,7 @@ export const translations = {
         },
       },
       models: {
+        auto: "Let Dakkom pick the best available model (fallback to Mistral)",
         gpt4o: "Most capable, best for complex tasks",
         gpt4turbo: "Fast and capable, good balance",
         gpt35: "Fast and economical, good for simple tasks",
@@ -1169,6 +1170,7 @@ export const translations = {
           },
         },
         models: {
+          auto: "Laisse Dakkom choisir le meilleur modèle disponible (Mistral par défaut)",
           gpt4o: "Le plus performant, idéal pour les tâches complexes",
           gpt4turbo: "Rapide et performant, bon équilibre",
           gpt35: "Rapide et économique, bon pour les tâches simples",
