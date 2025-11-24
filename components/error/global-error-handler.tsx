@@ -16,8 +16,31 @@ export function GlobalErrorHandler() {
   useEffect(() => {
     // Intercepter les erreurs non gérées dans les promesses
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      event.preventDefault()
       const error = event.reason
+      
+      // Ignorer les erreurs 401 (authentification) car elles sont normales après déconnexion
+      // Ces erreurs sont gérées silencieusement par les composants (RagGuard, sessionProfile, etc.)
+      if (error instanceof AppError && error.code === 401) {
+        // Erreur 401 silencieuse, ne pas la logger ni l'afficher
+        event.preventDefault()
+        return
+      }
+      
+      // Vérifier aussi si c'est une erreur d'authentification par le message
+      if (error instanceof Error) {
+        const isAuthError = error.message.includes("credentials were not provided") ||
+          error.message.includes("Authentication credentials") ||
+          error.message.includes("authentication") ||
+          (error as any).__silent === true
+        
+        if (isAuthError) {
+          // Erreur d'authentification silencieuse, ne pas la logger ni l'afficher
+          event.preventDefault()
+          return
+        }
+      }
+      
+      event.preventDefault()
       
       // Si c'est déjà une AppError, l'utiliser directement
       if (error instanceof AppError) {
@@ -46,13 +69,34 @@ export function GlobalErrorHandler() {
 
     // Intercepter les erreurs JavaScript non gérées
     const handleErrorEvent = (event: ErrorEvent) => {
-      event.preventDefault()
       const error = event.error
       
       // Ignorer les erreurs de script externes (ex: extensions de navigateur)
       if (event.filename && !event.filename.includes(window.location.origin)) {
         return
       }
+      
+      // Ignorer les erreurs 401 (authentification) car elles sont normales après déconnexion
+      if (error instanceof AppError && error.code === 401) {
+        event.preventDefault()
+        return
+      }
+      
+      // Vérifier aussi si c'est une erreur d'authentification par le message
+      if (error instanceof Error) {
+        const isAuthError = error.message.includes("credentials were not provided") ||
+          error.message.includes("Authentication credentials") ||
+          error.message.includes("authentication") ||
+          (error as any).__silent === true
+        
+        if (isAuthError) {
+          // Erreur d'authentification silencieuse, ne pas la logger ni l'afficher
+          event.preventDefault()
+          return
+        }
+      }
+      
+      event.preventDefault()
       
       if (error instanceof AppError) {
         handleError(error)

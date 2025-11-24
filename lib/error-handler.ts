@@ -76,7 +76,8 @@ export class ErrorLogger {
     }
 
     // Log to console in development with structured payload
-    if (process.env.NODE_ENV === "development") {
+    // Ne pas logger les erreurs 401 (authentification) car elles sont normales après déconnexion
+    if (process.env.NODE_ENV === "development" && error.code !== 401) {
       const isClientError = error.code >= 400 && error.code < 500
       try {
         const payload = JSON.stringify(log, null, 2)

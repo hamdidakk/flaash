@@ -52,6 +52,11 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   async logout() {
     try {
       await sessionLogout()
+    } catch (error) {
+      // Ignorer les erreurs 401 lors du logout (c'est normal si la session est déjà expirée)
+      if (!(error instanceof AppError && error.code === 401)) {
+        console.warn("Erreur lors de la déconnexion:", error)
+      }
     } finally {
       set({ user: null, status: "unauthenticated", error: undefined, errorCode: undefined, throttled: false })
     }
@@ -63,9 +68,17 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       if (profile) {
         set({ user: profile, status: "authenticated", error: undefined, errorCode: undefined, throttled: false })
       } else {
+        // Pas de profil = utilisateur non authentifié (normal après déconnexion)
         set({ user: null, status: "unauthenticated", error: undefined, errorCode: 401, throttled: false })
       }
     } catch (error) {
+      // Si c'est une erreur 401, c'est normal (utilisateur non authentifié)
+      // On ne la traite pas comme une erreur critique
+      if (error instanceof AppError && error.code === 401) {
+        set({ user: null, status: "unauthenticated", error: undefined, errorCode: 401, throttled: false })
+        return
+      }
+      // Pour les autres erreurs, on les traite comme des erreurs serveur
       const appError = error instanceof AppError ? error : new AppError(500, "Erreur lors du chargement de la session.", error)
       set({
         user: null,

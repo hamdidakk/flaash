@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast"
 import { AppError } from "@/lib/error-handler"
 import { useUploadHistory, type UploadHistoryEntry } from "@/hooks/use-upload-history"
 import { DashboardFormSection, DashboardFormField, DashboardFormActions } from "@/components/dashboard/DashboardForm"
-import { RagLoginModal } from "./RagLoginModal"
+// La modal de connexion est gérée par RagGuard, pas besoin de l'importer ici
 
 type SourceOption = "INTERNAL" | "WEB_PAGE" | "OTHER"
 
@@ -42,7 +42,7 @@ export function RagUploadClient() {
   const [isQA, setIsQA] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
-  const [showLoginModal, setShowLoginModal] = useState(false)
+  // La modal de connexion est gérée par RagGuard, pas besoin de state local
 
   const summary = useMemo(() => {
     if (entries.length === 0) return ""
@@ -117,10 +117,11 @@ export function RagUploadClient() {
           message = error.message || message
           errorCode = error.code
           // Détecter les erreurs d'authentification
-          if (error.code === 401 || error.code === 403) {
-            hasAuthError = true
-            message = "Authentification requise. Veuillez vous connecter."
-          }
+        if (error.code === 401 || error.code === 403) {
+          hasAuthError = true
+          message = "Authentification requise. Veuillez vous connecter."
+          // RagGuard gère l'affichage de la modal, on ne fait rien ici
+        }
         } else if (error instanceof Error) {
           message = error.message
         }
@@ -140,9 +141,8 @@ export function RagUploadClient() {
       }
     }
     
-    // Afficher la modal de connexion si erreur d'authentification
+    // Si erreur d'authentification, RagGuard gère l'affichage de la modal
     if (hasAuthError) {
-      setShowLoginModal(true)
       setIsUploading(false)
       return
     }
@@ -433,7 +433,7 @@ export function RagUploadClient() {
           </Card>
         </div>
       </div>
-      <RagLoginModal open={showLoginModal} onOpenChange={setShowLoginModal} />
+      {/* La modal de connexion est gérée par RagGuard */}
     </div>
   )
 }

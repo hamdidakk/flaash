@@ -111,6 +111,31 @@ async function sessionFetch<T>(input: RequestInfo | URL, init?: RequestInit & { 
       }
       
       const code = isErrorCode(response.status) ? response.status : 500
+      
+      // Pour les erreurs 401, créer une erreur silencieuse qui ne sera pas loggée
+      // Les erreurs 401 sont normales après déconnexion ou si l'utilisateur n'est pas connecté
+      if (code === 401) {
+        // Créer une erreur avec un flag spécial pour indiquer qu'elle ne doit pas être loggée
+        const silentError = new AppError(
+          code,
+          errorMessage,
+          {
+            url: typeof input === "string" ? input : input.toString(),
+            status: response.status,
+            silent: true, // Flag pour indiquer que cette erreur ne doit pas être loggée
+          },
+          false,
+        )
+        // Ajouter une propriété pour empêcher le logging
+        ;(silentError as any).__silent = true
+        throw silentError
+      }
+      
+      // Pour les autres erreurs, logger uniquement les erreurs serveur (500+)
+      if (code >= 500) {
+        console.error(`[session-client] Server error ${code} from ${typeof input === "string" ? input : input.toString()}:`, errorMessage)
+      }
+      
       throw new AppError(
         code,
         errorMessage,
@@ -132,6 +157,10 @@ async function sessionFetch<T>(input: RequestInfo | URL, init?: RequestInit & { 
     return { status: response.status, data }
   } catch (error) {
     if (error instanceof AppError) {
+      // Ne pas logger les erreurs 401 en production (c'est normal après déconnexion)
+      if (error.code === 401 && process.env.NODE_ENV === "production") {
+        // Erreur 401 silencieuse en production
+      }
       throw error
     }
     throw new AppError(503, error instanceof Error ? error.message : "Failed to fetch session", error)
@@ -151,9 +180,12 @@ export async function sessionProfile() {
     const res = await sessionFetch<SessionUser>(SESSION_ENDPOINTS.profile, { method: "GET" })
     return res.data
   } catch (error: any) {
+    // Les erreurs 401 (non authentifié) sont normales et ne doivent pas être propagées comme erreurs
+    // Cela peut arriver après une déconnexion ou si l'utilisateur n'est pas connecté
     if (error instanceof AppError && error.code === 401) {
       return null
     }
+    // Pour les autres erreurs, on les propage
     throw error
   }
 }

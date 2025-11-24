@@ -17,7 +17,7 @@ import type { KnowledgeDocument, ChunkRecord } from "@/lib/types"
 import { getDocumentChunksByName, listDocumentNames, removeDocumentByName } from "@/lib/dakkom-api"
 import { useUploadHistory } from "@/hooks/use-upload-history"
 import { AppError } from "@/lib/error-handler"
-import { RagLoginModal } from "./RagLoginModal"
+// La modal de connexion est gérée par RagGuard, pas besoin de l'importer ici
 
 const DEFAULT_SOURCE_LABEL = "Dakkom"
 
@@ -36,7 +36,7 @@ export function RagDocumentsClient() {
   const [documentToDelete, setDocumentToDelete] = useState<KnowledgeDocument | null>(null)
   const [isChunksLoading, setIsChunksLoading] = useState(false)
   const [uploadNotice, setUploadNotice] = useState<number | null>(null)
-  const [showLoginModal, setShowLoginModal] = useState(false)
+  // La modal de connexion est gérée par RagGuard, pas besoin de state local
   const loadRef = useRef(false)
 
   const filteredDocs = useMemo(() => {
@@ -68,8 +68,10 @@ export function RagDocumentsClient() {
       setDocuments(mapped)
     } catch (error) {
       // Détecter les erreurs d'authentification
+      // RagGuard gère l'affichage de la modal, on ne fait que logger l'erreur
       if (error instanceof AppError && (error.code === 401 || error.code === 403)) {
-        setShowLoginModal(true)
+        // L'erreur d'authentification sera gérée par RagGuard qui affichera la modal
+        // On ne fait rien ici, juste vider la liste
       } else {
         handleError(error, { title: "Impossible de charger les documents" })
       }
@@ -129,8 +131,9 @@ export function RagDocumentsClient() {
       setIsChunksOpen(true)
     } catch (error) {
       // Détecter les erreurs d'authentification
+      // RagGuard gère l'affichage de la modal, on ne fait que logger l'erreur
       if (error instanceof AppError && (error.code === 401 || error.code === 403)) {
-        setShowLoginModal(true)
+        // L'erreur d'authentification sera gérée par RagGuard qui affichera la modal
       } else {
         handleError(error, { title: `Impossible d'ouvrir ${doc.name}` })
       }
@@ -304,10 +307,12 @@ export function RagDocumentsClient() {
         }}
         documentName={documentToDelete?.name || ""}
         onDeleteComplete={handleDeleteComplete}
-        onAuthError={() => setShowLoginModal(true)}
+        onAuthError={() => {
+          // L'erreur d'authentification sera gérée par RagGuard qui affichera la modal
+        }}
       />
 
-      <RagLoginModal open={showLoginModal} onOpenChange={setShowLoginModal} />
+      {/* La modal de connexion est gérée par RagGuard */}
     </div>
   )
 }

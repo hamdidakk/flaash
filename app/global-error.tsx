@@ -13,7 +13,17 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error("[v0] Global error caught:", error)
+    // Ne pas logger les erreurs 401 (authentification) car elles sont normales après déconnexion
+    // Ces erreurs sont gérées silencieusement par les composants
+    const isAuthError = error instanceof Error && (
+      error.message.includes("Authentication credentials were not provided") ||
+      error.message.includes("authentication") ||
+      error.message.includes("401")
+    )
+    
+    if (!isAuthError) {
+      console.error("[v0] Global error caught:", error)
+    }
   }, [error])
 
       return (

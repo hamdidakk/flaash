@@ -15,39 +15,26 @@ interface RagLoginModalProps {
 export function RagLoginModal({ open, onOpenChange }: RagLoginModalProps) {
   const { t } = useLanguage()
   const { status, user } = useSessionStore()
-  const wasUnauthenticatedWhenOpenedRef = useRef(false)
+  const previousStatusRef = useRef<"idle" | "loading" | "authenticated" | "unauthenticated">(status)
 
-  // Mémoriser si l'utilisateur était non authentifié quand la modal s'est ouverte
+  // Détecter quand l'utilisateur passe de "unauthenticated" ou "loading" à "authenticated"
+  // Cela signifie qu'une connexion vient de réussir
   useEffect(() => {
-    if (open && status === "unauthenticated") {
-      wasUnauthenticatedWhenOpenedRef.current = true
-    }
-  }, [open, status])
+    const wasUnauthenticated = previousStatusRef.current === "unauthenticated" || previousStatusRef.current === "loading"
+    const isNowAuthenticated = status === "authenticated" && user !== null
 
-  // Fermer la modal automatiquement seulement si l'utilisateur vient de se connecter avec succès
-  // (c'est-à-dire qu'il était non authentifié quand la modal s'est ouverte)
-  useEffect(() => {
-    if (
-      status === "authenticated" &&
-      user &&
-      open &&
-      wasUnauthenticatedWhenOpenedRef.current
-    ) {
-      // Petit délai pour permettre au formulaire de terminer et éviter tout reload
+    // Si la modal est ouverte et qu'on vient de passer à "authenticated", fermer la modal
+    if (open && wasUnauthenticated && isNowAuthenticated) {
+      // Petit délai pour permettre au formulaire de terminer
       const timeoutId = setTimeout(() => {
         onOpenChange(false)
-        wasUnauthenticatedWhenOpenedRef.current = false
-      }, 200)
+      }, 300)
       return () => clearTimeout(timeoutId)
     }
-  }, [status, user, open, onOpenChange])
 
-  // Réinitialiser le flag quand la modal se ferme
-  useEffect(() => {
-    if (!open) {
-      wasUnauthenticatedWhenOpenedRef.current = false
-    }
-  }, [open])
+    // Mettre à jour le statut précédent
+    previousStatusRef.current = status
+  }, [status, user, open, onOpenChange])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

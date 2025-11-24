@@ -73,7 +73,8 @@ export function useErrorHandler() {
       // Logger l'erreur en développement (mais pas en production pour éviter le spam)
       // Utiliser console.warn pour les erreurs déjà gérées (affichées via toast)
       // Utiliser console.error uniquement pour les erreurs serveur (500+)
-      if (process.env.NODE_ENV === "development") {
+      // Ne pas logger les erreurs 401 (authentification) car elles sont normales après déconnexion
+      if (process.env.NODE_ENV === "development" && appError.code !== 401) {
         const logData: Record<string, unknown> = {
           code: appError.code,
           message: cleanMessage,

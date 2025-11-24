@@ -12,8 +12,13 @@ type SessionParamsPromise = Promise<SessionParams>
 const buildUpstreamUrl = (pathSegments: string[] = [], search: string) => {
   const normalizedBase = backendBase.replace(/\/$/, "")
   const joined = pathSegments.join("/").replace(/^\/+|\/+$/g, "")
+  
+  // Pour /api/session/login, utiliser /auth/login/ au lieu de /auth/session/login/
+  // Pour les autres routes, utiliser /auth/session/
+  const isLogin = joined === "login"
+  const basePath = isLogin ? "/auth" : "/auth/session"
   const upstreamPath = joined ? `/${joined}${joined.endsWith("/") ? "" : "/"}` : "/"
-  return `${normalizedBase}/auth/session${upstreamPath}${search}`
+  return `${normalizedBase}${basePath}${upstreamPath}${search}`
 }
 
 const forward = async (request: NextRequest, paramsPromise: SessionParamsPromise) => {
@@ -25,6 +30,16 @@ const forward = async (request: NextRequest, paramsPromise: SessionParamsPromise
       : pathname.replace(/^\/api\/session\/?/, "").split("/").filter(Boolean)
 
   const upstream = buildUpstreamUrl(incomingSegments, search)
+
+  // Debug logging in development
+  if (process.env.NODE_ENV === "development") {
+    console.log("[session-proxy] Request:", {
+      method: request.method,
+      pathname: pathname,
+      incomingSegments,
+      upstream,
+    })
+  }
 
   const method = request.method
   const headers = new Headers()
